@@ -1,0 +1,27 @@
+%[turnOnLights]
+    ~[hiPlease] ~[activate] the ~[lightOrLights]
+    ~[hiPlease] ~[lightOrLights] ~[activate]
+    ~[hiPlease] its too dark
+
+~[hiPlease]
+    ~[hi]? ~[please]?
+
+~[hi]
+    hi
+    hello
+    hey
+
+~[please]
+    please
+    pls
+
+~[activate]
+    activate
+    turn on
+    on
+
+~[lightOrLights]
+    light
+    lights
+    bulb
+    bulbs

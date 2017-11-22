@@ -1,0 +1,38 @@
+%[buscarEventosEnCiudad]
+    ~[holaPorfavorBusca] ~[eventos]? ~[en] @[ciudad]
+
+@[ciudad]
+    Arequipa
+    Medellin
+    Buenos Aires
+
+~[hola]
+    hola
+    hey
+
+~[porfavor]
+    porfavor
+    por favor
+    porfa
+
+~[buscar]
+    ~[quiero] buscar
+    busca
+    encuentra
+    lista
+
+~[quiero]
+    quiero
+    necesito
+
+~[holaPorfavorBusca]
+    ~[hola]? ~[porfavor]? ~[buscar]?
+
+~[eventos]
+    eventos
+    que hay
+    cosas que hacer
+
+~[en]
+    en
+    por

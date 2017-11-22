@@ -1,0 +1,2176 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test dataset generation 1`] = `
+"[
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi please activate the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi please activate the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi please activate the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi please activate the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi please turn on the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi please turn on the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi please turn on the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi please turn on the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi please on the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi please on the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi please on the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi please on the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi pls activate the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi pls activate the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi pls activate the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi pls activate the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi pls turn on the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi pls turn on the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi pls turn on the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi pls turn on the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi pls on the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi pls on the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi pls on the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi pls on the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi activate the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi activate the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi activate the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi activate the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi turn on the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi turn on the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi turn on the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi turn on the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi on the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi on the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi on the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi on the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello please activate the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello please activate the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello please activate the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello please activate the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello please turn on the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello please turn on the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello please turn on the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello please turn on the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello please on the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello please on the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello please on the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello please on the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello pls activate the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello pls activate the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello pls activate the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello pls activate the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello pls turn on the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello pls turn on the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello pls turn on the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello pls turn on the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello pls on the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello pls on the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello pls on the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello pls on the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello activate the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello activate the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello activate the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello activate the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello turn on the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello turn on the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello turn on the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello turn on the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello on the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello on the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello on the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello on the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey please activate the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey please activate the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey please activate the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey please activate the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey please turn on the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey please turn on the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey please turn on the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey please turn on the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey please on the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey please on the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey please on the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey please on the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey pls activate the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey pls activate the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey pls activate the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey pls activate the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey pls turn on the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey pls turn on the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey pls turn on the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey pls turn on the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey pls on the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey pls on the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey pls on the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey pls on the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey activate the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey activate the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey activate the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey activate the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey turn on the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey turn on the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey turn on the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey turn on the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey on the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey on the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey on the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey on the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"please activate the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"please activate the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"please activate the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"please activate the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"please turn on the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"please turn on the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"please turn on the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"please turn on the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"please on the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"please on the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"please on the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"please on the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"pls activate the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"pls activate the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"pls activate the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"pls activate the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"pls turn on the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"pls turn on the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"pls turn on the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"pls turn on the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"pls on the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"pls on the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"pls on the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"pls on the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"activate the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"activate the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"activate the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"activate the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"turn on the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"turn on the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"turn on the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"turn on the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"on the light\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"on the lights\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"on the bulb\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"on the bulbs\\",
+    \\"arg\\": {
+      \\"lightOrLights\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi please light activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi please light turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi please light on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi please lights activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi please lights turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi please lights on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi please bulb activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi please bulb turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi please bulb on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi please bulbs activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi please bulbs turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi please bulbs on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi pls light activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi pls light turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi pls light on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi pls lights activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi pls lights turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi pls lights on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi pls bulb activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi pls bulb turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi pls bulb on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi pls bulbs activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi pls bulbs turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi pls bulbs on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi light activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi light turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi light on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi lights activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi lights turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi lights on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi bulb activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi bulb turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi bulb on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi bulbs activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi bulbs turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi bulbs on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello please light activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello please light turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello please light on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello please lights activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello please lights turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello please lights on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello please bulb activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello please bulb turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello please bulb on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello please bulbs activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello please bulbs turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello please bulbs on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello pls light activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello pls light turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello pls light on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello pls lights activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello pls lights turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello pls lights on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello pls bulb activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello pls bulb turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello pls bulb on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello pls bulbs activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello pls bulbs turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello pls bulbs on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello light activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello light turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello light on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello lights activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello lights turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello lights on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello bulb activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello bulb turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello bulb on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello bulbs activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello bulbs turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello bulbs on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey please light activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey please light turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey please light on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey please lights activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey please lights turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey please lights on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey please bulb activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey please bulb turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey please bulb on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey please bulbs activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey please bulbs turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey please bulbs on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey pls light activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey pls light turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey pls light on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey pls lights activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey pls lights turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey pls lights on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey pls bulb activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey pls bulb turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey pls bulb on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey pls bulbs activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey pls bulbs turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey pls bulbs on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey light activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey light turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey light on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey lights activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey lights turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey lights on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey bulb activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey bulb turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey bulb on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey bulbs activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey bulbs turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey bulbs on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"please light activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"please light turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"please light on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"please lights activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"please lights turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"please lights on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"please bulb activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"please bulb turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"please bulb on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"please bulbs activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"please bulbs turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"please bulbs on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"pls light activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"pls light turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"pls light on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"pls lights activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"pls lights turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"pls lights on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"pls bulb activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"pls bulb turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"pls bulb on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"pls bulbs activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"pls bulbs turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"pls bulbs on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"light activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"light turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"light on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"lights activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"lights turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"lights on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"bulb activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"bulb turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"bulb on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"bulbs activate\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"bulbs turn on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"bulbs on\\",
+    \\"arg\\": {
+      \\"activate\\": {}
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi please its too dark\\",
+    \\"arg\\": {
+      \\"dark\\": {
+        \\"too\\": {
+          \\"hiPlease\\": {
+            \\"hi\\": {}
+          }
+        }
+      }
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi pls its too dark\\",
+    \\"arg\\": {
+      \\"dark\\": {
+        \\"too\\": {
+          \\"hiPlease\\": {
+            \\"hi\\": {}
+          }
+        }
+      }
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hi its too dark\\",
+    \\"arg\\": {
+      \\"dark\\": {
+        \\"too\\": {
+          \\"hiPlease\\": {
+            \\"hi\\": {}
+          }
+        }
+      }
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello please its too dark\\",
+    \\"arg\\": {
+      \\"dark\\": {
+        \\"too\\": {
+          \\"hiPlease\\": {
+            \\"hi\\": {}
+          }
+        }
+      }
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello pls its too dark\\",
+    \\"arg\\": {
+      \\"dark\\": {
+        \\"too\\": {
+          \\"hiPlease\\": {
+            \\"hi\\": {}
+          }
+        }
+      }
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hello its too dark\\",
+    \\"arg\\": {
+      \\"dark\\": {
+        \\"too\\": {
+          \\"hiPlease\\": {
+            \\"hi\\": {}
+          }
+        }
+      }
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey please its too dark\\",
+    \\"arg\\": {
+      \\"dark\\": {
+        \\"too\\": {
+          \\"hiPlease\\": {
+            \\"hi\\": {}
+          }
+        }
+      }
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey pls its too dark\\",
+    \\"arg\\": {
+      \\"dark\\": {
+        \\"too\\": {
+          \\"hiPlease\\": {
+            \\"hi\\": {}
+          }
+        }
+      }
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"hey its too dark\\",
+    \\"arg\\": {
+      \\"dark\\": {
+        \\"too\\": {
+          \\"hiPlease\\": {
+            \\"hi\\": {}
+          }
+        }
+      }
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"please its too dark\\",
+    \\"arg\\": {
+      \\"dark\\": {
+        \\"too\\": {
+          \\"hiPlease\\": {
+            \\"hi\\": {}
+          }
+        }
+      }
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"pls its too dark\\",
+    \\"arg\\": {
+      \\"dark\\": {
+        \\"too\\": {
+          \\"hiPlease\\": {
+            \\"hi\\": {}
+          }
+        }
+      }
+    }
+  },
+  {
+    \\"action\\": \\"turnOnLights\\",
+    \\"id\\": \\"its too dark\\",
+    \\"arg\\": {
+      \\"dark\\": {
+        \\"too\\": {
+          \\"hiPlease\\": {}
+        }
+      }
+    }
+  }
+]"
+`;

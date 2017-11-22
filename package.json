@@ -1,0 +1,23 @@
+{
+  "name": "chatito",
+  "version": "1.0.0",
+  "description": "",
+  "main": "core/chatito.js",
+  "scripts": {
+    "test": "jest",
+    "test:kill": "lsof -n -i4TCP:5858 | sed '1 d' | awk '{print $2}' | xargs kill -9",
+    "test:debug": "npm run test:kill && NODE_ENV=TEST node --inspect-brk node_modules/jest/bin/jest.js --no-cache --runInBand --forceExit --env jest-environment-node-debug",
+    "parser:build": "pegjs core/chatito.pegjs"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "^21.2.1",
+    "jest-environment-node-debug": "^2.0.0",
+    "pegjs": "^0.10.0"
+  },
+  "jest": {
+    "collectCoverage": true
+  }
+}
