@@ -5,6 +5,7 @@ const generator = require('../../core/datasetGenerator');
 const getExampleFile = filename => path.resolve(__dirname, filename);
 
 test('test dataset generation', () => {
-    const result = generator.datasetFromFile(getExampleFile("spanishEventsConcierge.chatito"));
+    const fileContent = fs.readFileSync(getExampleFile("spanishEventsConcierge.chatito"), "utf8");
+    const result = generator.datasetFromString(fileContent);
     expect(JSON.stringify(result, null, 2)).toMatchSnapshot();
 });

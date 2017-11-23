@@ -1,5 +1,3 @@
-const fs = require('fs');
-const path = require('path');
 const chatito = require('./chatito');
 
 // Get the cartesian product of N arrays (taken from):
@@ -24,19 +22,9 @@ const INNER_OPERATORS = {
 };
 
 // ======= AST ======= 
-const astFromFile = absolutePath => {
-    const chatitoFileContent = fs.readFileSync(absolutePath, "utf8");
-    return astFromString(chatitoFileContent);
-};
-
 const astFromString = str => chatito.parse(str);
 
 // ======= Dataset ======= 
-const datasetFromFile = absolutePath => {
-    const ast = astFromFile(absolutePath);
-    return datasetFromAST(ast);
-};
-
 const datasetFromString = str => {
     const ast = astFromString(str);
     return datasetFromAST(ast);
@@ -143,6 +131,5 @@ function getVariationsFromEntity(e, defs) {
 }
 
 module.exports = {
-    datasetFromFile,
     datasetFromString,
 };

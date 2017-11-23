@@ -19,7 +19,8 @@ configFile = argv._[0];
 
 try {
     const dslFilePath = getExampleFilePath(configFile);
-    const dataset = generator.datasetFromFile(dslFilePath);
+    const file = fs.readFileSync(dslFilePath, "utf8");
+    const dataset = generator.datasetFromString(file);
     const splittedPath = path.basename(dslFilePath).split(".");
     let jsonFileName;
     if (splittedPath.length) {

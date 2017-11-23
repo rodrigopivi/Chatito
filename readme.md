@@ -12,14 +12,17 @@ link some of the sentece words to arguments that are useful for the action. e.g.
 ```
 Sentence -> Hey Bot turn the lights off
 
-Parsed Intent -> { action: "lightChange", arguments: [value: "off"] }
+Parsed Intent -> {
+    id: "Hey Bot turn the lights off",
+    action: "lightChange",
+    arg: { switch: "off" }
+}
 ```
 
 ### Getting started
 
-- `npm i chatito`
-- create a definition file. e.g.: `trainClimateBot.chatito`
-- edit `trainClimateBot.chatito` with the DSL definitions
+- `npm i chatito --save`
+- create a definition file. e.g.: `trainClimateBot.chatito` with your DSL definitions.
 - `npx chatito trainClimateBot.chatito`
 - The training set should be available at `trainClimateBot.json`
 
@@ -53,10 +56,9 @@ It will generate this dataset:
 
 ## Chatito DSL
 
-A Chatito domain specific language file should contain the '.chatito' extension, and is just a text file composed of a single entry
-point, the sentence values inside entry point and the operator definitions.
+A Chatito domain specific language file should contain the '.chatito' extension, and is just a text file the operators definitions.
 
-Note: The DSL uses 4 space identation to define the code block scope nesting.
+Important Note: The DSL uses 4 space identation to define the code block scope nesting.
 
 ### Operators
 
@@ -68,7 +70,7 @@ a `?` symbol after the closing squared bracket. E.g.: `~[hi]?`
 
 Here is the full list of operators:
 
-#### Action (`%[` `]`)
+#### Action (`%[` `]`)
 
 The action operator is how we link a sentence with an actual bot command.
 Each action is an entry point for the generator. Actions cannot be nested, but can contain other operators (arguments and aliases).
@@ -112,7 +114,7 @@ Argument definitions can only include alias operators or words.
 ```
         
 
-####Alias (`~[` `]`):
+#### Alias (`~[` `]`):
 
 A word or list of words that are equivalent. e.g.:
 
@@ -186,7 +188,7 @@ A word or list of words that are equivalent. e.g.:
 
 ```
 
-# Credits
+# Credits
 
 - [nalgene](https://github.com/spro/nalgene) - Similar tool.
 - [PEG.js](https://pegjs.org) - Simple and powerfull parser generator.
@@ -197,4 +199,4 @@ A word or list of words that are equivalent. e.g.:
 - [ATIS.Keras](https://github.com/chsasank/ATIS.keras)
 - [RNN-for-Joint-NLU](https://github.com/DSKSD/RNN-for-Joint-NLU)
 - [pytorch-seq2seq-intent-parsing](https://github.com/spro/pytorch-seq2seq-intent-parsing)
--[Adapt intent parsing](https://github.com/MycroftAI/adapt)
+- [Adapt intent parsing](https://github.com/MycroftAI/adapt)
