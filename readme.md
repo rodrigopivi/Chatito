@@ -19,6 +19,8 @@ Parsed Intent -> {
 }
 ```
 
+Test it online at [https://rodrigopivi.github.io/Chatito/](https://rodrigopivi.github.io/Chatito/)
+
 ### Getting started
 
 - `npm i chatito --save`
