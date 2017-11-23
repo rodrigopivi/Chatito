@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Generate training datasets for slot filling chatbots in a breeze using a simple DSL",
   "bin": {
-    "chatito": "./bin/chatito.js"
+    "chatito": "node ./bin/chatito.js"
   },
   "scripts": {
     "test": "jest",
