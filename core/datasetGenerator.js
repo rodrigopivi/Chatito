@@ -92,13 +92,15 @@ function getVariationsFromSentence(s, defs, actionKey) {
         }
         const ret = variations.map(
             sentenceVariation => {
-                const args = {};
-                sentenceVariation.forEach(e => {
-                    if (e.arg) { args[entityToCheckForArgs.id] = e.arg; }
-                });
+                const arg = {};
+                if (entityToCheckForArgs.type === INNER_OPERATORS.ARGUMENT) {
+                    sentenceVariation.forEach(e => {
+                        if (e.arg) { arg[entityToCheckForArgs.id] = e.arg; }
+                    });
+                }
                 const base = {
                     id: sentenceVariation.map(e => e.id).join(" ").trim(),
-                    arg: args,
+                    arg,
                 };
                 let o = { type: "Text" };
                 if (actionKey) { o = { action: actionKey }; }
@@ -118,6 +120,7 @@ function getVariationsFromEntity(e, defs) {
         sentences = defs.args[e.id];
         if (!sentences) { throw new Error(`Undefined argument ${e.id}`); }
         isArgument = true;
+        debugger;
     } else if (e.type === INNER_OPERATORS.ALIAS) {
         sentences = defs.aliases[e.id];
         if (!sentences) { throw new Error(`Undefined alias ${e.id}`); }
