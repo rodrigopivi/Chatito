@@ -1,27 +1,19 @@
-%[turnOnLights]
-    ~[hiPlease] ~[activate] the ~[lightOrLights]
-    ~[hiPlease] ~[lightOrLights] ~[activate]
-    ~[hiPlease] its too dark
 
-~[hiPlease]
-    ~[hi]? ~[please]?
+%[lightChange]
+    Hey Bot @[switch] the @[lights]
 
-~[hi]
-    hi
-    hello
-    hey
+@[switch]
+    ~[off]
+    ~[on]
 
-~[please]
-    please
-    pls
-
-~[activate]
-    activate
-    turn on
-    on
-
-~[lightOrLights]
-    light
+@[lights]
     lights
-    bulb
-    bulbs
+    lowLights
+
+~[off]
+    turn off
+    deactivate
+
+~[on]
+    turn on
+    activate

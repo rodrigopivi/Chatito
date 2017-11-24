@@ -65,13 +65,11 @@ function getVariationsFromSentence(s, defs, actionKey) {
     if (sentence.length === 1) { sentence.push({id: "", type: "Text"}); }
     return sentence.reduce((entity, nextEntity) => {
         let variations = null;
-        let entityToCheckForArgs = entity;
         if (entity instanceof Array) {
             variations = cartesian(
                 entity,
                 getVariationsFromEntity(nextEntity, defs),
             );
-            entityToCheckForArgs = nextEntity;
         } else {
             variations = cartesian(
                 getVariationsFromEntity(entity, defs),
@@ -80,22 +78,16 @@ function getVariationsFromSentence(s, defs, actionKey) {
         }
         const ret = variations.map(
             sentenceVariation => {
-                const arg = {};
-                if (entityToCheckForArgs.type === INNER_OPERATORS.ARGUMENT) {
-                    sentenceVariation.forEach(e => {
-                        if (e.arg) { arg[entityToCheckForArgs.id] = e.arg; }
-                    });
-                }
-                const base = {
-                    id: sentenceVariation.map(e => e.id).join(" ").trim(),
-                    arg,
-                };
+                let arg = {};
+                sentenceVariation.reduce((e, nextE) => {
+                    id = `${e.id} ${nextE.id}`;
+                    arg = Object.assign({}, arg, e.arg, nextE.arg);
+                });
                 let o = { type: "Text" };
                 if (actionKey) { o = { action: actionKey }; }
-                return Object.assign({}, o, base);
+                return Object.assign({}, o, { id, arg });
             },
         );
-        const s = sentence;
         return ret;
     });
 }
@@ -108,7 +100,6 @@ function getVariationsFromEntity(e, defs) {
         sentences = defs.args[e.id];
         if (!sentences) { throw new Error(`Undefined argument ${e.id}`); }
         isArgument = true;
-        debugger;
     } else if (e.type === INNER_OPERATORS.ALIAS) {
         sentences = defs.aliases[e.id];
         if (!sentences) { throw new Error(`Undefined alias ${e.id}`); }
@@ -120,9 +111,7 @@ function getVariationsFromEntity(e, defs) {
     });
     if (isArgument) {
         variations = variations.map(v => {
-            if (!(v instanceof Array)) {
-                v.arg = v.id;
-            }
+            if (!(v instanceof Array)) { v.arg = { [e.id]: v.id }; }
             return v;
         });
     }

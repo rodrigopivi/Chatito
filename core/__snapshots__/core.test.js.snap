@@ -1,16 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`test action action defiend after alias 1`] = `
+exports[`test action defiend after alias 1`] = `
 Array [
   Object {
     "action": "arg",
     "arg": Object {},
-    "id": "asdf",
+    "id": "asdf ",
   },
 ]
 `;
 
-exports[`test action action referencing action works as text 1`] = `
+exports[`test action referencing action works as text 1`] = `
 Array [
   Object {
     "action": "asdf",
@@ -23,6 +23,43 @@ Array [
 exports[`test action referencing undefined alias 1`] = `[Error: Undefined alias alias]`;
 
 exports[`test action referencing undefined argument 1`] = `[Error: Undefined argument arg]`;
+
+exports[`test action with two arguments 1`] = `
+Array [
+  Object {
+    "action": "lightChange",
+    "arg": Object {
+      "lights": "lights ",
+      "switch": "off ",
+    },
+    "id": "Hey Bot turn the lights off",
+  },
+  Object {
+    "action": "lightChange",
+    "arg": Object {
+      "lights": "lights ",
+      "switch": "on ",
+    },
+    "id": "Hey Bot turn the lights on",
+  },
+  Object {
+    "action": "lightChange",
+    "arg": Object {
+      "lights": "luces ",
+      "switch": "off ",
+    },
+    "id": "Hey Bot turn the luces off",
+  },
+  Object {
+    "action": "lightChange",
+    "arg": Object {
+      "lights": "luces ",
+      "switch": "on ",
+    },
+    "id": "Hey Bot turn the luces on",
+  },
+]
+`;
 
 exports[`test action without correct identation error 1`] = `[SyntaxError: Expected "%", "@", "\\n", "~", correct indentation, or end of input but " " found.]`;
 

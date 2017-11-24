@@ -5,44 +5,169 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Chatito - Generate training datasets for slot filling chatbots in a breeze using a simple DSL</title>
+    <style>
+        :focus {
+            outline: none;
+        }
+
+        ::-moz-focus-inner {
+            border: 0;
+        }
+
+        html,
+        body,
+        #app {
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            height: auto !important;
+            font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        body {
+            box-sizing: border-box;
+            min-height: 100vh;
+            background: #ececec;
+            padding: 0 20px 20px 20px;
+        }
+
+        a:focus,
+        a:active,
+        a:any-link {
+            text-decoration: none;
+        }
+
+        a {
+            text-decoration: none;
+            color: #367962;
+        }
+
+        a:hover {
+            color: #369962;
+        }
+
+        #app {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+        .header { color: "#444" }
+        .content { display: flex; flex-direction: row; flex: 1; }
+        .content__column { display: flex; flex: 1; flex-direction: column; }
+        .content__middlecolumn { padding: 20px; }
+        .content textArea { display: flex; flex: 1; }
+        #chatitoGenerate { background-color: #446644; color: #ffffff; padding: 10px 5px; }
+    </style>
 </head>
 
 <body>
-    <textarea id="chatitoDSL" style="width: 90%; min-height: 100px;">
-%[lightChange]
-    Hey Bot turn the lights @[switch]
+    <div id="app">
+        <div class="header">
+            <h1><a href="https://github.com/rodrigopivi/Chatito">Chatito</a></h1>
+            <h2>
+                Generate training datasets for slot filling chatbots online and in a breeze using a simple DSL.
+                <a href="https://github.com/rodrigopivi/Chatito">Read the docs</a>
+            <h2>
+        </div>
+        <div class="content">
+            <div class="content__column">
+                    <textarea id="chatitoDSL"></textarea>
+            </div>
+            <div class="content__middlecolumn">
+                <button id="chatitoGenerate">Generate dataset =></button>
+            </div>
+            <div class="content__column">
+                <textarea id="chatitoDSLResult" disabled="true"></textarea>
+            </div>
+        </div>
+    </div>
 
-@[switch]
-    off
-    on
-</textarea>
-    <button id="chatitoGenerate">Generate</button>
-    <textarea id="chatitoDSLResult" style="width: 90%; min-height: 100px;" disabled="true"></textarea>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/0.20.19/system.src.js"></script>
     <script>
         System.config({
             transpiler: 'Babel',
-            babelOptions: {
-                presets: ['es2015']
-            },
-            packages: {
-                'https://cdn.rawgit.com': { defaultExtension: 'js' }
-            },
+            babelOptions: { presets: ['es2015'] },
+            packages: { 'https://cdn.rawgit.com': { defaultExtension: 'js' } },
             map: {
                 Chatito: 'https://cdn.rawgit.com/rodrigopivi/Chatito/73743c90/core/datasetGenerator.js',
                 Babel: 'https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js'
             }
         });
         SystemJS.import('Chatito').then(function (chatito) {
-            document.getElementById("chatitoGenerate").addEventListener("click", () => {
+            const currentValue = examples[0];
+            const genDataset = () => {
                 const val = document.getElementById("chatitoDSL").value;
                 let d = "";
-                try {
-                    d = chatito.datasetFromString(val);
-                } catch (e) { d = e.message; }
+                try { d = chatito.datasetFromString(val); } catch (e) { d = e.message; }
                 document.getElementById("chatitoDSLResult").value = JSON.stringify(d, null, 2);
-            });
+            };
+            document.getElementById("chatitoDSL").value = currentValue.value;
+            genDataset();
+            document.getElementById("chatitoGenerate").addEventListener("click", genDataset);
         });
+    </script>
+    <script>
+        const examples = [];
+        examples.push({
+            name: "Lights manager", value: `
+%[lightChange]
+    Hey Bot turn the lights @[switch]
+
+@[switch]
+    off
+    on`
+        });
+        examples.push({
+            name: "Find events at city in spanish", value: `
+%[buscarEventosEnCiudad]
+    ~[holaPorfavorBusca] ~[eventos]? ~[en] @[ciudad]
+
+@[ciudad]
+    Arequipa
+    Medellin
+    Buenos Aires
+
+~[hola]
+    hola
+    hey
+
+~[porfavor]
+    porfavor
+    por favor
+    porfa
+
+~[buscar]
+    ~[quiero] buscar
+    busca
+    encuentra
+    lista
+
+~[quiero]
+    quiero
+    necesito
+
+~[holaPorfavorBusca]
+    ~[hola]? ~[porfavor]? ~[buscar]?
+
+~[eventos]
+    eventos
+    que hay
+    cosas que hacer
+
+~[en]
+    en
+    por
+`});
     </script>
 </body>
 

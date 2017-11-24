@@ -8,8 +8,6 @@ const generator = require("../core/datasetGenerator");
 const workingDirectory = process.cwd();
 const getExampleFilePath = filename => path.resolve(workingDirectory, filename);
 
-console.log(argv);
-
 let configFile = null;
 if (!argv._ || !argv._.length) {
     console.error("ERROR: Invalid chatito file.");

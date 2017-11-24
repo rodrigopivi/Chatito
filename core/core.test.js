@@ -69,7 +69,7 @@ test('test action referencing undefined alias', () => {
     expect(result).toBeNull();
 });
 
-test('test action action referencing action works as text', () => {
+test('test action referencing action works as text', () => {
     let error = null;
     let result = null;
     const input = '%[asdf]\n    test %[arg]\n';
@@ -80,10 +80,32 @@ test('test action action referencing action works as text', () => {
     expect(result).toMatchSnapshot();
 });
 
-test('test action action defiend after alias', () => {
+test('test action defiend after alias', () => {
     let error = null;
     let result = null;
     const input = '~[asdf]\n    test\n\n%[arg]\n    asdf';
+    try {
+        result = generator.datasetFromString(input);
+    } catch (e) { error = e; }
+    expect(error).toBeNull();
+    expect(result).toMatchSnapshot();
+});
+
+test('test action with two arguments', () => {
+    let error = null;
+    let result = null;
+    const input = `
+%[lightChange]
+    Hey Bot turn the @[lights] @[switch]
+
+@[switch]
+    off
+    on
+
+@[lights]
+    lights
+    luces
+`;
     try {
         result = generator.datasetFromString(input);
     } catch (e) { error = e; }

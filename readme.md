@@ -4,6 +4,8 @@ Generate training datasets for chatbots in a breeze!
 
 Chatito is a natural language generation (NLG) tool and a domain specific language (DSL) for creating chatbot training datasets.
 
+This video is a great overview of this type of systems. [Slot-Filling in Conversations with Deep Learning](https://www.youtube.com/watch?v=Z1C1owUV0sI)
+
 Slot filling chatbots are a type of chatbots that link short text sentences to actions and extract the action arguments from the sentence.
 
 The general idea is that given a sentence, we link an action to it and
@@ -20,6 +22,8 @@ Parsed Intent -> {
 ```
 
 Test it online at [https://rodrigopivi.github.io/Chatito/](https://rodrigopivi.github.io/Chatito/)
+
+NOTE: This tool is still under early development as i'm learning to train and build this agents.
 
 ### Getting started
 
