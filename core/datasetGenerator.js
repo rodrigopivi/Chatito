@@ -80,7 +80,7 @@ function getVariationsFromSentence(s, defs, actionKey) {
             sentenceVariation => {
                 let arg = {};
                 sentenceVariation.reduce((e, nextE) => {
-                    id = `${e.id} ${nextE.id}`;
+                    id = `${e.id.trim()} ${nextE.id.trim()}`;
                     arg = Object.assign({}, arg, e.arg, nextE.arg);
                 });
                 let o = { type: "Text" };
