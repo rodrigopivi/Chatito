@@ -112,3 +112,21 @@ test('test action with two arguments', () => {
     expect(error).toBeNull();
     expect(result).toMatchSnapshot();
 });
+
+test('test readme example', () => {
+    let error = null;
+    let result = null;
+    const input = `
+%[lightChange]
+    Hey Bot turn the lights @[switch]
+
+@[switch]
+    off
+    on
+`;
+    try {
+        result = generator.datasetFromString(input);
+    } catch (e) { error = e; }
+    expect(error).toBeNull();
+    expect(result).toMatchSnapshot();
+});

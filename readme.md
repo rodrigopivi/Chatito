@@ -2,14 +2,17 @@
 
 Generate training datasets for chatbots in a breeze!
 
-Chatito is a natural language generation (NLG) tool and a domain specific language (DSL) for creating chatbot training datasets.
-
-This video is a great overview of this type of systems. [Slot-Filling in Conversations with Deep Learning](https://www.youtube.com/watch?v=Z1C1owUV0sI)
+Chatito is a natural language generation (NLG) tool and a domain specific language (DSL) for creating chatbot training datasets, with first class suport for [RasaNLU](https://github.com/RasaHQ/rasa_nlu).
 
 Slot filling chatbots are a type of chatbots that link short text sentences to actions and extract the action arguments from the sentence.
 
-The general idea is that given a sentence, we link an action to it and
-link some of the sentece words to arguments that are useful for the action. e.g.:
+Recommended videos to watch:
+
+    - [Slot-Filling in Conversations with Deep Learning](https://www.youtube.com/watch?v=Z1C1owUV0sI)
+    - [Open-source language understanding for bots by RASA author](https://www.youtube.com/watch?v=HIWqGc7AvKI)
+
+The general idea is that given a sentence, we link an (action/intent) to it and
+link some of the sentece words to arguments or entities that are useful for the action. e.g.:
 
 ```
 Sentence -> Hey Bot turn the lights off
@@ -21,9 +24,9 @@ Parsed Intent -> {
 }
 ```
 
-Test it online at [https://rodrigopivi.github.io/Chatito/](https://rodrigopivi.github.io/Chatito/)
+RASA_nlu is a great tool for training an intent and entity extrantion models in a breeze. Chatito gives first citizen support for generating RASA_NLU training datasets.
 
-NOTE: This tool is still under early development as i'm learning to train and build this agents.
+Test it online at [https://rodrigopivi.github.io/Chatito/](https://rodrigopivi.github.io/Chatito/)
 
 ### Getting started
 
@@ -48,15 +51,29 @@ It will generate this dataset:
 ```
 [
     {
-        id: "Hey Bot turn the lights on",
-        action: "lightChange",
-        arg: { switch: "on" }
-    },
-    {
-        id: "Hey Bot turn the lights off",
-        action: "lightChange",
-        arg: { switch: "off" }
-    }
+        "entities": [
+            {
+                "end": 27,
+                "entity": "switch",
+                "start": 24,
+                "value": "off",
+            },
+        ],
+        "intent": "lightChange",
+        "text": "Hey Bot turn the lights off",
+  },
+  {
+    "entities": [
+        {
+            "end": 26,
+            "entity": "switch",
+            "start": 24,
+            "value": "on",
+        },
+    ],
+    "intent": "lightChange",
+    "text": "Hey Bot turn the lights on",
+  },
 ]
 ```
 
@@ -198,11 +215,4 @@ A word or list of words that are equivalent. e.g.:
 
 - [nalgene](https://github.com/spro/nalgene) - Similar tool.
 - [PEG.js](https://pegjs.org) - Simple and powerfull parser generator.
-
-# Chatbot models
-
-- [JointSLU](https://github.com/yvchen/JointSLU)
-- [ATIS.Keras](https://github.com/chsasank/ATIS.keras)
-- [RNN-for-Joint-NLU](https://github.com/DSKSD/RNN-for-Joint-NLU)
-- [pytorch-seq2seq-intent-parsing](https://github.com/spro/pytorch-seq2seq-intent-parsing)
-- [Adapt intent parsing](https://github.com/MycroftAI/adapt)
+- [RASA_NLU](https://github.com/RasaHQ/rasa_nlu) - Great NLU tool for intent and entity model training.

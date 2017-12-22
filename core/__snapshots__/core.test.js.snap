@@ -3,9 +3,9 @@
 exports[`test action defiend after alias 1`] = `
 Array [
   Object {
-    "action": "arg",
-    "arg": Object {},
-    "id": "asdf ",
+    "entities": Array [],
+    "intent": "arg",
+    "text": "asdf",
   },
 ]
 `;
@@ -13,9 +13,9 @@ Array [
 exports[`test action referencing action works as text 1`] = `
 Array [
   Object {
-    "action": "asdf",
-    "arg": Object {},
-    "id": "test %[arg]",
+    "entities": Array [],
+    "intent": "asdf",
+    "text": "test %[arg]",
   },
 ]
 `;
@@ -27,36 +27,76 @@ exports[`test action referencing undefined argument 1`] = `[Error: Undefined arg
 exports[`test action with two arguments 1`] = `
 Array [
   Object {
-    "action": "lightChange",
-    "arg": Object {
-      "lights": "lights ",
-      "switch": "off ",
-    },
-    "id": "Hey Bot turn the lights off",
+    "entities": Array [
+      Object {
+        "end": 23,
+        "entity": "lights",
+        "start": 17,
+        "value": "lights",
+      },
+      Object {
+        "end": 27,
+        "entity": "switch",
+        "start": 24,
+        "value": "off",
+      },
+    ],
+    "intent": "lightChange",
+    "text": "Hey Bot turn the lights off",
   },
   Object {
-    "action": "lightChange",
-    "arg": Object {
-      "lights": "lights ",
-      "switch": "on ",
-    },
-    "id": "Hey Bot turn the lights on",
+    "entities": Array [
+      Object {
+        "end": 23,
+        "entity": "lights",
+        "start": 17,
+        "value": "lights",
+      },
+      Object {
+        "end": 26,
+        "entity": "switch",
+        "start": 24,
+        "value": "on",
+      },
+    ],
+    "intent": "lightChange",
+    "text": "Hey Bot turn the lights on",
   },
   Object {
-    "action": "lightChange",
-    "arg": Object {
-      "lights": "luces ",
-      "switch": "off ",
-    },
-    "id": "Hey Bot turn the luces off",
+    "entities": Array [
+      Object {
+        "end": 22,
+        "entity": "lights",
+        "start": 17,
+        "value": "luces",
+      },
+      Object {
+        "end": 26,
+        "entity": "switch",
+        "start": 23,
+        "value": "off",
+      },
+    ],
+    "intent": "lightChange",
+    "text": "Hey Bot turn the luces off",
   },
   Object {
-    "action": "lightChange",
-    "arg": Object {
-      "lights": "luces ",
-      "switch": "on ",
-    },
-    "id": "Hey Bot turn the luces on",
+    "entities": Array [
+      Object {
+        "end": 22,
+        "entity": "lights",
+        "start": 17,
+        "value": "luces",
+      },
+      Object {
+        "end": 25,
+        "entity": "switch",
+        "start": 23,
+        "value": "on",
+      },
+    ],
+    "intent": "lightChange",
+    "text": "Hey Bot turn the luces on",
   },
 ]
 `;
@@ -68,3 +108,32 @@ exports[`test action without sentences error 1`] = `[SyntaxError: Expected "\\n"
 exports[`test empty parser error 1`] = `[SyntaxError: Expected "%", "@", "\\n", or "~" but end of input found.]`;
 
 exports[`test no actions error 1`] = `[Error: No actions found]`;
+
+exports[`test readme example 1`] = `
+Array [
+  Object {
+    "entities": Array [
+      Object {
+        "end": 27,
+        "entity": "switch",
+        "start": 24,
+        "value": "off",
+      },
+    ],
+    "intent": "lightChange",
+    "text": "Hey Bot turn the lights off",
+  },
+  Object {
+    "entities": Array [
+      Object {
+        "end": 26,
+        "entity": "switch",
+        "start": 24,
+        "value": "on",
+      },
+    ],
+    "intent": "lightChange",
+    "text": "Hey Bot turn the lights on",
+  },
+]
+`;

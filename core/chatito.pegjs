@@ -15,7 +15,9 @@ BasicInnerStatements =  BasicInnerStatement+
 
 // Action
 OperatorActionStart = "%" { return "Action" }
-OperatorAction = type:OperatorActionStart id:OperatorBody { return { id: id, type: type } }
+OperatorAction = type:OperatorActionStart id:OperatorBody {
+    return { id: id, type: type, location: location() }
+}
 ActionValidInner = (OptionalArgument/OptionalAlias/OptionalKeywordLiteral)+
 ActionInnerStatements =  ActionInnerStatement+
 ActionInnerStatement =  Samedent s:ActionValidInner EOS { return s; }
@@ -25,9 +27,11 @@ ActionDefinition = EOL? o:OperatorAction EOL
 
 // Argument
 OperatorArgumentStart = "@" { return "Argument" }
-OperatorArgument = type:OperatorArgumentStart id:OperatorBody { return { id: id, type: type } }
+OperatorArgument = type:OperatorArgumentStart id:OperatorBody {
+    return { id: id, type: type, location: location() }
+}
 OptionalArgument = o:OperatorArgument opt:OperatorOpt? SPACE?
-    { return { id: o.id, type: o.type, opt: !!opt } }
+    { return { id: o.id, type: o.type, opt: !!opt, location: o.location } }
 ArgumentDefinition = EOL? o:OperatorArgument EOL
     Indent s:BasicInnerStatements Dedent
     { return { type: o.type + "Definition", key: o.id, inner: s } }

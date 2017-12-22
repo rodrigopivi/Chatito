@@ -3,68 +3,148 @@
 exports[`test dataset generation 1`] = `
 "[
   {
-    \\"action\\": \\"lightChange\\",
-    \\"id\\": \\"Hey Bot turn off the lights\\",
-    \\"arg\\": {
-      \\"switch\\": \\"turn off \\",
-      \\"lights\\": \\"lights \\"
-    }
+    \\"text\\": \\"Hey Bot turn off the lights\\",
+    \\"intent\\": \\"lightChange\\",
+    \\"entities\\": [
+      {
+        \\"start\\": 8,
+        \\"end\\": 16,
+        \\"value\\": \\"turn off\\",
+        \\"entity\\": \\"switch\\"
+      },
+      {
+        \\"start\\": 21,
+        \\"end\\": 27,
+        \\"value\\": \\"lights\\",
+        \\"entity\\": \\"lights\\"
+      }
+    ]
   },
   {
-    \\"action\\": \\"lightChange\\",
-    \\"id\\": \\"Hey Bot turn off the lowLights\\",
-    \\"arg\\": {
-      \\"switch\\": \\"turn off \\",
-      \\"lights\\": \\"lowLights \\"
-    }
+    \\"text\\": \\"Hey Bot turn off the lowLights\\",
+    \\"intent\\": \\"lightChange\\",
+    \\"entities\\": [
+      {
+        \\"start\\": 8,
+        \\"end\\": 16,
+        \\"value\\": \\"turn off\\",
+        \\"entity\\": \\"switch\\"
+      },
+      {
+        \\"start\\": 21,
+        \\"end\\": 30,
+        \\"value\\": \\"lowLights\\",
+        \\"entity\\": \\"lights\\"
+      }
+    ]
   },
   {
-    \\"action\\": \\"lightChange\\",
-    \\"id\\": \\"Hey Bot deactivate the lights\\",
-    \\"arg\\": {
-      \\"switch\\": \\"deactivate \\",
-      \\"lights\\": \\"lights \\"
-    }
+    \\"text\\": \\"Hey Bot deactivate the lights\\",
+    \\"intent\\": \\"lightChange\\",
+    \\"entities\\": [
+      {
+        \\"start\\": 8,
+        \\"end\\": 18,
+        \\"value\\": \\"deactivate\\",
+        \\"entity\\": \\"switch\\"
+      },
+      {
+        \\"start\\": 23,
+        \\"end\\": 29,
+        \\"value\\": \\"lights\\",
+        \\"entity\\": \\"lights\\"
+      }
+    ]
   },
   {
-    \\"action\\": \\"lightChange\\",
-    \\"id\\": \\"Hey Bot deactivate the lowLights\\",
-    \\"arg\\": {
-      \\"switch\\": \\"deactivate \\",
-      \\"lights\\": \\"lowLights \\"
-    }
+    \\"text\\": \\"Hey Bot deactivate the lowLights\\",
+    \\"intent\\": \\"lightChange\\",
+    \\"entities\\": [
+      {
+        \\"start\\": 8,
+        \\"end\\": 18,
+        \\"value\\": \\"deactivate\\",
+        \\"entity\\": \\"switch\\"
+      },
+      {
+        \\"start\\": 23,
+        \\"end\\": 32,
+        \\"value\\": \\"lowLights\\",
+        \\"entity\\": \\"lights\\"
+      }
+    ]
   },
   {
-    \\"action\\": \\"lightChange\\",
-    \\"id\\": \\"Hey Bot turn on the lights\\",
-    \\"arg\\": {
-      \\"switch\\": \\"turn on \\",
-      \\"lights\\": \\"lights \\"
-    }
+    \\"text\\": \\"Hey Bot turn on the lights\\",
+    \\"intent\\": \\"lightChange\\",
+    \\"entities\\": [
+      {
+        \\"start\\": 8,
+        \\"end\\": 15,
+        \\"value\\": \\"turn on\\",
+        \\"entity\\": \\"switch\\"
+      },
+      {
+        \\"start\\": 20,
+        \\"end\\": 26,
+        \\"value\\": \\"lights\\",
+        \\"entity\\": \\"lights\\"
+      }
+    ]
   },
   {
-    \\"action\\": \\"lightChange\\",
-    \\"id\\": \\"Hey Bot turn on the lowLights\\",
-    \\"arg\\": {
-      \\"switch\\": \\"turn on \\",
-      \\"lights\\": \\"lowLights \\"
-    }
+    \\"text\\": \\"Hey Bot turn on the lowLights\\",
+    \\"intent\\": \\"lightChange\\",
+    \\"entities\\": [
+      {
+        \\"start\\": 8,
+        \\"end\\": 15,
+        \\"value\\": \\"turn on\\",
+        \\"entity\\": \\"switch\\"
+      },
+      {
+        \\"start\\": 20,
+        \\"end\\": 29,
+        \\"value\\": \\"lowLights\\",
+        \\"entity\\": \\"lights\\"
+      }
+    ]
   },
   {
-    \\"action\\": \\"lightChange\\",
-    \\"id\\": \\"Hey Bot activate the lights\\",
-    \\"arg\\": {
-      \\"switch\\": \\"activate \\",
-      \\"lights\\": \\"lights \\"
-    }
+    \\"text\\": \\"Hey Bot activate the lights\\",
+    \\"intent\\": \\"lightChange\\",
+    \\"entities\\": [
+      {
+        \\"start\\": 8,
+        \\"end\\": 16,
+        \\"value\\": \\"activate\\",
+        \\"entity\\": \\"switch\\"
+      },
+      {
+        \\"start\\": 21,
+        \\"end\\": 27,
+        \\"value\\": \\"lights\\",
+        \\"entity\\": \\"lights\\"
+      }
+    ]
   },
   {
-    \\"action\\": \\"lightChange\\",
-    \\"id\\": \\"Hey Bot activate the lowLights\\",
-    \\"arg\\": {
-      \\"switch\\": \\"activate \\",
-      \\"lights\\": \\"lowLights \\"
-    }
+    \\"text\\": \\"Hey Bot activate the lowLights\\",
+    \\"intent\\": \\"lightChange\\",
+    \\"entities\\": [
+      {
+        \\"start\\": 8,
+        \\"end\\": 16,
+        \\"value\\": \\"activate\\",
+        \\"entity\\": \\"switch\\"
+      },
+      {
+        \\"start\\": 21,
+        \\"end\\": 30,
+        \\"value\\": \\"lowLights\\",
+        \\"entity\\": \\"lights\\"
+      }
+    ]
   }
 ]"
 `;
