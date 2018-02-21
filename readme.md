@@ -196,6 +196,7 @@ A word or list of words that are equivalent. e.g.:
     ny
     new york city
     ny city
+    
 ~[sanFrancisco]
     san francisco
     san francisco city
