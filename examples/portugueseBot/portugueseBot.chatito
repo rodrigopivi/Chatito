@@ -1,0 +1,47 @@
+%[findBoletoDASByMes]
+    ~[greet]? ~[botName]? ~[please]? ~[find]? @[boleto]? @[mes]
+
+~[greet]
+    oi
+    ola
+    opa
+    bom dia
+
+~[botName]
+    mago
+    Mago
+
+~[please]
+    por favor
+    poderia
+    pode
+    gostaria
+    quero
+
+~[find]
+    gerar
+    emitir
+    imprimir
+    pagar
+
+@[boleto]
+    boleto
+    DAS
+    contribuicao
+
+~[janeiro]
+    janeiro
+    Janeiro
+    janero
+    jan
+    01
+
+~[fevereiro]
+    fevereiro
+    feverero
+    fev
+    02
+
+@[mes]
+    ~[janeiro]
+    ~[fevereiro]

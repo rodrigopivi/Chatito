@@ -106,7 +106,8 @@ function getVariationsFromSentence(s, defs, actionKey, type) {
                     if (actionKey) {
                         const firstStart = column;
                         const firstEnd = firstStart + firstVal.length;
-                        const secondStart = firstEnd + 1;
+                        const increment = firstVal.length ? 1 : 0;
+                        const secondStart = firstEnd + increment;
                         const secondEnd = secondStart + secondVal.length;
                         Object.assign(arg, e.arg || {}, nextE.arg || {});
                         if (!column && e.type === INNER_OPERATORS.ARGUMENT) {
