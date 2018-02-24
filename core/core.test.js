@@ -9,7 +9,7 @@ test('test empty parser error', () => {
     let result = null;
     try {
         result = generator.datasetFromString("");
-    } catch (e) { error = e; }
+    } catch (e) { error = JSON.stringify(e, null, 2); }
     expect(error).toMatchSnapshot();
     expect(result).toBeNull();
 });
@@ -20,7 +20,7 @@ test('test action without sentences error', () => {
     const badInput = '%[asdf]\n';
     try {
         result = generator.datasetFromString(badInput);
-    } catch (e) { error = e; }
+    } catch (e) { error = JSON.stringify(e, null, 2); }
     expect(error).toMatchSnapshot();
     expect(result).toBeNull();
 });
@@ -31,7 +31,7 @@ test('test no actions error', () => {
     const badInput = '~[asdf]\n    test\n';
     try {
         result = generator.datasetFromString(badInput);
-    } catch (e) { error = e; }
+    } catch (e) { error = e }
     expect(error).toMatchSnapshot();
     expect(result).toBeNull();
 });
@@ -42,7 +42,7 @@ test('test action without correct identation error', () => {
     const badInput = '%[asdf]\n    test\n     badIdentation';
     try {
         result = generator.datasetFromString(badInput);
-    } catch (e) { error = e; }
+    } catch (e) { error = JSON.stringify(e, null, 2); }
     expect(error).toMatchSnapshot();
     expect(result).toBeNull();
 });
@@ -53,7 +53,7 @@ test('test action referencing undefined argument', () => {
     const badInput = '%[asdf]\n    test @[arg]\n';
     try {
         result = generator.datasetFromString(badInput);
-    } catch (e) { error = e; }
+    } catch (e) { error = e }
     expect(error).toMatchSnapshot();
     expect(result).toBeNull();
 });
@@ -64,7 +64,7 @@ test('test action referencing undefined alias', () => {
     const badInput = '%[asdf]\n    test ~[alias]\n';
     try {
         result = generator.datasetFromString(badInput);
-    } catch (e) { error = e; }
+    } catch (e) { error = e }
     expect(error).toMatchSnapshot();
     expect(result).toBeNull();
 });
@@ -75,7 +75,7 @@ test('test action referencing action works as text', () => {
     const input = '%[asdf]\n    test %[arg]\n';
     try {
         result = generator.datasetFromString(input);
-    } catch (e) { error = e; }
+    } catch (e) { error = JSON.stringify(e, null, 2); }
     expect(error).toBeNull();
     expect(result).toMatchSnapshot();
 });
@@ -86,7 +86,7 @@ test('test action defiend after alias', () => {
     const input = '~[asdf]\n    test\n\n%[arg]\n    asdf';
     try {
         result = generator.datasetFromString(input);
-    } catch (e) { error = e; }
+    } catch (e) { error = JSON.stringify(e, null, 2); }
     expect(error).toBeNull();
     expect(result).toMatchSnapshot();
 });
@@ -108,7 +108,7 @@ test('test action with two arguments', () => {
 `;
     try {
         result = generator.datasetFromString(input);
-    } catch (e) { error = e; }
+    } catch (e) { error = JSON.stringify(e, null, 2); }
     expect(error).toBeNull();
     expect(result).toMatchSnapshot();
 });
@@ -126,7 +126,7 @@ test('test readme example', () => {
 `;
     try {
         result = generator.datasetFromString(input);
-    } catch (e) { error = e; }
+    } catch (e) { error = JSON.stringify(e, null, 2); }
     expect(error).toBeNull();
     expect(result).toMatchSnapshot();
 });

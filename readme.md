@@ -8,11 +8,12 @@ Slot filling chatbots are a type of chatbots that link short text sentences to a
 
 Recommended videos to watch:
 
-    - [Slot-Filling in Conversations with Deep Learning](https://www.youtube.com/watch?v=Z1C1owUV0sI)
-    - [Open-source language understanding for bots by RASA author](https://www.youtube.com/watch?v=HIWqGc7AvKI)
+[Slot-Filling in Conversations with Deep Learning](https://www.youtube.com/watch?v=Z1C1owUV0sI)
 
-The general idea is that given a sentence, we link an (action/intent) to it and
-link some of the sentece words to arguments or entities that are useful for the action. e.g.:
+[Open-source language understanding for bots by RASA author](https://www.youtube.com/watch?v=HIWqGc7AvKI)
+
+Given a sentence, we link an (action/intent) to it and
+map some of the sentece words to arguments or entities that are useful for the action. e.g.:
 
 ```
 Sentence -> Hey Bot turn the lights off
@@ -24,7 +25,7 @@ Parsed Intent -> {
 }
 ```
 
-RASA_nlu is a great tool for training an intent and entity extrantion models in a breeze. Chatito gives first citizen support for generating RASA_NLU training datasets.
+RASA_nlu is a tool for training intent and entity extraction models in a breeze. Chatito generates training datasets compatible with the RASA format.
 
 Test it online at [https://rodrigopivi.github.io/Chatito/](https://rodrigopivi.github.io/Chatito/)
 
@@ -196,7 +197,7 @@ A word or list of words that are equivalent. e.g.:
     ny
     new york city
     ny city
-    
+
 ~[sanFrancisco]
     san francisco
     san francisco city

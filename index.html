@@ -108,8 +108,14 @@
             const genDataset = () => {
                 const val = document.getElementById("chatitoDSL").value;
                 let d = "";
-                try { d = chatito.datasetFromString(val); } catch (e) { d = e.message; }
-                document.getElementById("chatitoDSLResult").value = JSON.stringify(d, null, 2);
+                try {
+                    d = JSON.stringify(chatito.datasetFromString(val), null, 2);
+                } catch (e) {
+                    // IF its a js error, we just show it as string,
+                    // if its a pegsj error, show the full error payload
+                    d = e.constructor == Error ? e.toString() : `ERROR: \n\n ${JSON.stringify(e, null, 2)}`;
+                }
+                document.getElementById("chatitoDSLResult").value = d;
             };
             document.getElementById("chatitoDSL").value = currentValue.value;
             genDataset();

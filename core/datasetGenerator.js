@@ -74,7 +74,6 @@ const datasetFromAST = ast => {
         dataset = dataset.concat(variationsMatrix);
     });
     dataset = flatten(dataset);
-    debugger;
     return dataset;
 };
 
