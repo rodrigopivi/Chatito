@@ -9,7 +9,7 @@ exports[`test dataset generation 1`] = `
       {
         \\"start\\": 8,
         \\"end\\": 16,
-        \\"value\\": \\"turn off\\",
+        \\"value\\": \\"off\\",
         \\"entity\\": \\"switch\\"
       },
       {
@@ -27,7 +27,7 @@ exports[`test dataset generation 1`] = `
       {
         \\"start\\": 8,
         \\"end\\": 16,
-        \\"value\\": \\"turn off\\",
+        \\"value\\": \\"off\\",
         \\"entity\\": \\"switch\\"
       },
       {
@@ -45,7 +45,7 @@ exports[`test dataset generation 1`] = `
       {
         \\"start\\": 8,
         \\"end\\": 18,
-        \\"value\\": \\"deactivate\\",
+        \\"value\\": \\"off\\",
         \\"entity\\": \\"switch\\"
       },
       {
@@ -63,7 +63,7 @@ exports[`test dataset generation 1`] = `
       {
         \\"start\\": 8,
         \\"end\\": 18,
-        \\"value\\": \\"deactivate\\",
+        \\"value\\": \\"off\\",
         \\"entity\\": \\"switch\\"
       },
       {
@@ -81,7 +81,7 @@ exports[`test dataset generation 1`] = `
       {
         \\"start\\": 8,
         \\"end\\": 15,
-        \\"value\\": \\"turn on\\",
+        \\"value\\": \\"on\\",
         \\"entity\\": \\"switch\\"
       },
       {
@@ -99,7 +99,7 @@ exports[`test dataset generation 1`] = `
       {
         \\"start\\": 8,
         \\"end\\": 15,
-        \\"value\\": \\"turn on\\",
+        \\"value\\": \\"on\\",
         \\"entity\\": \\"switch\\"
       },
       {
@@ -117,7 +117,7 @@ exports[`test dataset generation 1`] = `
       {
         \\"start\\": 8,
         \\"end\\": 16,
-        \\"value\\": \\"activate\\",
+        \\"value\\": \\"on\\",
         \\"entity\\": \\"switch\\"
       },
       {
@@ -135,7 +135,7 @@ exports[`test dataset generation 1`] = `
       {
         \\"start\\": 8,
         \\"end\\": 16,
-        \\"value\\": \\"activate\\",
+        \\"value\\": \\"on\\",
         \\"entity\\": \\"switch\\"
       },
       {

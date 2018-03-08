@@ -36,45 +36,83 @@ Test it online at [https://rodrigopivi.github.io/Chatito/](https://rodrigopivi.g
 - `npx chatito trainClimateBot.chatito`
 - The training set should be available at `trainClimateBot.json`
 
-The json file contains all the possible combination sentences. Each traning example is an object that contains sentence, action and arguments. E.g.:
+The json file contains all the possible combination sentences. Each traning example is an object that contains sentence, action and arguments.
 
-Given this DSL definition:
+You can also use it programmatically:
+```
+const chatito = require("chatito");
+const dataset = chatito.datasetFromString(dslDefinitionString);
+```
+
+A simple example si that given this DSL definition:
 ```
 %[lightChange]
-    Hey Bot turn the lights @[switch]
+    lights @[switch]
 
 @[switch]
-    off
+    ~[on]
+    ~[off]
+
+~[on]
     on
+    active
+
+~[off]
+    off
+    inactive
 ```
 
 It will generate this dataset:
 ```
 [
-    {
-        "entities": [
-            {
-                "end": 27,
-                "entity": "switch",
-                "start": 24,
-                "value": "off",
-            },
-        ],
-        "intent": "lightChange",
-        "text": "Hey Bot turn the lights off",
+  {
+    "text": "lights on",
+    "intent": "lightChange",
+    "entities": [
+      {
+        "start": 7,
+        "end": 9,
+        "value": "on",
+        "entity": "switch"
+      }
+    ]
   },
   {
-    "entities": [
-        {
-            "end": 26,
-            "entity": "switch",
-            "start": 24,
-            "value": "on",
-        },
-    ],
+    "text": "lights active",
     "intent": "lightChange",
-    "text": "Hey Bot turn the lights on",
+    "entities": [
+      {
+        "start": 7,
+        "end": 13,
+        "value": "on",
+        "entity": "switch"
+      }
+    ]
   },
+  {
+    "text": "lights off",
+    "intent": "lightChange",
+    "entities": [
+      {
+        "start": 7,
+        "end": 10,
+        "value": "off",
+        "entity": "switch"
+      }
+    ]
+  },
+  {
+    "text": "lights inactive",
+    "intent": "lightChange",
+    "entities": [
+      {
+        "start": 7,
+        "end": 15,
+        "value": "off",
+        "entity": "switch"
+      }
+    ]
+  }
 ]
 ```
 
@@ -114,6 +152,9 @@ Then, everytime we receive a sentence that links to turnOnLights action. We can 
 
 Encapsulates a set of keywords as possible values for an input variable.
 Argument definitions can only include alias operators or words.
+
+Important note: When an argument only defines an alias, like in this example @city > ~[newYork],
+the argument value variations will map to the alias id.  (e.g.: all new york variations inside city, will return newYork as value).
 
 ```
 %[timeAtCity]

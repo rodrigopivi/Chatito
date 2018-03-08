@@ -1,8 +1,85 @@
 const fs = require('fs');
 const path = require('path');
 const generator = require('./datasetGenerator');
+const chatito = require('./chatito');
 
 const getExampleFile = filename => path.resolve(__dirname, filename);
+
+test('test pegjs parser output', () => {
+    let error = null;
+    let result = null;
+    const str = `
+%[lightChange]
+    lights @[switch]
+
+@[switch]
+    ~[on]
+    ~[off]
+
+~[on]
+    on
+    active
+    activated
+    iluminated
+
+~[off]
+    off
+    inactive
+    dark
+`;
+    try {
+        result = chatito.parse(str);
+    } catch (e) { error = e }
+    expect(error).toBeNull();
+    expect(JSON.stringify(result, null, 2)).toMatchSnapshot();
+});
+
+test('test argument that defines only one alias inside each line', () => {
+    let error = null;
+    let result = null;
+    const str = `
+%[lightChange]
+    lights @[switch]
+
+@[switch]
+    ~[on]
+    ~[off]
+
+~[on]
+    on
+    active
+
+~[off]
+    off
+    inactive
+`;
+    try {
+        result = generator.datasetFromString(str);
+    } catch (e) { error = e }
+    expect(error).toBeNull();
+    expect(JSON.stringify(result, null, 2)).toMatchSnapshot();
+});
+
+test('test switch off example for argument with one value', () => {
+    let error = null;
+    let result = null;
+    const str = `
+%[lightChange]
+    Hey Bot @[switch] the lights
+
+@[switch]
+    ~[off]
+
+~[off]
+    turn off
+    deactivate
+`;
+    try {
+        result = generator.datasetFromString(str);
+    } catch (e) { error = e }
+    expect(error).toBeNull();
+    expect(JSON.stringify(result, null, 2)).toMatchSnapshot();
+});
 
 test('test empty parser error', () => {
     let error = null;

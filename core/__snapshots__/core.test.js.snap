@@ -196,6 +196,59 @@ exports[`test action without sentences error 1`] = `
 }"
 `;
 
+exports[`test argument that defines only one alias inside each line 1`] = `
+"[
+  {
+    \\"text\\": \\"lights on\\",
+    \\"intent\\": \\"lightChange\\",
+    \\"entities\\": [
+      {
+        \\"start\\": 7,
+        \\"end\\": 9,
+        \\"value\\": \\"on\\",
+        \\"entity\\": \\"switch\\"
+      }
+    ]
+  },
+  {
+    \\"text\\": \\"lights active\\",
+    \\"intent\\": \\"lightChange\\",
+    \\"entities\\": [
+      {
+        \\"start\\": 7,
+        \\"end\\": 13,
+        \\"value\\": \\"on\\",
+        \\"entity\\": \\"switch\\"
+      }
+    ]
+  },
+  {
+    \\"text\\": \\"lights off\\",
+    \\"intent\\": \\"lightChange\\",
+    \\"entities\\": [
+      {
+        \\"start\\": 7,
+        \\"end\\": 10,
+        \\"value\\": \\"off\\",
+        \\"entity\\": \\"switch\\"
+      }
+    ]
+  },
+  {
+    \\"text\\": \\"lights inactive\\",
+    \\"intent\\": \\"lightChange\\",
+    \\"entities\\": [
+      {
+        \\"start\\": 7,
+        \\"end\\": 15,
+        \\"value\\": \\"off\\",
+        \\"entity\\": \\"switch\\"
+      }
+    ]
+  }
+]"
+`;
+
 exports[`test empty parser error 1`] = `
 "{
   \\"message\\": \\"Expected \\\\\\"%\\\\\\", \\\\\\"@\\\\\\", \\\\\\"\\\\\\\\n\\\\\\", or \\\\\\"~\\\\\\" but end of input found.\\",
@@ -250,6 +303,114 @@ exports[`test empty parser error 1`] = `
 
 exports[`test no actions error 1`] = `[Error: No actions found]`;
 
+exports[`test pegjs parser output 1`] = `
+"[
+  {
+    \\"type\\": \\"ActionDefinition\\",
+    \\"key\\": \\"lightChange\\",
+    \\"inner\\": [
+      [
+        {
+          \\"id\\": \\"lights\\",
+          \\"type\\": \\"Text\\"
+        },
+        {
+          \\"id\\": \\"switch\\",
+          \\"type\\": \\"Argument\\",
+          \\"opt\\": false,
+          \\"location\\": {
+            \\"start\\": {
+              \\"offset\\": 27,
+              \\"line\\": 3,
+              \\"column\\": 12
+            },
+            \\"end\\": {
+              \\"offset\\": 36,
+              \\"line\\": 3,
+              \\"column\\": 21
+            }
+          }
+        }
+      ]
+    ]
+  },
+  {
+    \\"type\\": \\"ArgumentDefinition\\",
+    \\"key\\": \\"switch\\",
+    \\"inner\\": [
+      [
+        {
+          \\"id\\": \\"on\\",
+          \\"type\\": \\"Alias\\",
+          \\"opt\\": false
+        }
+      ],
+      [
+        {
+          \\"id\\": \\"off\\",
+          \\"type\\": \\"Alias\\",
+          \\"opt\\": false
+        }
+      ]
+    ]
+  },
+  {
+    \\"type\\": \\"AliasDefinition\\",
+    \\"key\\": \\"on\\",
+    \\"inner\\": [
+      [
+        {
+          \\"id\\": \\"on\\",
+          \\"type\\": \\"Text\\"
+        }
+      ],
+      [
+        {
+          \\"id\\": \\"active\\",
+          \\"type\\": \\"Text\\"
+        }
+      ],
+      [
+        {
+          \\"id\\": \\"activated\\",
+          \\"type\\": \\"Text\\"
+        }
+      ],
+      [
+        {
+          \\"id\\": \\"iluminated\\",
+          \\"type\\": \\"Text\\"
+        }
+      ]
+    ]
+  },
+  {
+    \\"type\\": \\"AliasDefinition\\",
+    \\"key\\": \\"off\\",
+    \\"inner\\": [
+      [
+        {
+          \\"id\\": \\"off\\",
+          \\"type\\": \\"Text\\"
+        }
+      ],
+      [
+        {
+          \\"id\\": \\"inactive\\",
+          \\"type\\": \\"Text\\"
+        }
+      ],
+      [
+        {
+          \\"id\\": \\"dark\\",
+          \\"type\\": \\"Text\\"
+        }
+      ]
+    ]
+  }
+]"
+`;
+
 exports[`test readme example 1`] = `
 Array [
   Object {
@@ -277,4 +438,33 @@ Array [
     "text": "Hey Bot turn the lights on",
   },
 ]
+`;
+
+exports[`test switch off example for argument with one value 1`] = `
+"[
+  {
+    \\"text\\": \\"Hey Bot turn off the lights\\",
+    \\"intent\\": \\"lightChange\\",
+    \\"entities\\": [
+      {
+        \\"start\\": 8,
+        \\"end\\": 16,
+        \\"value\\": \\"off\\",
+        \\"entity\\": \\"switch\\"
+      }
+    ]
+  },
+  {
+    \\"text\\": \\"Hey Bot deactivate the lights\\",
+    \\"intent\\": \\"lightChange\\",
+    \\"entities\\": [
+      {
+        \\"start\\": 8,
+        \\"end\\": 18,
+        \\"value\\": \\"off\\",
+        \\"entity\\": \\"switch\\"
+      }
+    ]
+  }
+]"
 `;

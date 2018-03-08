@@ -1,10 +1,11 @@
 {
   "name": "chatito",
-  "version": "1.0.7",
+  "version": "1.1.0",
   "description": "Generate training datasets for slot filling chatbots in a breeze using a simple DSL",
   "bin": {
     "chatito": "./bin/chatito.js"
   },
+  "main" : "./core/datasetGenerator.js",
   "scripts": {
     "test": "jest",
     "test:kill": "lsof -n -i4TCP:5858 | sed '1 d' | awk '{print $2}' | xargs kill -9",

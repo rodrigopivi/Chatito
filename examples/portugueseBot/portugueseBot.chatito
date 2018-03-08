@@ -1,28 +1,5 @@
 %[findBoletoDASByMes]
-    ~[greet]? ~[botName]? ~[please]? ~[find]? @[boleto]? @[mes]
-
-~[greet]
-    oi
-    ola
-    opa
-    bom dia
-
-~[botName]
-    mago
-    Mago
-
-~[please]
-    por favor
-    poderia
-    pode
-    gostaria
-    quero
-
-~[find]
-    gerar
-    emitir
-    imprimir
-    pagar
+    @[boleto]? @[mes]
 
 @[boleto]
     boleto

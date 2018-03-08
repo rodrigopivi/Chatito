@@ -67,6 +67,7 @@
         .content__middlecolumn { padding: 20px; }
         .content textArea { display: flex; flex: 1; }
         #chatitoGenerate { background-color: #446644; color: #ffffff; padding: 10px 5px; }
+        #chatitoGenerate.disabled { background-color: #999999;; color: #000000; }
     </style>
 </head>
 
@@ -84,16 +85,29 @@
                     <textarea id="chatitoDSL"></textarea>
             </div>
             <div class="content__middlecolumn">
-                <button id="chatitoGenerate">Generate dataset =></button>
+                <input type="button" id="chatitoGenerate" value="Generate dataset =>" />
             </div>
             <div class="content__column">
-                <textarea id="chatitoDSLResult" disabled="true"></textarea>
+                <textarea id="chatitoDSLResult"></textarea>
             </div>
         </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/0.20.19/system.src.js"></script>
     <script>
+        var loadingButtonInitialValue = document.getElementById("chatitoGenerate").value;
+        function changeLoadingButton(isLoading) {
+            const $generateButton = document.getElementById("chatitoGenerate");
+            if (isLoading) {
+                $generateButton.className = "disabled";
+                $generateButton.setAttribute("value", "Generating dataset...");
+                $generateButton.setAttribute("disabled", true);
+            } else {
+                $generateButton.className = "";
+                $generateButton.setAttribute("value", loadingButtonInitialValue);
+                $generateButton.removeAttribute("disabled");
+            }
+        }
         System.config({
             transpiler: 'Babel',
             babelOptions: { presets: ['es2015'] },
@@ -106,20 +120,25 @@
         SystemJS.import('Chatito').then(function (chatito) {
             const currentValue = examples[0];
             const genDataset = () => {
+                document.getElementById("chatitoDSLResult").value = "";
                 const val = document.getElementById("chatitoDSL").value;
                 let d = "";
-                try {
-                    d = JSON.stringify(chatito.datasetFromString(val), null, 2);
-                } catch (e) {
-                    // IF its a js error, we just show it as string,
-                    // if its a pegsj error, show the full error payload
-                    d = e.constructor == Error ? e.toString() : `ERROR: \n\n ${JSON.stringify(e, null, 2)}`;
-                }
-                document.getElementById("chatitoDSLResult").value = d;
+                changeLoadingButton(true);
+                setTimeout(() => {// make async
+                    try {
+                        d = JSON.stringify(chatito.datasetFromString(val), null, 2);
+                    } catch (e) {
+                        // IF its a js error, we just show it as string,
+                        // if its a pegsj error, show the full error payload
+                        d = e.constructor == Error ? e.toString() : `ERROR: \n\n ${JSON.stringify(e, null, 2)}`;
+                    }
+                    document.getElementById("chatitoDSLResult").value = d;
+                    changeLoadingButton(false);
+                }, 100);
             };
             document.getElementById("chatitoDSL").value = currentValue.value;
-            genDataset();
             document.getElementById("chatitoGenerate").addEventListener("click", genDataset);
+            genDataset();
         });
     </script>
     <script>
@@ -127,53 +146,20 @@
         examples.push({
             name: "Lights manager", value: `
 %[lightChange]
-    Hey Bot turn the lights @[switch]
+    lights @[switch]
 
 @[switch]
+    ~[on]
+    ~[off]
+
+~[on]
+    on
+    active
+
+~[off]
     off
-    on`
+    inactive`
         });
-        examples.push({
-            name: "Find events at city in spanish", value: `
-%[buscarEventosEnCiudad]
-    ~[holaPorfavorBusca] ~[eventos]? ~[en] @[ciudad]
-
-@[ciudad]
-    Arequipa
-    Medellin
-    Buenos Aires
-
-~[hola]
-    hola
-    hey
-
-~[porfavor]
-    porfavor
-    por favor
-    porfa
-
-~[buscar]
-    ~[quiero] buscar
-    busca
-    encuentra
-    lista
-
-~[quiero]
-    quiero
-    necesito
-
-~[holaPorfavorBusca]
-    ~[hola]? ~[porfavor]? ~[buscar]?
-
-~[eventos]
-    eventos
-    que hay
-    cosas que hacer
-
-~[en]
-    en
-    por
-`});
     </script>
 </body>
 
