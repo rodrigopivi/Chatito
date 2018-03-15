@@ -70,7 +70,7 @@ const datasetFromAST = ast => {
         const sentences = operatorDefinitions.actions[actionKey];
         const variationsMatrix = sentences.map(s => {
             const variationsFromSentence = getVariationsFromSentence(
-                s, operatorDefinitions, actionKey, null,
+                s, operatorDefinitions, actionKey, null
             );
             return variationsFromSentence.map(rasaDatasetAdapter);
         });
@@ -89,12 +89,12 @@ function getVariationsFromSentence(s, defs, actionKey, parentEntity) {
         if (entity instanceof Array) {
             variations = cartesian(
                 entity,
-                getVariationsFromEntity(nextEntity, defs, parentEntity, sentenceOfOneWord),
+                getVariationsFromEntity(nextEntity, defs, parentEntity, sentenceOfOneWord)
             );
         } else {
             variations = cartesian(
                 getVariationsFromEntity(entity, defs, parentEntity, sentenceOfOneWord),
-                getVariationsFromEntity(nextEntity, defs, parentEntity, sentenceOfOneWord),
+                getVariationsFromEntity(nextEntity, defs, parentEntity, sentenceOfOneWord)
             );
         }
         const ret = variations.map(
@@ -138,7 +138,7 @@ function getVariationsFromSentence(s, defs, actionKey, parentEntity) {
                 }
                 if (actionKey) { o.action = actionKey; }
                 return o;
-            },
+            }
         );
         return ret;
     });
