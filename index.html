@@ -182,9 +182,9 @@
 <script>
 System.config({
     transpiler: 'Babel', babelOptions: { presets: ['es2015'] },
-    packages: { '': { defaultExtension: 'js' }, },
+    packages: { '': { defaultExtension: 'js' }, 'https://rawgit.com': { defaultExtension: 'js' } },
     map: {
-        Chatito: '/core/datasetGenerator.js',
+        Chatito: 'https://rawgit.com/rodrigopivi/Chatito/master/core/datasetGenerator.js',
         Babel: 'https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js',
     }
 });
