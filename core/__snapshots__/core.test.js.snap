@@ -308,6 +308,18 @@ exports[`test pegjs parser output 1`] = `
   {
     \\"type\\": \\"ActionDefinition\\",
     \\"key\\": \\"lightChange\\",
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 1,
+        \\"line\\": 2,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 15,
+        \\"line\\": 2,
+        \\"column\\": 15
+      }
+    },
     \\"inner\\": [
       [
         {
@@ -337,6 +349,18 @@ exports[`test pegjs parser output 1`] = `
   {
     \\"type\\": \\"ArgumentDefinition\\",
     \\"key\\": \\"switch\\",
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 38,
+        \\"line\\": 5,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 47,
+        \\"line\\": 5,
+        \\"column\\": 10
+      }
+    },
     \\"inner\\": [
       [
         {

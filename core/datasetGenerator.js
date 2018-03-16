@@ -6,9 +6,6 @@ const combineCartesian = (a, b) => [].concat(...a.map(d => b.map(e => [].concat(
 const cartesian = (a, b, ...c) => (b ? cartesian(combineCartesian(a, b), ...c) : a);
 const flatten = list => list.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []);
 
-const uniqEntities = a => 
-    a.sort().filter((item, pos, ary) => !pos || item.id != ary[pos - 1].id);
-
 const OPERATOR_DEFS = {
     ACTION_DEF_KEY: "ActionDefinition",
     ARGUMENT_DEF_KEY: "ArgumentDefinition",
@@ -56,10 +53,13 @@ const datasetFromAST = ast => {
     if (!ast || !ast.length) { return; }
     ast.forEach(od => {
         if (od.type === OPERATOR_DEFS.ACTION_DEF_KEY) {
+            if (operatorDefinitions.actions[od.key]) { throw new Error(`Duplicate definition for ${od.key}`); }
             operatorDefinitions.actions[od.key] = od.inner;
         } else if (od.type === OPERATOR_DEFS.ARGUMENT_DEF_KEY) {
+            if (operatorDefinitions.args[od.key]) { throw new Error(`Duplicate argument for ${od.key}`); }
             operatorDefinitions.args[od.key] = od.inner;
         } else if (od.type === OPERATOR_DEFS.ALIAS_DEF_KEY) {
+            if (operatorDefinitions.aliases[od.key]) { throw new Error(`Duplicate alias for ${od.key}`); }
             operatorDefinitions.aliases[od.key] = od.inner;
         }
     });
@@ -97,7 +97,7 @@ function getVariationsFromSentence(s, defs, actionKey, parentEntity) {
                 getVariationsFromEntity(nextEntity, defs, parentEntity, sentenceOfOneWord),
             );
         }
-        const ret = variations.map(
+        return variations.map(
             sentenceVariation => {
                 let arg = {};
                 let column = 0;
@@ -140,7 +140,6 @@ function getVariationsFromSentence(s, defs, actionKey, parentEntity) {
                 return o;
             },
         );
-        return ret;
     });
 }
 

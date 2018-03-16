@@ -23,7 +23,7 @@ ActionInnerStatements =  ActionInnerStatement+
 ActionInnerStatement =  Samedent s:ActionValidInner EOS { return s; }
 ActionDefinition = EOL? o:OperatorAction EOL
     Indent s:ActionInnerStatements Dedent
-    { return { type: o.type + "Definition", key: o.id, inner: s } }
+    { return { type: o.type + "Definition", key: o.id, location: o.location, inner: s } }
 
 // Argument
 OperatorArgumentStart = "@" { return "Argument" }
@@ -34,7 +34,7 @@ OptionalArgument = o:OperatorArgument opt:OperatorOpt? SPACE?
     { return { id: o.id, type: o.type, opt: !!opt, location: o.location } }
 ArgumentDefinition = EOL? o:OperatorArgument EOL
     Indent s:BasicInnerStatements Dedent
-    { return { type: o.type + "Definition", key: o.id, inner: s } }
+    { return { type: o.type + "Definition", key: o.id, location: o.location, inner: s } }
 
 // Alias
 OperatorAliasStart = "~" { return "Alias" }
@@ -43,7 +43,7 @@ OptionalAlias = o:OperatorAlias opt:OperatorOpt? SPACE?
     { return { id: o.id, type: o.type, opt: !!opt } }
 AliasDefinition = EOL? o:OperatorAlias EOL
     Indent s:BasicInnerStatements Dedent
-    { return { type: o.type + "Definition", key: o.id, inner: s } }
+    { return { type: o.type + "Definition", key: o.id, location: o.location, inner: s } }
 
 // ============= Identation =============
 Samedent "correct indentation" = s:" "* &{ return s.length === level * STEP; }

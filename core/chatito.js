@@ -156,7 +156,7 @@ function peg$parse(input, options) {
       peg$c12 = function(type, id) {
           return { id: id, type: type, location: location() }
       },
-      peg$c13 = function(o, s) { return { type: o.type + "Definition", key: o.id, inner: s } },
+      peg$c13 = function(o, s) { return { type: o.type + "Definition", key: o.id, location: o.location, inner: s } },
       peg$c14 = "@",
       peg$c15 = peg$literalExpectation("@", false),
       peg$c16 = function() { return "Argument" },

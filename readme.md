@@ -1,8 +1,15 @@
-# Chatito
+# [Chatito](https://rodrigopivi.github.io/Chatito/)
 
-Generate training datasets for chatbots in a breeze!
+Generate datasets for natural language understanding (NLU) chatbots in a breeze using a simple DSL.
 
-Chatito is a natural language generation (NLG) tool and a domain specific language (DSL) for creating chatbot training datasets, with first class suport for [RasaNLU](https://github.com/RasaHQ/rasa_nlu).
+Chatito is a blazing fast natural language generation (NLG) tool and a domain specific language (DSL) that helps you code dataset generators. It takes some ideas from probabilistic programming languages (PPS) to help you express your conversational domain knowledge through code, as described in [Automatic Inference, Learning and Design using Probabilistic Programming](https://github.com/twgr/thesis/blob/master/main.pdf).
+
+Test it online at [https://rodrigopivi.github.io/Chatito/](https://rodrigopivi.github.io/Chatito/)
+
+We provide first class suport for the [RasaNLU](https://github.com/RasaHQ/rasa_nlu) json dataset format.
+RasaNLU is a framework for training intent and entity extraction models in a breeze. Chatito generates training datasets compatible with the RasaNLU format.
+
+### Overview
 
 Slot filling chatbots are a type of chatbots that link short text sentences to actions and extract the action arguments from the sentence.
 
@@ -12,31 +19,22 @@ Recommended videos to watch:
 
 [Open-source language understanding for bots by RASA author](https://www.youtube.com/watch?v=HIWqGc7AvKI)
 
-Given a sentence, we link an (action/intent) to it and
-map some of the sentece words to arguments or entities that are useful for the action. e.g.:
+Given a sentence, we link an (action/intent) to it and map some of the sentece words to arguments/slots that are meaningful for the action. e.g.:
 
 ```
 Sentence -> Hey Bot turn the lights off
-
-Parsed Intent -> {
-    id: "Hey Bot turn the lights off",
-    action: "lightChange",
-    arg: { switch: "off" }
-}
+Intent -> "lightChange"
+Slots: { switch: "off"  }
 ```
-
-RASA_nlu is a tool for training intent and entity extraction models in a breeze. Chatito generates training datasets compatible with the RASA format.
-
-Test it online at [https://rodrigopivi.github.io/Chatito/](https://rodrigopivi.github.io/Chatito/)
 
 ### Getting started
 
 - `npm i chatito --save`
 - create a definition file. e.g.: `trainClimateBot.chatito` with your DSL definitions.
 - `npx chatito trainClimateBot.chatito`
-- The training set should be available at `trainClimateBot.json`
+- The full dataset set should be available at `trainClimateBot.json`
 
-The json file contains all the possible combination sentences. Each traning example is an object that contains sentence, action and arguments.
+NOTE: The json file contains all the possible combination sentences. Each traning example is an object that contains sentence, action and arguments. You may want to shuffle and split the dataset for training/testing/validation, it's not a good practice to train the RasaNLU model with the entire dataset corpus.
 
 You can also use it programmatically:
 ```
@@ -118,9 +116,9 @@ It will generate this dataset:
 
 ## Chatito DSL
 
-A Chatito domain specific language file should contain the '.chatito' extension, and is just a text file the operators definitions.
+A Chatito domain specific language file should contain the '.chatito' extension, and is just a text file with the grammar definitions.
 
-Important Note: The DSL uses 4 space identation to define the code block scope nesting.
+Important Note: The DSL enfroces the use of 4 space identation for nested sentences.
 
 ### Operators
 
@@ -258,4 +256,8 @@ A word or list of words that are equivalent. e.g.:
 
 - [nalgene](https://github.com/spro/nalgene) - Similar tool.
 - [PEG.js](https://pegjs.org) - Simple and powerfull parser generator.
-- [RASA_NLU](https://github.com/RasaHQ/rasa_nlu) - Great NLU tool for intent and entity model training.
+- [RasaNLU](https://github.com/RasaHQ/rasa_nlu) - Framework for training NLU models (using spacy.io as backend).
+
+# Autor
+
+Rodrigo Pimentel

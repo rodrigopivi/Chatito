@@ -1,23 +1,25 @@
 {
   "name": "chatito",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Generate training datasets for slot filling chatbots in a breeze using a simple DSL",
   "bin": {
     "chatito": "./bin/chatito.js"
   },
-  "main" : "./core/datasetGenerator.js",
+  "main": "./core/datasetGenerator.js",
   "scripts": {
     "test": "jest",
     "test:kill": "lsof -n -i4TCP:5858 | sed '1 d' | awk '{print $2}' | xargs kill -9",
     "test:debug": "npm run test:kill && NODE_ENV=TEST node --inspect-brk node_modules/jest/bin/jest.js --no-cache --runInBand --forceExit --env jest-environment-node-debug",
-    "parser:build": "pegjs core/chatito.pegjs"
+    "parser:build": "pegjs core/chatito.pegjs",
+    "static": "http-server ."
   },
-  "author": "",
+  "author": "Rodrigo Pimentel",
   "license": "ISC",
   "dependencies": {
     "minimist": "^1.2.0"
   },
   "devDependencies": {
+    "http-server": "^0.11.1",
     "jest": "^21.2.1",
     "jest-environment-node-debug": "^2.0.0",
     "pegjs": "^0.10.0"
