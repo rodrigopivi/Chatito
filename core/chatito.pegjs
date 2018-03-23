@@ -56,6 +56,8 @@ AnyText = v:([^ \n]+) { return v.join("") }
 OptionalKeywordLiteral = id:AnyText SPACE?
     { return { id: id, type: "Text" }}
 EOS = EOL / EOF
-EOL = "\n"+
+EOL = (EOLNonWindows/EOLWindows)+
+EOLNonWindows = "\n"
+EOLWindows = "\r\n"
 SPACE = " "+
 EOF = !.

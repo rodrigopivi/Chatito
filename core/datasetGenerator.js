@@ -1,4 +1,4 @@
-const chatito = require('./chatito');
+const chatito = require("./chatito");
 
 // Get the cartesian product of N arrays (taken from):
 // https://stackoverflow.com/questions/12303989/cartesian-product-of-multiple-arrays-in-javascript
@@ -35,13 +35,13 @@ const rasaDatasetAdapter = (item) => {
             end: item.arg[k].end,
             value: item.arg[k].value || item.id.slice(item.arg[k].start, item.arg[k].end),
             entity: k,
-        }))
+        }));
     }
     return {
         text: item.id,
         intent: item.action,
         entities,
-    }
+    };
 };
 
 const datasetFromAST = ast => {
@@ -50,7 +50,7 @@ const datasetFromAST = ast => {
         args: {},
         aliases: {},
     };
-    if (!ast || !ast.length) { return; }
+    if (!ast || !ast.length) { return; }
     ast.forEach(od => {
         if (od.type === OPERATOR_DEFS.ACTION_DEF_KEY) {
             if (operatorDefinitions.actions[od.key]) { throw new Error(`Duplicate definition for ${od.key}`); }
@@ -70,7 +70,7 @@ const datasetFromAST = ast => {
         const sentences = operatorDefinitions.actions[actionKey];
         const variationsMatrix = sentences.map(s => {
             const variationsFromSentence = getVariationsFromSentence(
-                s, operatorDefinitions, actionKey, null,
+                s, operatorDefinitions, actionKey, null
             );
             return variationsFromSentence.map(rasaDatasetAdapter);
         });
@@ -89,12 +89,12 @@ function getVariationsFromSentence(s, defs, actionKey, parentEntity) {
         if (entity instanceof Array) {
             variations = cartesian(
                 entity,
-                getVariationsFromEntity(nextEntity, defs, parentEntity, sentenceOfOneWord),
+                getVariationsFromEntity(nextEntity, defs, parentEntity, sentenceOfOneWord)
             );
         } else {
             variations = cartesian(
                 getVariationsFromEntity(entity, defs, parentEntity, sentenceOfOneWord),
-                getVariationsFromEntity(nextEntity, defs, parentEntity, sentenceOfOneWord),
+                getVariationsFromEntity(nextEntity, defs, parentEntity, sentenceOfOneWord)
             );
         }
         return variations.map(
@@ -112,9 +112,9 @@ function getVariationsFromSentence(s, defs, actionKey, parentEntity) {
                         const increment = firstVal.length ? 1 : 0;
                         const secondStart = firstEnd + increment;
                         const secondEnd = secondStart + secondVal.length;
-                        if (e.aliasArg) { Object.assign(e.arg, e.aliasArg); }
-                        if (nextE.aliasArg) { Object.assign(nextE.arg, nextE.aliasArg); }
-                        Object.assign(arg, e.arg || {}, nextE.arg || {});
+                        if (e.aliasArg) { Object.assign(e.arg, e.aliasArg); }
+                        if (nextE.aliasArg) { Object.assign(nextE.arg, nextE.aliasArg); }
+                        Object.assign(arg, e.arg || {}, nextE.arg || {});
                         if (!column && e.type === INNER_OPERATORS.ARGUMENT) {
                             Object.keys(e.arg).map(k => {
                                 arg[k] = { start: firstStart, end: firstEnd };
@@ -138,7 +138,7 @@ function getVariationsFromSentence(s, defs, actionKey, parentEntity) {
                 }
                 if (actionKey) { o.action = actionKey; }
                 return o;
-            },
+            }
         );
     });
 }

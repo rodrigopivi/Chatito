@@ -103,11 +103,16 @@ Array [
 
 exports[`test action without correct identation error 1`] = `
 "{
-  \\"message\\": \\"Expected \\\\\\"%\\\\\\", \\\\\\"@\\\\\\", \\\\\\"\\\\\\\\n\\\\\\", \\\\\\"~\\\\\\", correct indentation, or end of input but \\\\\\" \\\\\\" found.\\",
+  \\"message\\": \\"Expected \\\\\\"%\\\\\\", \\\\\\"@\\\\\\", \\\\\\"\\\\\\\\n\\\\\\", \\\\\\"\\\\\\\\r\\\\\\\\n\\\\\\", \\\\\\"~\\\\\\", correct indentation, or end of input but \\\\\\" \\\\\\" found.\\",
   \\"expected\\": [
     {
       \\"type\\": \\"literal\\",
       \\"text\\": \\"\\\\n\\",
+      \\"ignoreCase\\": false
+    },
+    {
+      \\"type\\": \\"literal\\",
+      \\"text\\": \\"\\\\r\\\\n\\",
       \\"ignoreCase\\": false
     },
     {
@@ -117,6 +122,11 @@ exports[`test action without correct identation error 1`] = `
     {
       \\"type\\": \\"literal\\",
       \\"text\\": \\"\\\\n\\",
+      \\"ignoreCase\\": false
+    },
+    {
+      \\"type\\": \\"literal\\",
+      \\"text\\": \\"\\\\r\\\\n\\",
       \\"ignoreCase\\": false
     },
     {
@@ -131,12 +141,22 @@ exports[`test action without correct identation error 1`] = `
     },
     {
       \\"type\\": \\"literal\\",
+      \\"text\\": \\"\\\\r\\\\n\\",
+      \\"ignoreCase\\": false
+    },
+    {
+      \\"type\\": \\"literal\\",
       \\"text\\": \\"@\\",
       \\"ignoreCase\\": false
     },
     {
       \\"type\\": \\"literal\\",
       \\"text\\": \\"\\\\n\\",
+      \\"ignoreCase\\": false
+    },
+    {
+      \\"type\\": \\"literal\\",
+      \\"text\\": \\"\\\\r\\\\n\\",
       \\"ignoreCase\\": false
     },
     {
@@ -167,11 +187,16 @@ exports[`test action without correct identation error 1`] = `
 
 exports[`test action without sentences error 1`] = `
 "{
-  \\"message\\": \\"Expected \\\\\\"\\\\\\\\n\\\\\\" or correct indentation but end of input found.\\",
+  \\"message\\": \\"Expected \\\\\\"\\\\\\\\n\\\\\\", \\\\\\"\\\\\\\\r\\\\\\\\n\\\\\\", or correct indentation but end of input found.\\",
   \\"expected\\": [
     {
       \\"type\\": \\"literal\\",
       \\"text\\": \\"\\\\n\\",
+      \\"ignoreCase\\": false
+    },
+    {
+      \\"type\\": \\"literal\\",
+      \\"text\\": \\"\\\\r\\\\n\\",
       \\"ignoreCase\\": false
     },
     {
@@ -251,11 +276,16 @@ exports[`test argument that defines only one alias inside each line 1`] = `
 
 exports[`test empty parser error 1`] = `
 "{
-  \\"message\\": \\"Expected \\\\\\"%\\\\\\", \\\\\\"@\\\\\\", \\\\\\"\\\\\\\\n\\\\\\", or \\\\\\"~\\\\\\" but end of input found.\\",
+  \\"message\\": \\"Expected \\\\\\"%\\\\\\", \\\\\\"@\\\\\\", \\\\\\"\\\\\\\\n\\\\\\", \\\\\\"\\\\\\\\r\\\\\\\\n\\\\\\", or \\\\\\"~\\\\\\" but end of input found.\\",
   \\"expected\\": [
     {
       \\"type\\": \\"literal\\",
       \\"text\\": \\"\\\\n\\",
+      \\"ignoreCase\\": false
+    },
+    {
+      \\"type\\": \\"literal\\",
+      \\"text\\": \\"\\\\r\\\\n\\",
       \\"ignoreCase\\": false
     },
     {
@@ -270,12 +300,22 @@ exports[`test empty parser error 1`] = `
     },
     {
       \\"type\\": \\"literal\\",
+      \\"text\\": \\"\\\\r\\\\n\\",
+      \\"ignoreCase\\": false
+    },
+    {
+      \\"type\\": \\"literal\\",
       \\"text\\": \\"@\\",
       \\"ignoreCase\\": false
     },
     {
       \\"type\\": \\"literal\\",
       \\"text\\": \\"\\\\n\\",
+      \\"ignoreCase\\": false
+    },
+    {
+      \\"type\\": \\"literal\\",
+      \\"text\\": \\"\\\\r\\\\n\\",
       \\"ignoreCase\\": false
     },
     {

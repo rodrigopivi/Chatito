@@ -1,5 +1,7 @@
 # [Chatito](https://rodrigopivi.github.io/Chatito/)
 
+### [Online Chatito IDE](https://rodrigopivi.github.io/Chatito/)
+
 Generate datasets for natural language understanding (NLU) chatbots in a breeze using a simple DSL.
 
 Chatito is a blazing fast natural language generation (NLG) tool and a domain specific language (DSL) that helps you code dataset generators. It takes some ideas from probabilistic programming languages (PPS) to help you express your conversational domain knowledge through code, as described in [Automatic Inference, Learning and Design using Probabilistic Programming](https://github.com/twgr/thesis/blob/master/main.pdf).
@@ -258,6 +260,10 @@ A word or list of words that are equivalent. e.g.:
 - [PEG.js](https://pegjs.org) - Simple and powerfull parser generator.
 - [RasaNLU](https://github.com/RasaHQ/rasa_nlu) - Framework for training NLU models (using spacy.io as backend).
 
-# Autor
+# Starter project
+
+Checkout [Pia](https://rodrigopivi.github.io/pia_es/), a super simple (no dialog generation) starter kit based on chatito and rasa_nlu.
+
+# Author
 
 Rodrigo Pimentel

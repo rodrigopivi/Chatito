@@ -180,7 +180,9 @@ function peg$parse(input, options) {
       peg$c34 = function(id) { return { id: id, type: "Text" }},
       peg$c35 = "\n",
       peg$c36 = peg$literalExpectation("\n", false),
-      peg$c37 = peg$anyExpectation(),
+      peg$c37 = "\r\n",
+      peg$c38 = peg$literalExpectation("\r\n", false),
+      peg$c39 = peg$anyExpectation(),
 
       peg$currPos          = 0,
       peg$savedPos         = 0,
@@ -1109,26 +1111,48 @@ function peg$parse(input, options) {
     var s0, s1;
 
     s0 = [];
-    if (input.charCodeAt(peg$currPos) === 10) {
-      s1 = peg$c35;
-      peg$currPos++;
-    } else {
-      s1 = peg$FAILED;
-      if (peg$silentFails === 0) { peg$fail(peg$c36); }
+    s1 = peg$parseEOLNonWindows();
+    if (s1 === peg$FAILED) {
+      s1 = peg$parseEOLWindows();
     }
     if (s1 !== peg$FAILED) {
       while (s1 !== peg$FAILED) {
         s0.push(s1);
-        if (input.charCodeAt(peg$currPos) === 10) {
-          s1 = peg$c35;
-          peg$currPos++;
-        } else {
-          s1 = peg$FAILED;
-          if (peg$silentFails === 0) { peg$fail(peg$c36); }
+        s1 = peg$parseEOLNonWindows();
+        if (s1 === peg$FAILED) {
+          s1 = peg$parseEOLWindows();
         }
       }
     } else {
       s0 = peg$FAILED;
+    }
+
+    return s0;
+  }
+
+  function peg$parseEOLNonWindows() {
+    var s0;
+
+    if (input.charCodeAt(peg$currPos) === 10) {
+      s0 = peg$c35;
+      peg$currPos++;
+    } else {
+      s0 = peg$FAILED;
+      if (peg$silentFails === 0) { peg$fail(peg$c36); }
+    }
+
+    return s0;
+  }
+
+  function peg$parseEOLWindows() {
+    var s0;
+
+    if (input.substr(peg$currPos, 2) === peg$c37) {
+      s0 = peg$c37;
+      peg$currPos += 2;
+    } else {
+      s0 = peg$FAILED;
+      if (peg$silentFails === 0) { peg$fail(peg$c38); }
     }
 
     return s0;
@@ -1173,7 +1197,7 @@ function peg$parse(input, options) {
       peg$currPos++;
     } else {
       s1 = peg$FAILED;
-      if (peg$silentFails === 0) { peg$fail(peg$c37); }
+      if (peg$silentFails === 0) { peg$fail(peg$c39); }
     }
     peg$silentFails--;
     if (s1 === peg$FAILED) {
