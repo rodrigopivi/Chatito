@@ -1,5 +1,5 @@
 %[findBoletoDASByMes]
-    @[boleto]? @[mes]
+    @[boleto?] @[mes]
 
 @[boleto]
     boleto

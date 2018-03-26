@@ -1,100 +1,75 @@
 const chatito = require("./chatito");
-
-// Get the cartesian product of N arrays (taken from):
-// https://stackoverflow.com/questions/12303989/cartesian-product-of-multiple-arrays-in-javascript
-const combineCartesian = (a, b) => [].concat(...a.map(d => b.map(e => [].concat(d, e))));
-const cartesian = (a, b, ...c) => (b ? cartesian(combineCartesian(a, b), ...c) : a);
-const flatten = list => list.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []);
+const rasaGenerator = require("./rasaGenerator");
+const snipsGenerator = require("./snipsGenerator");
+const utils = require("./utils");
 
 const OPERATOR_DEFS = {
     ACTION_DEF_KEY: "ActionDefinition",
     ARGUMENT_DEF_KEY: "ArgumentDefinition",
     ALIAS_DEF_KEY: "AliasDefinition",
 };
+const INNER_OPERATORS = { ALIAS: "Alias", TEXT: "Text", ARGUMENT: "Argument" };
+const DATASET_ADAPTERS = { rasa: rasaGenerator.adapter, snips: snipsGenerator.adapter };
 
-const INNER_OPERATORS = {
-    ALIAS: "Alias",
-    TEXT: "Text",
-    ARGUMENT: "Argument",
-};
-
-// ======= AST ======= 
 const astFromString = str => chatito.parse(str);
 
-// ======= Dataset ======= 
-const datasetFromString = str => {
+function datasetFromString(str, datasetAdapter = "rasa", options) {
     const ast = astFromString(str);
-    return datasetFromAST(ast);
-};
+    let adapter = datasetAdapter;
+    if (typeof adapter === "string") { adapter = DATASET_ADAPTERS[datasetAdapter]; }
+    if (!adapter) { throw new Error("Invalid dataset adapter provided"); }
+    const { definitions, dataset } = datasetFromAST(ast);
+    return adapter(dataset, definitions, options);
+}
 
-const rasaDatasetAdapter = (item) => {
-    let entities = [];
-    if (item.arg) {
-        entities = Object.keys(item.arg).map(k => ({
-            start: item.arg[k].start,
-            end: item.arg[k].end,
-            value: item.arg[k].value || item.id.slice(item.arg[k].start, item.arg[k].end),
-            entity: k,
-        }));
-    }
-    return {
-        text: item.id,
-        intent: item.action,
-        entities,
-    };
-};
-
-const datasetFromAST = ast => {
+function datasetFromAST(ast) {
     const operatorDefinitions = {
         actions: {},
         args: {},
         aliases: {},
     };
+    const cache = {};
     if (!ast || !ast.length) { return; }
     ast.forEach(od => {
         if (od.type === OPERATOR_DEFS.ACTION_DEF_KEY) {
             if (operatorDefinitions.actions[od.key]) { throw new Error(`Duplicate definition for ${od.key}`); }
-            operatorDefinitions.actions[od.key] = od.inner;
+            operatorDefinitions.actions[od.key] = od;
         } else if (od.type === OPERATOR_DEFS.ARGUMENT_DEF_KEY) {
             if (operatorDefinitions.args[od.key]) { throw new Error(`Duplicate argument for ${od.key}`); }
-            operatorDefinitions.args[od.key] = od.inner;
+            operatorDefinitions.args[od.key] = od;
         } else if (od.type === OPERATOR_DEFS.ALIAS_DEF_KEY) {
             if (operatorDefinitions.aliases[od.key]) { throw new Error(`Duplicate alias for ${od.key}`); }
-            operatorDefinitions.aliases[od.key] = od.inner;
+            operatorDefinitions.aliases[od.key] = od;
         }
     });
     const actions = Object.keys(operatorDefinitions.actions);
     if (!actions || !actions.length) { throw new Error("No actions found"); }
     let dataset = [];
     actions.forEach(actionKey => {
-        const sentences = operatorDefinitions.actions[actionKey];
-        const variationsMatrix = sentences.map(s => {
-            const variationsFromSentence = getVariationsFromSentence(
-                s, operatorDefinitions, actionKey, null
-            );
-            return variationsFromSentence.map(rasaDatasetAdapter);
-        });
+        const sentences = operatorDefinitions.actions[actionKey].inner;
+        const variationsMatrix = sentences.map(s => getVariationsFromSentence(
+            s, operatorDefinitions, actionKey, null, cache
+        ));
         dataset = dataset.concat(variationsMatrix);
     });
-    dataset = flatten(dataset);
-    return dataset;
-};
+    return { definitions: operatorDefinitions, dataset: utils.flatten(dataset) };
+}
 
-function getVariationsFromSentence(s, defs, actionKey, parentEntity) {
+function getVariationsFromSentence(s, defs, actionKey, parentEntity, cache) {
     const sentence = [].concat(s);
     const sentenceOfOneWord = sentence.length === 1;
-    if (sentenceOfOneWord) { sentence.push({id: "", type: INNER_OPERATORS.TEXT}); }
+    if (sentenceOfOneWord) { sentence.push({ id: "", type: INNER_OPERATORS.TEXT }); }
     return sentence.reduce((entity, nextEntity) => {
         let variations = null;
         if (entity instanceof Array) {
-            variations = cartesian(
+            variations = utils.cartesian(
                 entity,
-                getVariationsFromEntity(nextEntity, defs, parentEntity, sentenceOfOneWord)
+                getVariationsFromEntity(nextEntity, defs, parentEntity, sentenceOfOneWord, cache)
             );
         } else {
-            variations = cartesian(
-                getVariationsFromEntity(entity, defs, parentEntity, sentenceOfOneWord),
-                getVariationsFromEntity(nextEntity, defs, parentEntity, sentenceOfOneWord)
+            variations = utils.cartesian(
+                getVariationsFromEntity(entity, defs, parentEntity, sentenceOfOneWord, cache),
+                getVariationsFromEntity(nextEntity, defs, parentEntity, sentenceOfOneWord, cache)
             );
         }
         return variations.map(
@@ -143,43 +118,52 @@ function getVariationsFromSentence(s, defs, actionKey, parentEntity) {
     });
 }
 
-function getVariationsFromEntity(e, defs, parentEntity, isTheOnlyEntityOfASentence) {
+function getVariationsFromEntity(e, defs, parentEntity, isTheOnlyEntityOfASentence, cache) {
     let sentences = null;
     let isArgument = false;
     let singleAliasDefinedAsArgumentValue = false;
+    let cacheThisEntity = false;
     if (e.type === INNER_OPERATORS.ARGUMENT) {
-        sentences = defs.args[e.id];
-        if (!sentences) { throw new Error(`Undefined argument ${e.id}`); }
+        if (!defs.args[e.id]) { throw new Error(`Undefined argument ${e.id}`); }
+        sentences = defs.args[e.id].inner;
         isArgument = true;
+        cacheThisEntity = true;
     } else if (e.type === INNER_OPERATORS.ALIAS) {
-        sentences = defs.aliases[e.id];
-        if (!sentences) { throw new Error(`Undefined alias ${e.id}`); }
+        if (!defs.aliases[e.id]) { throw new Error(`Undefined alias ${e.id}`); }
+        sentences = defs.aliases[e.id].inner;
         // if the sentence is jjust one alias and the parent entity is an argument,
         // we provide the alias id as the argument value instead of each alias variation,
         // so that all argument alias variations are infered as a single argument value
         if (parentEntity && parentEntity.type === INNER_OPERATORS.ARGUMENT && isTheOnlyEntityOfASentence) {
             singleAliasDefinedAsArgumentValue = true;
         }
+        cacheThisEntity = true;
     } else {
         return [e];
     }
     let variations = [];
-    sentences.forEach(s => {
-        const sentence = getVariationsFromSentence(s, defs, null, e);
-        variations = variations.concat(sentence);
-    });
+    if (cache[e.type] && cache[e.type][e.id]) {
+        variations = cache[e.type][e.id];
+    } else {
+        sentences.forEach(s => {
+            variations = variations.concat(getVariationsFromSentence(s, defs, null, e, cache));
+        });
+        if (cacheThisEntity) {
+            if (!cache[e.type]) { cache[e.type] = {}; }
+            cache[e.type][e.id] = variations;
+        }
+    }
     if (singleAliasDefinedAsArgumentValue) {
         variations = variations.map(v => {
             if (!(v instanceof Array)) { v.aliasArg = { [parentEntity.id]: e.id }; }
-            // if (!(v instanceof Array)) { v.aliasArg = e.id; }
             return v;
         });
     } else if (isArgument) {
         variations = variations.map(v => {
-            if (!(v instanceof Array)) { v.arg = { [e.id]: { value: v.id,  } }; }
+            if (!(v instanceof Array) && v.id) { v.arg = { [e.id]: { value: v.id, } }; }
             return v;
         });
-    } 
+    }
     if (e.opt) { variations.push({ id: "", type: INNER_OPERATORS.TEXT }); }
     return variations;
 }
@@ -188,4 +172,6 @@ module.exports = {
     astFromString,
     datasetFromAST,
     datasetFromString,
+    rasaGenerator,
+    snipsGenerator,
 };

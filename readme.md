@@ -6,10 +6,13 @@ Generate datasets for natural language understanding (NLU) chatbots in a breeze 
 
 Chatito is a blazing fast natural language generation (NLG) tool and a domain specific language (DSL) that helps you code dataset generators. It takes some ideas from probabilistic programming languages (PPS) to help you express your conversational domain knowledge through code, as described in [Automatic Inference, Learning and Design using Probabilistic Programming](https://github.com/twgr/thesis/blob/master/main.pdf).
 
+Discriminative NLU models require training examples and the more valid examples, the better the model. The data defines the model. It is easier to write and maintain generative models with your specific business knowledge and generate the examples you need, instead of doing it manually. You can maintain chatito dsl files instead of big json dataset files.
+
 Test it online at [https://rodrigopivi.github.io/Chatito/](https://rodrigopivi.github.io/Chatito/)
 
-We provide first class suport for the [RasaNLU](https://github.com/RasaHQ/rasa_nlu) json dataset format.
-RasaNLU is a framework for training intent and entity extraction models in a breeze. Chatito generates training datasets compatible with the RasaNLU format.
+This library supports [Rasa NLU](https://github.com/RasaHQ/rasa_nlu) and [Snips NLU](https://github.com/snipsco/snips-nlu) json dataset formats.
+
+Rasa NLU  and Snips NLU are frameworks for training intent and entity extraction models in a breeze. Chatito generates training datasets compatible with both and provides support for smart aliasing features of both frameworks and custon entity naming for Snips NLU, and allows receiving a custom dataset config as template.
 
 ### Overview
 
@@ -21,7 +24,7 @@ Recommended videos to watch:
 
 [Open-source language understanding for bots by RASA author](https://www.youtube.com/watch?v=HIWqGc7AvKI)
 
-Given a sentence, we link an (action/intent) to it and map some of the sentece words to arguments/slots that are meaningful for the action. e.g.:
+Given a sentence, link an (action/intent) to it and map some of the sentece words to arguments/slots that are meaningful for the action. e.g.:
 
 ```
 Sentence -> Hey Bot turn the lights off
@@ -33,10 +36,10 @@ Slots: { switch: "off"  }
 
 - `npm i chatito --save`
 - create a definition file. e.g.: `trainClimateBot.chatito` with your DSL definitions.
-- `npx chatito trainClimateBot.chatito`
+- `npx chatito trainClimateBot.chatito --format=rasa` or `npx chatito trainClimateBot.chatito --format=snips`
 - The full dataset set should be available at `trainClimateBot.json`
 
-NOTE: The json file contains all the possible combination sentences. Each traning example is an object that contains sentence, action and arguments. You may want to shuffle and split the dataset for training/testing/validation, it's not a good practice to train the RasaNLU model with the entire dataset corpus.
+NOTE: The json file contains all the possible combination sentences. Each traning example is an object that contains sentence, action and arguments. You may want to shuffle and split the dataset for training/testing/validation, it's not a good practice to train the nlu models with the entire dataset corpus.
 
 You can also use it programmatically:
 ```
@@ -116,6 +119,24 @@ It will generate this dataset:
 ]
 ```
 
+### Command line tool
+
+The package can be installed globaly (`npm i chatito -g`) or locally for each project (`npm i chatito --save`), once installed you can call it with `npx`.
+
+```
+npx chatito <pathToFile> --format=<format> --formatOptions=<formatOptions> --max=<max> --min=<min>
+```
+
+ - `<pathToFile>` path to the grammar file. e.g.: `lightsChange.chatito`
+ - `<format>` can be `rasa` or `snips`
+ - `<formatOptions>` Optional. Path to a `.json` file containing the initial format dataset template (you can pass custom options for each nlu dataset format here).
+ - `<max>` Optional. A number that sets how many random exmamples go for training, if the dataset contains more, those examples go for testing dataset. If the dataset contains less examples , then there wont be training datset.
+ - `<min>` Optional. The minimun number of training examples. If the dataset has less examples than this, then it will duplicate random examples until min is reached.
+
+Command line example:
+```
+npx chatito examples/spanishEventsConcierge/spanishEventsConcierge.chatito --format=snips  --formatOptions=examples/spanishEventsConcierge/snips.json --max=20 --min=10
+```
 ## Chatito DSL
 
 A Chatito domain specific language file should contain the '.chatito' extension, and is just a text file with the grammar definitions.
@@ -124,19 +145,20 @@ Important Note: The DSL enfroces the use of 4 space identation for nested senten
 
 ### Operators
 
-Operators are the way to declare keywords with special behaviors. An operator is a token that starts with an operator symbol (`%` or `@` or `~`), followed by an opening squared bracket `[`, a cammel cased word with no spaces and a closing
-squared bracket `]`. e.g.: `%[someAction]`, `@[someArgument]`, `~[someAlias]`
+Operators are the way to declare keywords with special behaviors. An operator is a token that starts with an operator symbol (`%` or `@` or `~`), followed by an opening squared bracket `[`, the operator name (`aphanumeric`, `space`, `:` and `_`) and a closing squared bracket `]`. e.g.: `%[someAction]`, `%[another:action]`, `@[argument argument]`, `~[11:11 AM]`
+
+Note: Arguments allow a special alternative naming for entities. (only used for snips nlu dataset custom entities, read more at the argument definion).
 
 When using operators inside a sentence, operators can be made optional by adding
-a `?` symbol after the closing squared bracket. E.g.: `~[hi]?`
+a `?` symbol after the closing squared bracket. E.g.: `~[hi?]`
 
 Here is the full list of operators:
 
 #### Action (`%[` `]`)
 
-The action operator is how we link a sentence with an actual bot command.
+The action operator is how to link a sentence with an actual bot command.
 Each action is an entry point for the generator. Actions cannot be nested, but can contain other operators (arguments and aliases).
-We can think about it, as if each action maps to a function call. E.g.:
+Think about it, as if each action maps to a function call. E.g.:
 
 ```
 %[turnOnLights]
@@ -145,8 +167,6 @@ We can think about it, as if each action maps to a function call. E.g.:
     its too dark
     please lights on
 ```
-
-Then, everytime we receive a sentence that links to turnOnLights action. We can call a function, if the function we want to call needs arguments, we can use the argument operator to define them.
 
 #### Argument (`@[` `]`):
 
@@ -177,6 +197,36 @@ the argument value variations will map to the alias id.  (e.g.: all new york var
     los angeles city
     la city
 ```
+
+NOTE (only for Snips datasets):
+
+In order to support [Snips NLU built in entities](https://snips-nlu.readthedocs.io/en/latest/data_model.html#builtin-entities-and-resolution) and [custom language entities](https://github.com/snipsco/snips-nlu-ontology), like `snips/datetime` and `location`, you can use the`#` symbol at the argument name definition followed by the entity custom name. e.g.:
+
+```
+%[sampleGetWeather]
+    will it be sunny in @[city] at @[weatherDate] ?
+    what kind of weather should I expect @[weatherDate] in @[city] please
+    tell me if it is going to rain @[weatherDate] in @[city]
+    What is the weather in @[city] ?
+
+@[weatherDate#snips/datetime]
+    at the end of the day
+    tomorrow morning
+    this afternoon
+    today
+
+@[city#location]
+    ~[los angeles]
+    rio de janeiro
+    tokyo
+    london
+    tel aviv
+    paris
+
+~[los angeles]
+    los angeles
+    la
+```
         
 
 #### Alias (`~[` `]`):
@@ -199,7 +249,7 @@ A word or list of words that are equivalent. e.g.:
 
 ```
 %[findByCityAndCategory]
-    ~[greet]? ~[botName]? ~[please]? ~[find]? ~[restaurants]? ~[nearby] @[city]
+    ~[greet?] ~[botName?] ~[please?] ~[find?] ~[restaurants?] ~[nearby] @[city]
 
 ~[greet]
     hey
@@ -208,9 +258,7 @@ A word or list of words that are equivalent. e.g.:
     greetings
 
 ~[botName]
-    Fred
-    Fredy
-    Frederick
+    Pia
 
 ~[please]
     please
@@ -247,7 +295,7 @@ A word or list of words that are equivalent. e.g.:
     atlanta
     atlanta city
 
-@[city]
+@[city#location]
     ~[newYork]
     ~[sanFrancisco]
     ~[atlanta]
@@ -258,7 +306,8 @@ A word or list of words that are equivalent. e.g.:
 
 - [nalgene](https://github.com/spro/nalgene) - Similar tool.
 - [PEG.js](https://pegjs.org) - Simple and powerfull parser generator.
-- [RasaNLU](https://github.com/RasaHQ/rasa_nlu) - Framework for training NLU models (using spacy.io as backend).
+- [Rasa NLU](https://github.com/RasaHQ/rasa_nlu) - Framework for training NLU models.
+- [Snips NLU](https://github.com/snipsco/snips-nlu) - Framework for training NLU models.
 
 # Starter project
 

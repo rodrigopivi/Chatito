@@ -1,105 +1,85 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`test action defiend after alias 1`] = `
-Array [
-  Object {
-    "entities": Array [],
-    "intent": "arg",
-    "text": "asdf",
+exports[`argument defining optional value wont map the entity as empty string 1`] = `
+Object {
+  "rasa_nlu_data": Object {
+    "common_examples": Array [
+      Object {
+        "entities": Array [
+          Object {
+            "end": 13,
+            "entity": "city",
+            "start": 6,
+            "value": "atlanta",
+          },
+        ],
+        "intent": "findByCityAndCategory",
+        "text": "hey ? atlanta",
+      },
+      Object {
+        "entities": Array [],
+        "intent": "findByCityAndCategory",
+        "text": "hey ?",
+      },
+      Object {
+        "entities": Array [
+          Object {
+            "end": 9,
+            "entity": "city",
+            "start": 2,
+            "value": "atlanta",
+          },
+        ],
+        "intent": "findByCityAndCategory",
+        "text": "? atlanta",
+      },
+      Object {
+        "entities": Array [],
+        "intent": "findByCityAndCategory",
+        "text": "?",
+      },
+    ],
+    "entity_synonyms": Array [],
+    "regex_features": Array [],
   },
-]
+}
+`;
+
+exports[`test action defiend after alias 1`] = `
+Object {
+  "rasa_nlu_data": Object {
+    "common_examples": Array [
+      Object {
+        "entities": Array [],
+        "intent": "arg",
+        "text": "asdf",
+      },
+    ],
+    "entity_synonyms": Array [],
+    "regex_features": Array [],
+  },
+}
 `;
 
 exports[`test action referencing action works as text 1`] = `
-Array [
-  Object {
-    "entities": Array [],
-    "intent": "asdf",
-    "text": "test %[arg]",
+Object {
+  "rasa_nlu_data": Object {
+    "common_examples": Array [
+      Object {
+        "entities": Array [],
+        "intent": "asdf",
+        "text": "test %[arg]",
+      },
+    ],
+    "entity_synonyms": Array [],
+    "regex_features": Array [],
   },
-]
+}
 `;
 
 exports[`test action referencing undefined alias 1`] = `[Error: Undefined alias alias]`;
 
 exports[`test action referencing undefined argument 1`] = `[Error: Undefined argument arg]`;
-
-exports[`test action with two arguments 1`] = `
-Array [
-  Object {
-    "entities": Array [
-      Object {
-        "end": 23,
-        "entity": "lights",
-        "start": 17,
-        "value": "lights",
-      },
-      Object {
-        "end": 27,
-        "entity": "switch",
-        "start": 24,
-        "value": "off",
-      },
-    ],
-    "intent": "lightChange",
-    "text": "Hey Bot turn the lights off",
-  },
-  Object {
-    "entities": Array [
-      Object {
-        "end": 23,
-        "entity": "lights",
-        "start": 17,
-        "value": "lights",
-      },
-      Object {
-        "end": 26,
-        "entity": "switch",
-        "start": 24,
-        "value": "on",
-      },
-    ],
-    "intent": "lightChange",
-    "text": "Hey Bot turn the lights on",
-  },
-  Object {
-    "entities": Array [
-      Object {
-        "end": 22,
-        "entity": "lights",
-        "start": 17,
-        "value": "luces",
-      },
-      Object {
-        "end": 26,
-        "entity": "switch",
-        "start": 23,
-        "value": "off",
-      },
-    ],
-    "intent": "lightChange",
-    "text": "Hey Bot turn the luces off",
-  },
-  Object {
-    "entities": Array [
-      Object {
-        "end": 22,
-        "entity": "lights",
-        "start": 17,
-        "value": "luces",
-      },
-      Object {
-        "end": 25,
-        "entity": "switch",
-        "start": 23,
-        "value": "on",
-      },
-    ],
-    "intent": "lightChange",
-    "text": "Hey Bot turn the luces on",
-  },
-]
-`;
 
 exports[`test action without correct identation error 1`] = `
 "{
@@ -222,56 +202,75 @@ exports[`test action without sentences error 1`] = `
 `;
 
 exports[`test argument that defines only one alias inside each line 1`] = `
-"[
-  {
-    \\"text\\": \\"lights on\\",
-    \\"intent\\": \\"lightChange\\",
-    \\"entities\\": [
+"{
+  \\"rasa_nlu_data\\": {
+    \\"regex_features\\": [],
+    \\"entity_synonyms\\": [
       {
-        \\"start\\": 7,
-        \\"end\\": 9,
         \\"value\\": \\"on\\",
-        \\"entity\\": \\"switch\\"
-      }
-    ]
-  },
-  {
-    \\"text\\": \\"lights active\\",
-    \\"intent\\": \\"lightChange\\",
-    \\"entities\\": [
+        \\"synonyms\\": [
+          \\"active\\"
+        ]
+      },
       {
-        \\"start\\": 7,
-        \\"end\\": 13,
-        \\"value\\": \\"on\\",
-        \\"entity\\": \\"switch\\"
-      }
-    ]
-  },
-  {
-    \\"text\\": \\"lights off\\",
-    \\"intent\\": \\"lightChange\\",
-    \\"entities\\": [
-      {
-        \\"start\\": 7,
-        \\"end\\": 10,
         \\"value\\": \\"off\\",
-        \\"entity\\": \\"switch\\"
+        \\"synonyms\\": [
+          \\"inactive\\"
+        ]
       }
-    ]
-  },
-  {
-    \\"text\\": \\"lights inactive\\",
-    \\"intent\\": \\"lightChange\\",
-    \\"entities\\": [
+    ],
+    \\"common_examples\\": [
       {
-        \\"start\\": 7,
-        \\"end\\": 15,
-        \\"value\\": \\"off\\",
-        \\"entity\\": \\"switch\\"
+        \\"text\\": \\"lights on\\",
+        \\"intent\\": \\"lightChange\\",
+        \\"entities\\": [
+          {
+            \\"start\\": 7,
+            \\"end\\": 9,
+            \\"value\\": \\"on\\",
+            \\"entity\\": \\"switch\\"
+          }
+        ]
+      },
+      {
+        \\"text\\": \\"lights active\\",
+        \\"intent\\": \\"lightChange\\",
+        \\"entities\\": [
+          {
+            \\"start\\": 7,
+            \\"end\\": 13,
+            \\"value\\": \\"on\\",
+            \\"entity\\": \\"switch\\"
+          }
+        ]
+      },
+      {
+        \\"text\\": \\"lights off\\",
+        \\"intent\\": \\"lightChange\\",
+        \\"entities\\": [
+          {
+            \\"start\\": 7,
+            \\"end\\": 10,
+            \\"value\\": \\"off\\",
+            \\"entity\\": \\"switch\\"
+          }
+        ]
+      },
+      {
+        \\"text\\": \\"lights inactive\\",
+        \\"intent\\": \\"lightChange\\",
+        \\"entities\\": [
+          {
+            \\"start\\": 7,
+            \\"end\\": 15,
+            \\"value\\": \\"off\\",
+            \\"entity\\": \\"switch\\"
+          }
+        ]
       }
     ]
   }
-]"
+}"
 `;
 
 exports[`test empty parser error 1`] = `
@@ -343,6 +342,96 @@ exports[`test empty parser error 1`] = `
 
 exports[`test no actions error 1`] = `[Error: No actions found]`;
 
+exports[`test operator names with underscore space and numbers 1`] = `
+Object {
+  "rasa_nlu_data": Object {
+    "common_examples": Array [
+      Object {
+        "entities": Array [
+          Object {
+            "end": 11,
+            "entity": "custom time",
+            "start": 3,
+            "value": "11:11 am",
+          },
+        ],
+        "intent": "light_change",
+        "text": "at 11:11 am",
+      },
+      Object {
+        "entities": Array [
+          Object {
+            "end": 31,
+            "entity": "custom time",
+            "start": 3,
+            "value": "11:11 am",
+          },
+        ],
+        "intent": "light_change",
+        "text": "at eleven eleven in the morning",
+      },
+    ],
+    "entity_synonyms": Array [
+      Object {
+        "synonyms": Array [
+          "eleven eleven in the morning",
+        ],
+        "value": "11:11 am",
+      },
+    ],
+    "regex_features": Array [],
+  },
+}
+`;
+
+exports[`test optional value 1`] = `
+"{
+  \\"rasa_nlu_data\\": {
+    \\"regex_features\\": [],
+    \\"entity_synonyms\\": [
+      {
+        \\"value\\": \\"off\\",
+        \\"synonyms\\": [
+          \\"turn off\\",
+          \\"deactivate\\"
+        ]
+      }
+    ],
+    \\"common_examples\\": [
+      {
+        \\"text\\": \\"Hey Bot turn off the lights\\",
+        \\"intent\\": \\"lightChange\\",
+        \\"entities\\": [
+          {
+            \\"start\\": 8,
+            \\"end\\": 16,
+            \\"value\\": \\"off\\",
+            \\"entity\\": \\"switch\\"
+          }
+        ]
+      },
+      {
+        \\"text\\": \\"Hey Bot deactivate the lights\\",
+        \\"intent\\": \\"lightChange\\",
+        \\"entities\\": [
+          {
+            \\"start\\": 8,
+            \\"end\\": 18,
+            \\"value\\": \\"off\\",
+            \\"entity\\": \\"switch\\"
+          }
+        ]
+      },
+      {
+        \\"text\\": \\"Hey Bot the lights\\",
+        \\"intent\\": \\"lightChange\\",
+        \\"entities\\": []
+      }
+    ]
+  }
+}"
+`;
+
 exports[`test pegjs parser output 1`] = `
 "[
   {
@@ -389,6 +478,7 @@ exports[`test pegjs parser output 1`] = `
   {
     \\"type\\": \\"ArgumentDefinition\\",
     \\"key\\": \\"switch\\",
+    \\"entity\\": null,
     \\"location\\": {
       \\"start\\": {
         \\"offset\\": 38,
@@ -475,60 +565,592 @@ exports[`test pegjs parser output 1`] = `
 ]"
 `;
 
-exports[`test readme example 1`] = `
-Array [
-  Object {
-    "entities": Array [
+exports[`test readme example with rasa nlu 1`] = `
+Object {
+  "rasa_nlu_data": Object {
+    "common_examples": Array [
       Object {
-        "end": 27,
-        "entity": "switch",
-        "start": 24,
-        "value": "off",
+        "entities": Array [
+          Object {
+            "end": 23,
+            "entity": "lights",
+            "start": 17,
+            "value": "lights",
+          },
+          Object {
+            "end": 27,
+            "entity": "switch",
+            "start": 24,
+            "value": "off",
+          },
+        ],
+        "intent": "lightChange",
+        "text": "Hey Bot turn the lights off",
+      },
+      Object {
+        "entities": Array [
+          Object {
+            "end": 23,
+            "entity": "lights",
+            "start": 17,
+            "value": "lights",
+          },
+          Object {
+            "end": 26,
+            "entity": "switch",
+            "start": 24,
+            "value": "on",
+          },
+        ],
+        "intent": "lightChange",
+        "text": "Hey Bot turn the lights on",
+      },
+      Object {
+        "entities": Array [
+          Object {
+            "end": 22,
+            "entity": "lights",
+            "start": 17,
+            "value": "luces",
+          },
+          Object {
+            "end": 26,
+            "entity": "switch",
+            "start": 23,
+            "value": "off",
+          },
+        ],
+        "intent": "lightChange",
+        "text": "Hey Bot turn the luces off",
+      },
+      Object {
+        "entities": Array [
+          Object {
+            "end": 22,
+            "entity": "lights",
+            "start": 17,
+            "value": "luces",
+          },
+          Object {
+            "end": 25,
+            "entity": "switch",
+            "start": 23,
+            "value": "on",
+          },
+        ],
+        "intent": "lightChange",
+        "text": "Hey Bot turn the luces on",
       },
     ],
-    "intent": "lightChange",
-    "text": "Hey Bot turn the lights off",
+    "entity_synonyms": Array [],
+    "regex_features": Array [],
   },
-  Object {
-    "entities": Array [
-      Object {
-        "end": 26,
-        "entity": "switch",
-        "start": 24,
-        "value": "on",
-      },
-    ],
-    "intent": "lightChange",
-    "text": "Hey Bot turn the lights on",
+}
+`;
+
+exports[`test readme example with snips nlu 1`] = `
+Object {
+  "entities": Object {
+    "lights": Object {},
+    "switch": Object {},
   },
-]
+  "intents": Object {
+    "lightChange": Object {
+      "utterances": Array [
+        Object {
+          "data": Array [
+            Object {
+              "text": "Hey Bot turn the ",
+            },
+            Object {
+              "entity": "lights",
+              "slot_name": "lights",
+              "text": "lights",
+            },
+            Object {
+              "text": " ",
+            },
+            Object {
+              "entity": "switch",
+              "slot_name": "switch",
+              "text": "off",
+            },
+          ],
+        },
+        Object {
+          "data": Array [
+            Object {
+              "text": "Hey Bot turn the ",
+            },
+            Object {
+              "entity": "lights",
+              "slot_name": "lights",
+              "text": "lights",
+            },
+            Object {
+              "text": " ",
+            },
+            Object {
+              "entity": "switch",
+              "slot_name": "switch",
+              "text": "on",
+            },
+          ],
+        },
+        Object {
+          "data": Array [
+            Object {
+              "text": "Hey Bot turn the ",
+            },
+            Object {
+              "entity": "lights",
+              "slot_name": "lights",
+              "text": "luces",
+            },
+            Object {
+              "text": " ",
+            },
+            Object {
+              "entity": "switch",
+              "slot_name": "switch",
+              "text": "off",
+            },
+          ],
+        },
+        Object {
+          "data": Array [
+            Object {
+              "text": "Hey Bot turn the ",
+            },
+            Object {
+              "entity": "lights",
+              "slot_name": "lights",
+              "text": "luces",
+            },
+            Object {
+              "text": " ",
+            },
+            Object {
+              "entity": "switch",
+              "slot_name": "switch",
+              "text": "on",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  "language": "en",
+}
+`;
+
+exports[`test snips nlu adapter 1`] = `
+Object {
+  "entities": Object {
+    "location": Object {
+      "automatically_extensible": false,
+      "data": Array [
+        Object {
+          "synonyms": Array [
+            "ny",
+            "nyc",
+          ],
+          "value": "new york",
+        },
+      ],
+      "use_synonyms": true,
+    },
+    "snips/datetime": Object {
+      "automatically_extensible": false,
+      "data": Array [
+        Object {
+          "synonyms": Array [
+            "eleven eleven in the morning",
+          ],
+          "value": "11:11 am",
+        },
+      ],
+      "use_synonyms": true,
+    },
+  },
+  "intents": Object {
+    "light_change": Object {
+      "utterances": Array [
+        Object {
+          "data": Array [
+            Object {
+              "text": "is it true that the time at ",
+            },
+            Object {
+              "entity": "location",
+              "slot_name": "places",
+              "text": "new york",
+            },
+            Object {
+              "text": " is ",
+            },
+            Object {
+              "entity": "snips/datetime",
+              "slot_name": "custom_time",
+              "text": "11:11 am",
+            },
+            Object {
+              "text": " ?",
+            },
+          ],
+        },
+        Object {
+          "data": Array [
+            Object {
+              "text": "is it true that the time at ",
+            },
+            Object {
+              "entity": "location",
+              "slot_name": "places",
+              "text": "new york",
+            },
+            Object {
+              "text": " is ",
+            },
+            Object {
+              "entity": "snips/datetime",
+              "slot_name": "custom_time",
+              "text": "eleven eleven in the morning",
+            },
+            Object {
+              "text": " ?",
+            },
+          ],
+        },
+        Object {
+          "data": Array [
+            Object {
+              "text": "is it true that the time at ",
+            },
+            Object {
+              "entity": "location",
+              "slot_name": "places",
+              "text": "ny",
+            },
+            Object {
+              "text": " is ",
+            },
+            Object {
+              "entity": "snips/datetime",
+              "slot_name": "custom_time",
+              "text": "11:11 am",
+            },
+            Object {
+              "text": " ?",
+            },
+          ],
+        },
+        Object {
+          "data": Array [
+            Object {
+              "text": "is it true that the time at ",
+            },
+            Object {
+              "entity": "location",
+              "slot_name": "places",
+              "text": "ny",
+            },
+            Object {
+              "text": " is ",
+            },
+            Object {
+              "entity": "snips/datetime",
+              "slot_name": "custom_time",
+              "text": "eleven eleven in the morning",
+            },
+            Object {
+              "text": " ?",
+            },
+          ],
+        },
+        Object {
+          "data": Array [
+            Object {
+              "text": "is it true that the time at ",
+            },
+            Object {
+              "entity": "location",
+              "slot_name": "places",
+              "text": "nyc",
+            },
+            Object {
+              "text": " is ",
+            },
+            Object {
+              "entity": "snips/datetime",
+              "slot_name": "custom_time",
+              "text": "11:11 am",
+            },
+            Object {
+              "text": " ?",
+            },
+          ],
+        },
+        Object {
+          "data": Array [
+            Object {
+              "text": "is it true that the time at ",
+            },
+            Object {
+              "entity": "location",
+              "slot_name": "places",
+              "text": "nyc",
+            },
+            Object {
+              "text": " is ",
+            },
+            Object {
+              "entity": "snips/datetime",
+              "slot_name": "custom_time",
+              "text": "eleven eleven in the morning",
+            },
+            Object {
+              "text": " ?",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  "language": "en",
+}
+`;
+
+exports[`test snips nlu passing options 1`] = `
+Object {
+  "entities": Object {
+    "location": Object {
+      "automatically_extensible": true,
+      "data": Array [
+        Object {
+          "synonyms": Array [
+            "new york",
+          ],
+          "value": "ny",
+        },
+      ],
+      "use_synonyms": true,
+    },
+  },
+  "intents": Object {
+    "buscaEnCiudad": Object {
+      "utterances": Array [
+        Object {
+          "data": Array [
+            Object {
+              "text": "buscar en la ciudad de ",
+            },
+            Object {
+              "entity": "location",
+              "slot_name": "city",
+              "text": "new york",
+            },
+          ],
+        },
+        Object {
+          "data": Array [
+            Object {
+              "text": "buscar en la ciudad de ",
+            },
+            Object {
+              "entity": "location",
+              "slot_name": "city",
+              "text": "ny",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  "language": "es",
+}
+`;
+
+exports[`test snips nlu readme example 1`] = `
+Object {
+  "entities": Object {
+    "location": Object {
+      "automatically_extensible": false,
+      "data": Array [
+        Object {
+          "synonyms": Array [
+            "la",
+          ],
+          "value": "los angeles",
+        },
+      ],
+      "use_synonyms": true,
+    },
+    "snips/datetime": Object {},
+  },
+  "intents": Object {
+    "sampleGetWeather": Object {
+      "utterances": Array [
+        Object {
+          "data": Array [
+            Object {
+              "text": "will it be sunny in ",
+            },
+            Object {
+              "entity": "location",
+              "slot_name": "city",
+              "text": "los angeles",
+            },
+            Object {
+              "text": " at ",
+            },
+            Object {
+              "entity": "snips/datetime",
+              "slot_name": "weatherDate",
+              "text": "this afternoon",
+            },
+            Object {
+              "text": " ?",
+            },
+          ],
+        },
+        Object {
+          "data": Array [
+            Object {
+              "text": "will it be sunny in ",
+            },
+            Object {
+              "entity": "location",
+              "slot_name": "city",
+              "text": "la",
+            },
+            Object {
+              "text": " at ",
+            },
+            Object {
+              "entity": "snips/datetime",
+              "slot_name": "weatherDate",
+              "text": "this afternoon",
+            },
+            Object {
+              "text": " ?",
+            },
+          ],
+        },
+        Object {
+          "data": Array [
+            Object {
+              "text": "will it be sunny in ",
+            },
+            Object {
+              "entity": "location",
+              "slot_name": "city",
+              "text": "rio de janeiro",
+            },
+            Object {
+              "text": " at ",
+            },
+            Object {
+              "entity": "snips/datetime",
+              "slot_name": "weatherDate",
+              "text": "this afternoon",
+            },
+            Object {
+              "text": " ?",
+            },
+          ],
+        },
+        Object {
+          "data": Array [
+            Object {
+              "text": "What is the weather in ",
+            },
+            Object {
+              "entity": "location",
+              "slot_name": "city",
+              "text": "los angeles",
+            },
+            Object {
+              "text": " ?",
+            },
+          ],
+        },
+        Object {
+          "data": Array [
+            Object {
+              "text": "What is the weather in ",
+            },
+            Object {
+              "entity": "location",
+              "slot_name": "city",
+              "text": "la",
+            },
+            Object {
+              "text": " ?",
+            },
+          ],
+        },
+        Object {
+          "data": Array [
+            Object {
+              "text": "What is the weather in ",
+            },
+            Object {
+              "entity": "location",
+              "slot_name": "city",
+              "text": "rio de janeiro",
+            },
+            Object {
+              "text": " ?",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  "language": "en",
+}
 `;
 
 exports[`test switch off example for argument with one value 1`] = `
-"[
-  {
-    \\"text\\": \\"Hey Bot turn off the lights\\",
-    \\"intent\\": \\"lightChange\\",
-    \\"entities\\": [
+"{
+  \\"rasa_nlu_data\\": {
+    \\"regex_features\\": [],
+    \\"entity_synonyms\\": [
       {
-        \\"start\\": 8,
-        \\"end\\": 16,
         \\"value\\": \\"off\\",
-        \\"entity\\": \\"switch\\"
+        \\"synonyms\\": [
+          \\"turn off\\",
+          \\"deactivate\\"
+        ]
       }
-    ]
-  },
-  {
-    \\"text\\": \\"Hey Bot deactivate the lights\\",
-    \\"intent\\": \\"lightChange\\",
-    \\"entities\\": [
+    ],
+    \\"common_examples\\": [
       {
-        \\"start\\": 8,
-        \\"end\\": 18,
-        \\"value\\": \\"off\\",
-        \\"entity\\": \\"switch\\"
+        \\"text\\": \\"Hey Bot turn off the lights\\",
+        \\"intent\\": \\"lightChange\\",
+        \\"entities\\": [
+          {
+            \\"start\\": 8,
+            \\"end\\": 16,
+            \\"value\\": \\"off\\",
+            \\"entity\\": \\"switch\\"
+          }
+        ]
+      },
+      {
+        \\"text\\": \\"Hey Bot deactivate the lights\\",
+        \\"intent\\": \\"lightChange\\",
+        \\"entities\\": [
+          {
+            \\"start\\": 8,
+            \\"end\\": 18,
+            \\"value\\": \\"off\\",
+            \\"entity\\": \\"switch\\"
+          }
+        ]
       }
     ]
   }
-]"
+}"
 `;

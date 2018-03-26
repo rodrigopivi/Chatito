@@ -19,7 +19,7 @@
             flex-direction: column;
             flex: 1;
             height: auto !important;
-            font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+            font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
         }
         * { box-sizing: border-box; }
         a { text-decoration: none; }
@@ -42,11 +42,7 @@
             flex-direction: column;
             max-height: calc(100vh - 200px) !important;
         }
-        .content__middlecolumn .middlecolumn__stats {
-            max-width: 160px;
-            font-size: 13px;
-            margin-top: 30px;
-        }
+        .content__middlecolumn .middlecolumn__stats { max-width: 140px; font-size: 11px; margin-top: 20px; }
         .content__middlecolumn > #middlecolumn__stats { text-align: center; }
         .content textarea { display: flex; flex: 1; border: none; }
         #chatitoGenerate {
@@ -61,8 +57,9 @@
             padding:8px 16px;
             text-decoration:none;
             text-shadow:0px 1px 0px #612866;
+            margin: 16px 0;
         }
-        #training__download, #testing__download {
+        #training__download {
             background-color:#6AAD28;
             border-radius:8px;
             border:1px solid #6AAD28;
@@ -78,12 +75,7 @@
         #chatitoGenerate:active { position:relative; top:1px; }
         #chatitoGenerate.disabled { background-color: #999999;; color: #000000; }
         .code-wrapper { overflow: scroll; }
-        #code {
-            min-height: 90vh;
-            width: 50vw;
-            background-color: #FFFFFF;
-            margin: auto;
-        }
+        #code { min-height: 90vh; width: 50vw; background-color: #FFFFFF; margin: auto; }
         #code pre.CodeFlask__pre { padding-left: 50px !important; padding-top: 0px !important; }
         #code .CodeFlask__textarea_line-numbers {
             width: 100%;
@@ -153,23 +145,31 @@
                 </div>
             </div>
             <div class="content__middlecolumn">
+                <select id="datasetAdapter">
+                    <option value="rasa" selected="selected">rasa adapter</option>
+                    <option value="snips">snips adapter</option>
+                </select>
                 <input type="button" id="chatitoGenerate" value="Generate dataset" />
                 <div class="middlecolumn__stats hide_me">
                     <div><b>Total examples: </b> <span id="middlecolumn__stats"></span></div>
                     <br />
-                    <div><b>Split the shuffled dataset for training and testing</b></div>
-                    <div>Select the % of random examples for training, the rest will go to testing.</div>
+                    <div><b>Post process</b></div>
+                    <div>
+                        On the right, you see the full dataset. Shuffling and splitting the examples helps
+                        preventing overfitting and provides testing examples. Select the % of random examples for training:
+                    </div>
                     <div class="range-slider">
                         <input class="range-slider__range" type="range" value="100" min="0" max="100">
                         <div class="range-slider__value">100%</div>
                     </div>
                     <div style="margin-top: 16px; text-align: center;">
-                        <b>Training #:</b> <span id="range__trainingnum">0</span>
+                        <b>Training examples:</b> <span id="range__trainingnum">0</span><br />
+                        <b>Testing examples:</b> <span id="range__testingnum">0</span>
                         <div><input type="button" id="training__download" value="Download" /></div>
                     </div>
-                    <div style="margin-top: 16px; text-align: center;">
-                        <b>Testing #:</b> <span id="range__testingnum">0</span>
-                        <div><input type="button" id="testing__download" value="Download" /></div>
+                    <div>
+                        <br /><br />
+                        If you need custom options for rasa or snips (like regex or custon entities), use the npm package with formatOptions argument.
                     </div>
                 </div>
             </div>
@@ -181,37 +181,66 @@
 
 <script>
 System.config({
-    transpiler: 'Babel', babelOptions: { presets: ['es2015'] },
-    packages: { '': { defaultExtension: 'js' }, 'https://rawgit.com': { defaultExtension: 'js' } },
+    transpiler: "Babel", babelOptions: { presets: ["es2015"] },
+    packages: { "": { defaultExtension: "js" }, "https://rawgit.com": { defaultExtension: "js" } },
     map: {
-        Chatito: 'https://rawgit.com/rodrigopivi/Chatito/master/core/datasetGenerator.js',
-        Babel: 'https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js',
+        // Chatito: 'https://rawgit.com/rodrigopivi/Chatito/master/core/datasetGenerator.js',
+        Chatito: '/core/datasetGenerator.js',
+        Babel: "https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js",
+        jsonStringify: "https://cdn.rawgit.com/lydell/json-stringify-pretty-compact/b11cf5b0/index.js",
     }
 });
-SystemJS.import('Chatito').then(function (chatito) {
+SystemJS.import("Chatito").then(function (chatito) {
+SystemJS.import("jsonStringify").then(function (jsonStringify) {
     let DATASET = null;
-    var loadingButtonInitialValue = document.getElementById("chatitoGenerate").value;
-    function downloadDataset(data, exportName) {
-        const blob = new Blob([JSON.stringify(data)], {type: "text/json;charset=utf-8"});
-        saveAs(blob, `${exportName}_${new Date().getTime()}.json`);
+    function clearDataset() {
+        DATASET = null;
+        document.getElementById("chatitoDSLResult").value = "";
+        const container$ = document.getElementsByClassName("middlecolumn__stats")[0];
+        container$.classList.add("hide_me");
+    }
+    function downloadDataset(data, maxNumberOfTrainingExamples) {
+        const adapterSelector$ = document.getElementById("datasetAdapter");
+        let postProcessor = adapterSelector$.value === "rasa" ? chatito.rasaGenerator.postProcessor : chatito.snipsGenerator.postProcessor;
+        const { dataset, testingExamples, stats } = postProcessor(data, maxNumberOfTrainingExamples);
+        const datasetBlob = new Blob([jsonStringify(dataset)], {type: "text/json;charset=utf-8"});
+        const testingBlob = new Blob([jsonStringify(testingExamples)], {type: "text/json;charset=utf-8"});
+        const trainingFilename = `training_${adapterSelector$.value}_${stats.training}_${new Date().getTime()}.json`;
+        const testingFilename = `testing_${adapterSelector$.value}_${stats.testing}_${new Date().getTime()}.json`;
+        saveAs(datasetBlob, trainingFilename);
+        setTimeout(() => {
+            saveAs(testingBlob, testingFilename);
+            clearDataset();
+        }, 100); // timeout to allow multiple downloads at once
     };
     function changeLoadingButton(isLoading) {
         const $generateButton = document.getElementById("chatitoGenerate");
         if (isLoading) {
             $generateButton.className = "disabled";
             $generateButton.setAttribute("disabled", true);
-            const container$ = document.getElementsByClassName('middlecolumn__stats')[0];
-            container$.classList.add('hide_me');
+            const container$ = document.getElementsByClassName("middlecolumn__stats")[0];
+            container$.classList.add("hide_me");
         } else {
             $generateButton.className = "";
             $generateButton.removeAttribute("disabled");
         }
     }
+    function getNumberOfExamples() {
+        const adapterSelector$ = document.getElementById("datasetAdapter");
+        let total = 0;
+        if (!DATASET) { return 0; }
+        if (adapterSelector$.value === "rasa") {
+            total = DATASET.rasa_nlu_data.common_examples.length;
+        } else if (adapterSelector$.value === "snips") {
+            for (const i in DATASET.intents) { total += DATASET.intents[i].utterances.length; }
+        }
+        return total
+    }
     function onRangeChangeHandler(evt) {
-        const value$ = document.getElementsByClassName('range-slider__value')[0];
-        const range__trainingnum$ = document.getElementById('range__trainingnum');
-        const range__testingnum$ = document.getElementById('range__testingnum');
-        const total = DATASET && DATASET.length ? DATASET.length : 0;
+        const value$ = document.getElementsByClassName("range-slider__value")[0];
+        const range__trainingnum$ = document.getElementById("range__trainingnum");
+        const range__testingnum$ = document.getElementById("range__testingnum");
+        const total = getNumberOfExamples();
         const v = evt.target.value;
         value$.innerHTML = `${v}%`;
         const trainingExamples = Math.round((parseInt(v, 10) / 100) * total);
@@ -219,21 +248,18 @@ SystemJS.import('Chatito').then(function (chatito) {
         range__trainingnum$.innerHTML = trainingExamples;
         range__testingnum$.innerHTML = testingExamples;
         const trainingDownload$ = document.getElementById("training__download");
-        const testingDownload$ = document.getElementById("testing__download");
-        const trainingData = DATASET.slice(0, trainingExamples);
-        const testingData = DATASET.slice(trainingExamples);
-        trainingDownload$.onclick = () => downloadDataset(trainingData, "training");
-        testingDownload$.onclick = () => downloadDataset(testingData, "testing");
+        trainingDownload$.onclick = () => downloadDataset(DATASET, trainingExamples);
     }
     function updateStats() {
         const $stats = document.getElementById("middlecolumn__stats");
-        if (!DATASET || !DATASET.length) { return $stats.innerHTML = ""; }
-        $stats.innerHTML = `${DATASET.length}`;
-        const range$ = document.getElementsByClassName('range-slider__range')[0];
+        const numberOfExamples = getNumberOfExamples();
+        if (!numberOfExamples) { return $stats.innerHTML = ""; }
+        $stats.innerHTML = `${numberOfExamples}`;
+        const range$ = document.getElementsByClassName("range-slider__range")[0];
         range$.value = 50;
         onRangeChangeHandler({ target: range$ });
-        const container$ = document.getElementsByClassName('middlecolumn__stats')[0];
-        container$.classList.remove('hide_me');
+        const container$ = document.getElementsByClassName("middlecolumn__stats")[0];
+        container$.classList.remove("hide_me");
     }
     const genDataset = () => {
         document.getElementById("chatitoDSLResult").value = "";
@@ -245,27 +271,28 @@ SystemJS.import('Chatito').then(function (chatito) {
         updateStats();
         setTimeout(() => {// make async
             try {
-                DATASET = _.shuffle(chatito.datasetFromString(codeInputValue));
-                d = JSON.stringify(DATASET, null, 2);
+                const adapterSelector$ = document.getElementById("datasetAdapter");
+                DATASET = chatito.datasetFromString(codeInputValue, adapterSelector$.value);
+                d = jsonStringify(DATASET);
                 updateStats();
             } catch (e) {
                 // IF its a js error, we just show it as string,
                 // if its a pegsj error, show the full error payload
-                d = e.constructor == Error ? e.toString() : `ERROR: \n\n ${JSON.stringify(e, null, 2)}`;
+                d = e.constructor == Error ? e.toString() : `ERROR: \n\n ${jsonStringify(e, null, 2)}`;
             }
             document.getElementById("chatitoDSLResult").value = d;
             changeLoadingButton(false);
         }, 100);
     };
     const initRangeSlider = () => {
-        const range$ = document.getElementsByClassName('range-slider__range')[0];
+        const range$ = document.getElementsByClassName("range-slider__range")[0];
         range$.onchange = onRangeChangeHandler;
     };
     const validateChatitoDSL = _.debounce((val) => {
         let ast = null;
         let err = null;
         try {
-            ast = JSON.stringify(chatito.astFromString(codeInputValue), null, 2);
+            ast = jsonStringify(chatito.astFromString(codeInputValue), null, 2);
         } catch (e) {
             err = e.constructor == Error ?
                 e.toString() : `${e.name}: ${e.message} Line: ${e.location.start.line}, Column: ${e.location.start.column}`
@@ -280,23 +307,22 @@ SystemJS.import('Chatito').then(function (chatito) {
         }
     }, 500);
     Prism.languages.chatito = {
-        'action': { pattern: /\%\[[^\]]+\](\?)?/i, greedy: true },
-        'argument': { pattern: /\@\[[^\]]+\](\?)?/i, greedy: true },
-        'alias': { pattern: /~\[[^\]]+\](\?)?/i, greedy: true },
+        "action": { pattern: /\%\[[^\]]+\](\?)?/i, greedy: true },
+        "argument": { pattern: /\@\[[^\]]+\](\?)?/i, greedy: true },
+        "alias": { pattern: /~\[[^\]]+\](\?)?/i, greedy: true },
     };
     const flask = new CodeFlask();
-    flask.run('#code', { language: 'chatito', lineNumbers: true });
+    flask.run("#code", { language: "chatito", lineNumbers: true });
     flask.onUpdate((code) => {
         codeInputValue = code;
-        DATASET = null;
-        document.getElementById("chatitoDSLResult").value = "";
-        const container$ = document.getElementsByClassName('middlecolumn__stats')[0];
-        container$.classList.add('hide_me');
+        clearDataset();
         validateChatitoDSL(code);
     });
     document.getElementById("chatitoGenerate").addEventListener("click", genDataset);
+    document.getElementById("datasetAdapter").addEventListener("change", clearDataset);
     initRangeSlider();
     genDataset();
+});
 });
 </script>
 </body>

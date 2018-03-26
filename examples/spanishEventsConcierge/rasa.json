@@ -1,0 +1,1 @@
+{"rasa_nlu_data":{"regex_features":[{"name":"zipcode","pattern":"[0-9]{5}"}]}}
