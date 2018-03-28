@@ -32,6 +32,8 @@ Intent -> "lightChange"
 Slots: { switch: "off"  }
 ```
 
+You can test any of the readme examples at the [online editor](https://rodrigopivi.github.io/Chatito/) and test what it generates for each dataset format.
+
 ### Getting started
 
 - `npm i chatito --save`
@@ -47,79 +49,9 @@ const chatito = require("chatito");
 const dataset = chatito.datasetFromString(dslDefinitionString);
 ```
 
-A simple example si that given this DSL definition:
-```
-%[lightChange]
-    lights @[switch]
-
-@[switch]
-    ~[on]
-    ~[off]
-
-~[on]
-    on
-    active
-
-~[off]
-    off
-    inactive
-```
-
-It will generate this dataset:
-```
-[
-  {
-    "text": "lights on",
-    "intent": "lightChange",
-    "entities": [
-      {
-        "start": 7,
-        "end": 9,
-        "value": "on",
-        "entity": "switch"
-      }
-    ]
-  },
-  {
-    "text": "lights active",
-    "intent": "lightChange",
-    "entities": [
-      {
-        "start": 7,
-        "end": 13,
-        "value": "on",
-        "entity": "switch"
-      }
-    ]
-  },
-  {
-    "text": "lights off",
-    "intent": "lightChange",
-    "entities": [
-      {
-        "start": 7,
-        "end": 10,
-        "value": "off",
-        "entity": "switch"
-      }
-    ]
-  },
-  {
-    "text": "lights inactive",
-    "intent": "lightChange",
-    "entities": [
-      {
-        "start": 7,
-        "end": 15,
-        "value": "off",
-        "entity": "switch"
-      }
-    ]
-  }
-]
-```
-
 ### Command line tool
+
+Chatito is an npm package, so you need [NodeJS 8.10.0 LTS](https://nodejs.org/es/) or higher with npm.
 
 The package can be installed globaly (`npm i chatito -g`) or locally for each project (`npm i chatito --save`), once installed you can call it with `npx`.
 
@@ -130,8 +62,8 @@ npx chatito <pathToFile> --format=<format> --formatOptions=<formatOptions> --max
  - `<pathToFile>` path to the grammar file. e.g.: `lightsChange.chatito`
  - `<format>` can be `rasa` or `snips`
  - `<formatOptions>` Optional. Path to a `.json` file containing the initial format dataset template (you can pass custom options for each nlu dataset format here).
- - `<max>` Optional. A number that sets how many random exmamples go for training, if the dataset contains more, those examples go for testing dataset. If the dataset contains less examples , then there wont be training datset.
- - `<min>` Optional. The minimun number of training examples. If the dataset has less examples than this, then it will duplicate random examples until min is reached.
+ - `<max>` Optional. A number that sets how many random exmamples go for training, if the dataset contains more, those examples go for testing dataset. If the dataset contains less examples , then there wont be testing data.
+ - `<min>` Optional. The minimun number of training examples. If the dataset has less examples than this, then it will duplicate random examples until min.
 
 Command line example:
 ```
@@ -150,7 +82,7 @@ Operators are the way to declare keywords with special behaviors. An operator is
 Note: Arguments allow a special alternative naming for entities. (only used for snips nlu dataset custom entities, read more at the argument definion).
 
 When using operators inside a sentence, operators can be made optional by adding
-a `?` symbol after the closing squared bracket. E.g.: `~[hi?]`
+a `?` symbol before the closing squared bracket. E.g.: `~[hi?]`
 
 Here is the full list of operators:
 
