@@ -22,7 +22,7 @@ Recommended videos to watch:
 
 [Slot-Filling in Conversations with Deep Learning](https://www.youtube.com/watch?v=Z1C1owUV0sI)
 
-[Open-source language understanding for bots by RASA author](https://www.youtube.com/watch?v=HIWqGc7AvKI)
+[Conversational AI: Building clever chatbots](https://www.youtube.com/watch?v=HV0bJMkzpO4)
 
 Given a sentence, link an (action/intent) to it and map some of the sentece words to arguments/slots that are meaningful for the action. e.g.:
 

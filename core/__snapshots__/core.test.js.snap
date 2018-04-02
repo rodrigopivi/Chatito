@@ -432,6 +432,42 @@ exports[`test optional value 1`] = `
 }"
 `;
 
+exports[`test passing optional alias once and once not and caching works 1`] = `
+Object {
+  "rasa_nlu_data": Object {
+    "common_examples": Array [
+      Object {
+        "entities": Array [],
+        "intent": "greet",
+        "text": "hola botname1",
+      },
+      Object {
+        "entities": Array [],
+        "intent": "greet",
+        "text": "hola botname2",
+      },
+      Object {
+        "entities": Array [],
+        "intent": "greet",
+        "text": "hola",
+      },
+      Object {
+        "entities": Array [],
+        "intent": "greet",
+        "text": "buenas botname1",
+      },
+      Object {
+        "entities": Array [],
+        "intent": "greet",
+        "text": "buenas botname2",
+      },
+    ],
+    "entity_synonyms": Array [],
+    "regex_features": Array [],
+  },
+}
+`;
+
 exports[`test pegjs parser output 1`] = `
 "[
   {

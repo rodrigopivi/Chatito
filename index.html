@@ -126,20 +126,29 @@
             <div class="content__column">
                 <div class="code-wrapper">
 <div id="code" data-language="chatito">
-%[lightChange]
-    lights @[switch]
+%[sampleGetWeather]
+    will it be sunny in @[city] @[weatherDate] ?
+    what kind of weather should I expect @[weatherDate] in @[city] please
+    tell me if it is going to rain @[weatherDate] in @[city]
+    What is the weather in @[city] ?
 
-@[switch]
-    ~[on]
-    ~[off]
+@[weatherDate#snips/datetime]
+    at the end of the day
+    tomorrow morning
+    this afternoon
+    today
 
-~[on]
-    on
-    active
+@[city#location]
+    ~[los angeles]
+    rio de janeiro
+    tokyo
+    london
+    tel aviv
+    paris
 
-~[off]
-    off
-    inactive
+~[los angeles]
+    los angeles
+    la
 </div>
                     <div id="code__notification">Correct syntax!</div>
                 </div>

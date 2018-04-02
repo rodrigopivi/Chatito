@@ -150,7 +150,7 @@ function getVariationsFromEntity(e, defs, parentEntity, isTheOnlyEntityOfASenten
         });
         if (cacheThisEntity) {
             if (!cache[e.type]) { cache[e.type] = {}; }
-            cache[e.type][e.id] = variations;
+            cache[e.type][e.id] = [].concat(variations);
         }
     }
     if (singleAliasDefinedAsArgumentValue) {

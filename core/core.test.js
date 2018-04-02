@@ -392,3 +392,22 @@ test("test snips nlu passing options", () => {
     expect(error).toBeNull();
     expect(result).toMatchSnapshot();
 });
+
+test("test passing optional alias once and once not and caching works", () => {
+    let error = null;
+    let result = null;
+    const input = `
+%[greet]
+    hola ~[bot?]
+    buenas ~[bot]
+
+~[bot]
+    botname1
+    botname2
+`;
+    try {
+        result = generator.datasetFromString(input, "rasa");
+    } catch (e) { error = e; }
+    expect(error).toBeNull();
+    expect(result).toMatchSnapshot();
+});
