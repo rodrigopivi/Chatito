@@ -468,6 +468,67 @@ Object {
 }
 `;
 
+exports[`test passing optional alias to two entities with opt and non opt works fine with caching 1`] = `
+Object {
+  "rasa_nlu_data": Object {
+    "common_examples": Array [
+      Object {
+        "entities": Array [],
+        "intent": "greet",
+        "text": "hola botname1",
+      },
+      Object {
+        "entities": Array [],
+        "intent": "greet",
+        "text": "hola botname2",
+      },
+      Object {
+        "entities": Array [],
+        "intent": "greet",
+        "text": "hola",
+      },
+      Object {
+        "entities": Array [],
+        "intent": "greet",
+        "text": "buenas botname1",
+      },
+      Object {
+        "entities": Array [],
+        "intent": "greet",
+        "text": "buenas botname2",
+      },
+      Object {
+        "entities": Array [],
+        "intent": "greet",
+        "text": "buenas",
+      },
+      Object {
+        "entities": Array [],
+        "intent": "goodbye",
+        "text": "chao botname1",
+      },
+      Object {
+        "entities": Array [],
+        "intent": "goodbye",
+        "text": "chao botname2",
+      },
+      Object {
+        "entities": Array [],
+        "intent": "goodbye",
+        "text": "adios botname1",
+      },
+      Object {
+        "entities": Array [],
+        "intent": "goodbye",
+        "text": "adios botname2",
+      },
+    ],
+    "entity_synonyms": Array [],
+    "regex_features": Array [],
+  },
+}
+`;
+
 exports[`test pegjs parser output 1`] = `
 "[
   {

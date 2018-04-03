@@ -143,7 +143,7 @@ function getVariationsFromEntity(e, defs, parentEntity, isTheOnlyEntityOfASenten
     }
     let variations = [];
     if (cache[e.type] && cache[e.type][e.id]) {
-        variations = cache[e.type][e.id];
+        variations = [].concat(cache[e.type][e.id]);
     } else {
         sentences.forEach(s => {
             variations = variations.concat(getVariationsFromSentence(s, defs, null, e, cache));

@@ -411,3 +411,26 @@ test("test passing optional alias once and once not and caching works", () => {
     expect(error).toBeNull();
     expect(result).toMatchSnapshot();
 });
+
+test("test passing optional alias to two entities with opt and non opt works fine with caching", () => {
+    let error = null;
+    let result = null;
+    const input = `
+%[greet]
+    hola ~[bot?]
+    buenas ~[bot?]
+
+%[goodbye]
+    chao ~[bot]
+    adios ~[bot]
+
+~[bot]
+    botname1
+    botname2
+`;
+    try {
+        result = generator.datasetFromString(input, "rasa");
+    } catch (e) { error = e; }
+    expect(error).toBeNull();
+    expect(result).toMatchSnapshot();
+});
