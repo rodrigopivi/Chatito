@@ -42,7 +42,7 @@ The generated dataset should be available next to your definition file.
 
 Here is the full npm generator options:
 ```
-npx chatito <pathToFile> --format=<format> --formatOptions=<formatOptions> --max=<max> --min=<min>
+npx chatito <pathToFile> --format=<format> --formatOptions=<formatOptions>
 ```
 
  - `<pathToFile>` path to the grammar file. e.g.: lightsChange.chatito

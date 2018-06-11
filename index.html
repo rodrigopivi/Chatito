@@ -296,7 +296,7 @@ SystemJS.import('jsonStringify').then(function (jsonStringify) {
         }
     }, 400);
     Prism.languages.chatito = {
-        'intentDefinition': { pattern: /^(((\n|\n\r)+)?)%\[[^\]]+\]((\([0-9]+\))?)/i, greedy: true },
+        'intentDefinition': { pattern: /%\[[^\]]+\]((\([0-9]+\))?)/i, greedy: true },
         'slot': { pattern: /\@\[[^\]]+(\?)?\]/i, greedy: true },
         'alias': { pattern: /~\[[^\]]+(\?)?\]/i, greedy: true },
         'default': { pattern: /[^\r\n]/i, greedy: true },

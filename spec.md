@@ -16,7 +16,7 @@ Chatito design principles:
 Following those principles this is an example of the language and its generated output:
 
 ```
-%[greet]
+%[greet](2)
     ~[hi] @[name?] ~[whatsUp?]
 
 ~[hi]
@@ -34,7 +34,7 @@ Following those principles this is an example of the language and its generated 
 
 This code could produce a maximun of 18 examples, the output format is independent from the DSL language,
 although it is recommended to use a newline delimited format to just stream results to a file, a format like ndjson is recommended over plain json.
-That said, here is an example of two `Newline Delimited JSON` (ndjson.org) examples generated from the previous code:
+That said, the previous dsl code generates two examples for the `greet` intent. Here is the `Newline Delimited JSON` (ndjson.org) examples generated from the previous code:
 
 ```
 [{"type":"Text","value":"hi how is it going"}]
@@ -59,7 +59,7 @@ non printable characters, this are the requirements of document source text:
 
 ### 2.1 - Entities
 Entities are the way to define keywords that wrap sentence variations and attach some properties to them.
-There are three types of entities: intent, slot and alias.
+There are three types of entities: `intent`, `slot` and `alias`.
 
 #### 2.1.1 - Intent
 
