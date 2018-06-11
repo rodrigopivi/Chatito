@@ -1,0 +1,52 @@
+%[findByCityAndCategory](1000)
+    ~[greet?] ~[botName?] ~[please?] ~[find?] ~[restaurants?] ~[nearby] @[city]
+
+~[greet]
+    hey
+    hi
+    hello
+    greetings
+
+~[botName]
+    Pia
+
+~[please]
+    please
+    pls
+
+~[find]
+    find
+    search
+    lookup
+
+~[nearby]
+    close to
+    in the area of
+    within
+    located at
+    nearby
+
+~[restaurants]
+    restaurants
+    places to eat
+    where to eat
+
+~[newYork]
+    new york ~[city?]
+    ny ~[city?]
+
+~[sanFrancisco]
+    san francisco
+    san francisco city
+
+~[atlanta]
+    atlanta
+    atlanta city
+
+~[city]
+    city
+
+@[city]
+    ~[newYork]
+    ~[sanFrancisco]
+    ~[atlanta]

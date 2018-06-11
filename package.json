@@ -1,32 +1,74 @@
 {
   "name": "chatito",
-  "version": "1.2.2",
-  "description": "Generate training datasets for slot filling chatbots in a breeze using a simple DSL",
+  "version": "2.0.0",
+  "description": "Generate training datasets for NLU chatbots using a simple DSL",
   "bin": {
-    "chatito": "./bin/chatito.js"
+    "chatito": "./dist/bin.js"
   },
-  "main": "./core/datasetGenerator.js",
+  "main": "./dist/main.js",
   "scripts": {
-    "lint": "npx eslint ./core --ignore-pattern core/chatito.js",
-    "test": "npm run lint && jest",
-    "test:kill": "lsof -n -i4TCP:5858 | sed '1 d' | awk '{print $2}' | xargs kill -9",
-    "test:debug": "npm run test:kill && NODE_ENV=TEST node --inspect-brk node_modules/jest/bin/jest.js --no-cache --runInBand --forceExit --env jest-environment-node-debug",
-    "parser:build": "pegjs core/chatito.pegjs",
-    "static": "http-server ."
+    "prepublish": "npm run build:parser && npm run build:ts",
+    "build:parser": "pegjs parser/chatito.pegjs",
+    "build:ts": "tsc",
+    "generate": "node -r ts-node/register ./src/bin.ts",
+    "test": "npx jest",
+    "lint": "npx tslint -c tslint.json 'src/**/*.ts'"
   },
-  "author": "Rodrigo Pimentel",
-  "license": "ISC",
+  "engines": {
+    "node": ">=8.11.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rodrigopivi/Chatito.git"
+  },
+  "keywords": [
+    "nlu",
+    "natural language processing",
+    "typescript",
+    "dataset generation",
+    "named entity recognition",
+    "nlp",
+    "natural language understanding",
+    "chatbot"
+  ],
+  "author": {
+    "name": "Rodrigo Pimentel",
+    "url": "https://twitter.com/amaru_muru"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/rodrigopivi/Chatito",
   "dependencies": {
     "minimist": "^1.2.0"
   },
-  "devDependencies": {
-    "eslint": "^4.19.1",
-    "http-server": "^0.11.1",
-    "jest": "^21.2.1",
-    "jest-environment-node-debug": "^2.0.0",
-    "pegjs": "^0.10.0"
-  },
   "jest": {
-    "collectCoverage": true
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/src/tests/.*|(\\.|/)(test|spec))\\.(tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "collectCoverage": true,
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/dist/",
+      "/src/test/",
+      "/parser/"
+    ]
+  },
+  "devDependencies": {
+    "@types/jest": "^23.0.0",
+    "@types/node": "^10.3.2",
+    "jest": "^23.1.0",
+    "pegjs": "^0.10.0",
+    "ts-jest": "^22.4.6",
+    "ts-node": "^6.1.0",
+    "tslint": "^5.10.0",
+    "typescript": "^2.9.1"
   }
 }

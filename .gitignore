@@ -1,8 +1,7 @@
+/coverage
+/dist
+node_modules
 .DS_Store
 *.swp
-
-/coverage
-
-node_modules
 .tmp
-
+/parser/chatito.js

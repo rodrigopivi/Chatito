@@ -2,12 +2,12 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Chatito - Generate training datasets for slot filling chatbots in a breeze using a simple DSL</title>
-    <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/kazzkiq/CodeFlask.js/4d8a24b0/src/codeflask.css">
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.12.2/themes/prism.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.12.2/plugins/line-numbers/prism-line-numbers.min.css">
+    <meta charset='utf-8'>
+    <meta name="description" content="Generate datasets for slot filling, named entity recognition, text classification NLU chatbots">
+    <meta name="keywords" content="chatbot, chatbots, nlu, natural language understanding, natural language processing, nlp, dataset, dataset generation, named entity recognition, text classification">
+    <meta name="author" content="Rodrigo Pimentel">
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <title>Chatito - Generate datasets for slot filling/named entity recognition/text classification NLU chatbots using a simple DSL</title>
     <style>
         :focus { outline: none; }
         h1, h2 { display: inline; }
@@ -19,7 +19,7 @@
             flex-direction: column;
             flex: 1;
             height: auto !important;
-            font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+            font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
         }
         * { box-sizing: border-box; }
         a { text-decoration: none; }
@@ -27,23 +27,36 @@
             box-sizing: border-box;
             min-height: 100vh;
             background: #ececec;
-            padding: 0 20px 20px 20px;
+            padding: 0 20px 50px 20px;
         }
         a:focus, a:active, a:any-link { text-decoration: none; }
         a { text-decoration: none; color: #990adb; }
         a:hover { color: #B92aFb; }
         #app { display: flex; flex-direction: column; flex: 1; }
-        .header { color: "#444"; margin: 20px; }
+        .header { color: '#444'; margin: 20px; }
         .content { display: flex; flex-direction: row; flex: 1; }
-        .content__column { display: flex; flex: 1; flex-direction: column; max-height: calc(100vh - 200px) !important; }
+        .content__column {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            max-height: calc(100vh - 200px) !important;
+            height: calc(100vh - 200px) !important;
+            min-height: 300px;
+        }
+        #code {
+            white-space: pre-wrap; position: relative;
+            width: 50vw; background-color: #FFFFFF; margin: auto;
+            max-height: calc(100vh - 200px) !important;
+            height: calc(100vh - 200px) !important;
+            min-height: 300px;
+        }
         .content__middlecolumn {
             padding: 20px;
             display: flex;
             flex-direction: column;
-            max-height: calc(100vh - 200px) !important;
+            max-height: 300px;
         }
-        .content__middlecolumn .middlecolumn__stats { max-width: 140px; font-size: 11px; margin-top: 20px; }
-        .content__middlecolumn > #middlecolumn__stats { text-align: center; }
+        .content__middlecolumn .middlecolumn__download { max-width: 140px; font-size: 11px; margin-top: 20px; }
         .content textarea { display: flex; flex: 1; border: none; }
         #chatitoGenerate {
             background-color:#990adb;
@@ -74,24 +87,11 @@
         #chatitoGenerate:hover { background-color:#B92aFb; }
         #chatitoGenerate:active { position:relative; top:1px; }
         #chatitoGenerate.disabled { background-color: #999999;; color: #000000; }
-        .code-wrapper { overflow: scroll; }
-        #code { min-height: 90vh; width: 50vw; background-color: #FFFFFF; margin: auto; }
-        #code pre.CodeFlask__pre { padding-left: 50px !important; padding-top: 0px !important; }
-        #code .CodeFlask__textarea_line-numbers {
-            width: 100%;
-            margin-left: 0;
-            padding-left: 60px !important;
-            padding-top: 0px !important;
-        }
-        #code pre.line-numbers > code { padding: 0 !important; padding-left: 10px !important; }
-        .token.action { color: #F526aE; }
-        .token.argument { color: #6AAD28; }
-        .token.alias { color: #245994; }
-        .line-numbers .line-numbers-rows { background-color: #E3E3E3; }
+        #chatitoDSLResult { white-space: nowrap; }
         #code__notification {
-            position: absolute;
-            width: 100%;
-            height: 38px;
+            position: fixed;
+            width: 100vw;
+            height: 40px;
             background-color: green;
             bottom: 0;
             margin: auto;
@@ -100,211 +100,191 @@
             padding: 8px;
             color: white;
             z-index: 99;
+            padding: 12px;
+            opacity: 0.8;
         }
         #code__notification.codeerror__notification { background-color: red; }
-        .range-slider { text-align: center; margin-top: 8px; }
         .hide_me { visibility: hidden; display: none; }
+        .token.intentDefinition { color: #F526aE; }
+        .token.slot { color: #6AAD28; }
+        .token.alias { color: #245994; }
+        .token.default { color: #444; }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/0.20.19/system.src.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.12.2/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.12.2/plugins/line-numbers/prism-line-numbers.min.js"></script>
-    <script src="https://cdn.rawgit.com/kazzkiq/CodeFlask.js/4d8a24b0/src/codeflask.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.5/lodash.min.js"></script>
-    <script src="https://fastcdn.org/FileSaver.js/1.1.20151003/FileSaver.min.js"></script>
+    <script src='https://cdn.rawgit.com/kazzkiq/CodeFlask/v1.1.0/build/codeflask.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.5/lodash.min.js'></script>
 </head>
 
 <body>
-    <div id="app">
-        <div class="header">
-            <h1><a href="https://github.com/rodrigopivi/Chatito">Chatito</a></h1>
+    <div id='app'>
+        <div class='header'>
+            <h1><a href='https://github.com/rodrigopivi/Chatito'>Chatito</a></h1>
             <h2>
-                helps you generate datasets for chatbots online and in a breeze using a simple DSL.
-                <a href="https://github.com/rodrigopivi/Chatito">Read the docs</a>
+                helps you datasets for natural language understanding chatbots using a simple DSL
+                <a href='https://github.com/rodrigopivi/Chatito'>Read the docs</a>
             <h2>
         </div>
-        <div class="content">
-            <div class="content__column">
-                <div class="code-wrapper">
-<div id="code" data-language="chatito">
-%[sampleGetWeather]
-    will it be sunny in @[city] @[weatherDate] ?
-    what kind of weather should I expect @[weatherDate] in @[city] please
-    tell me if it is going to rain @[weatherDate] in @[city]
-    What is the weather in @[city] ?
+        <div class='content'>
+            <div class='content__column'>
+                <div class='code-wrapper'>
+<div id='code' data-language='chatito'>
+%[findByCityAndCategory](3)
+    ~[greet?] ~[botName?] ~[please?] ~[find?] ~[restaurants?] ~[nearby] @[city]
 
-@[weatherDate#snips/datetime]
-    at the end of the day
-    tomorrow morning
-    this afternoon
-    today
+~[greet]
+    hey
+    hi
+    hello
+    greetings
 
-@[city#location]
-    ~[los angeles]
-    rio de janeiro
-    tokyo
-    london
-    tel aviv
-    paris
+~[botName]
+    Pia
 
-~[los angeles]
-    los angeles
-    la
+~[please]
+    please
+    pls
+
+~[find]
+    find
+    search
+    lookup
+
+~[nearby]
+    close to
+    in the area of
+    within
+    located at
+    nearby
+
+~[restaurants]
+    restaurants
+    places to eat
+    where to eat
+
+~[newYork]
+    new york ~[city?]
+    ny ~[city?]
+
+~[sanFrancisco]
+    san francisco
+    san francisco city
+
+~[atlanta]
+    atlanta
+    atlanta city
+
+~[city]
+    city
+
+@[city]
+    ~[newYork]
+    ~[sanFrancisco]
+    ~[atlanta]
 </div>
-                    <div id="code__notification">Correct syntax!</div>
+                    <div id='code__notification'>Correct syntax!</div>
                 </div>
             </div>
-            <div class="content__middlecolumn">
-                <select id="datasetAdapter">
-                    <option value="rasa" selected="selected">rasa adapter</option>
-                    <option value="snips">snips adapter</option>
+            <div class='content__middlecolumn'>
+                <select id='datasetAdapter'>
+                    <option value='default' selected='selected'>default format</option>
+                    <option value='rasa'>rasa adapter</option>
+                    <option value='snips'>snips adapter</option>
                 </select>
-                <input type="button" id="chatitoGenerate" value="Generate dataset" />
-                <div class="middlecolumn__stats hide_me">
-                    <div><b>Total examples: </b> <span id="middlecolumn__stats"></span></div>
-                    <br />
-                    <div><b>Post process</b></div>
+                <input type='button' id='chatitoGenerate' value='Generate dataset' />
+                <div class='middlecolumn__download hide_me'>
+                    <div style="text-align:center;"><b>Dataset generated!</b></div>
+                    <div style='margin-top: 16px; text-align: center;'>
+                        <div><input type='button' id='training__download' value='Download' /></div>
+                    </div>
+                    <br /><br />
                     <div>
-                        On the right, you see the full dataset. Shuffling and splitting the examples helps
-                        preventing overfitting and provides testing examples. Select the % of random examples for training:
-                    </div>
-                    <div class="range-slider">
-                        <input class="range-slider__range" type="range" value="100" min="0" max="100">
-                        <div class="range-slider__value">100%</div>
-                    </div>
-                    <div style="margin-top: 16px; text-align: center;">
-                        <b>Training examples:</b> <span id="range__trainingnum">0</span><br />
-                        <b>Testing examples:</b> <span id="range__testingnum">0</span>
-                        <div><input type="button" id="training__download" value="Download" /></div>
-                    </div>
-                    <div>
-                        <br /><br />
-                        If you need custom options for rasa or snips (like regex or custon entities), use the npm package with formatOptions argument.
+                        If you need custom options for rasa or snips (like regex or custon entities),
+                        use the npm package with formatOptions argument.
                     </div>
                 </div>
             </div>
-            <div class="content__column">
-                <textarea id="chatitoDSLResult"></textarea>
+            <div class='content__column'>
+                <textarea id='chatitoDSLResult'></textarea>
             </div>
         </div>
     </div>
-
+</div>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/systemjs/0.20.19/system.src.js'></script>
+<script src='https://fastcdn.org/FileSaver.js/1.1.20151003/FileSaver.min.js'></script>
 <script>
+let flask = null;
 System.config({
-    transpiler: "Babel", babelOptions: { presets: ["es2015"] },
-    packages: { "": { defaultExtension: "js" }, "https://rawgit.com": { defaultExtension: "js" } },
+    transpiler: 'Babel',
+    babelOptions: { presets: ['es2015'] },
+    packages: { '': { defaultExtension: 'js' }, 'https://unpkg.com': { defaultExtension: 'js' } },
     map: {
-        Chatito: 'https://rawgit.com/rodrigopivi/Chatito/master/core/datasetGenerator.js',
-        // Chatito: '/core/datasetGenerator.js',
-        Babel: "https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js",
-        jsonStringify: "https://cdn.rawgit.com/lydell/json-stringify-pretty-compact/b11cf5b0/index.js",
+        Babel: 'https://unpkg.com/babel-standalone@6.26.0/babel.min.js',
+        parser: '/dist/main.js',
+        webAdapter: '/dist/adapters/web.js',
+        rasaAdapter: '/dist/adapters/rasa.js',
+        snipsAdapter: '/dist/adapters/snips.js',
+        jsonStringify: 'https://unpkg.com/json-stringify-pretty-compact@1.2.0/index.js',
     }
 });
-SystemJS.import("Chatito").then(function (chatito) {
-SystemJS.import("jsonStringify").then(function (jsonStringify) {
-    let DATASET = null;
+SystemJS.import('parser').then(function (parser) {
+SystemJS.import('webAdapter').then(function (webAdapter) {
+SystemJS.import('rasaAdapter').then(function (rasaAdapter) {
+SystemJS.import('snipsAdapter').then(function (snipsAdapter) {
+SystemJS.import('jsonStringify').then(function (jsonStringify) {
+    const adapters = { default: webAdapter.adapter, rasa: rasaAdapter.adapter, snips: snipsAdapter.adapter };
     function clearDataset() {
         DATASET = null;
         document.getElementById("chatitoDSLResult").value = "";
-        const container$ = document.getElementsByClassName("middlecolumn__stats")[0];
+        const container$ = document.getElementsByClassName("middlecolumn__download")[0];
         container$.classList.add("hide_me");
     }
-    function downloadDataset(data, maxNumberOfTrainingExamples) {
-        const adapterSelector$ = document.getElementById("datasetAdapter");
-        let postProcessor = adapterSelector$.value === "rasa" ? chatito.rasaGenerator.postProcessor : chatito.snipsGenerator.postProcessor;
-        const { dataset, testingExamples, stats } = postProcessor(data, maxNumberOfTrainingExamples);
-        const datasetBlob = new Blob([jsonStringify(dataset)], {type: "text/json;charset=utf-8"});
-        const testingBlob = new Blob([jsonStringify(testingExamples)], {type: "text/json;charset=utf-8"});
-        const trainingFilename = `training_${adapterSelector$.value}_${stats.training}_${new Date().getTime()}.json`;
-        const testingFilename = `testing_${adapterSelector$.value}_${stats.testing}_${new Date().getTime()}.json`;
-        saveAs(datasetBlob, trainingFilename);
-        setTimeout(() => {
-            saveAs(testingBlob, testingFilename);
-            clearDataset();
-        }, 100); // timeout to allow multiple downloads at once
+    function downloadDataset(data, adapterName) {
+        const datasetBlob = new Blob([data], {type: "text/json;charset=utf-8"});
+        const fname = `chatito_${adapterName}_${new Date().getTime()}.json`;
+        saveAs(datasetBlob, fname);
     };
     function changeLoadingButton(isLoading) {
-        const $generateButton = document.getElementById("chatitoGenerate");
+        const generateButton$ = document.getElementById("chatitoGenerate");
         if (isLoading) {
-            $generateButton.className = "disabled";
-            $generateButton.setAttribute("disabled", true);
-            const container$ = document.getElementsByClassName("middlecolumn__stats")[0];
+            generateButton$.className = "disabled";
+            generateButton$.setAttribute("disabled", true);
+            const container$ = document.getElementsByClassName("middlecolumn__download")[0];
             container$.classList.add("hide_me");
         } else {
-            $generateButton.className = "";
-            $generateButton.removeAttribute("disabled");
+            generateButton$.className = "";
+            generateButton$.removeAttribute("disabled");
         }
-    }
-    function getNumberOfExamples() {
-        const adapterSelector$ = document.getElementById("datasetAdapter");
-        let total = 0;
-        if (!DATASET) { return 0; }
-        if (adapterSelector$.value === "rasa") {
-            total = DATASET.rasa_nlu_data.common_examples.length;
-        } else if (adapterSelector$.value === "snips") {
-            for (const i in DATASET.intents) { total += DATASET.intents[i].utterances.length; }
-        }
-        return total
-    }
-    function onRangeChangeHandler(evt) {
-        const value$ = document.getElementsByClassName("range-slider__value")[0];
-        const range__trainingnum$ = document.getElementById("range__trainingnum");
-        const range__testingnum$ = document.getElementById("range__testingnum");
-        const total = getNumberOfExamples();
-        const v = evt.target.value;
-        value$.innerHTML = `${v}%`;
-        const trainingExamples = Math.round((parseInt(v, 10) / 100) * total);
-        const testingExamples = Math.round(((100 - parseInt(v, 10)) / 100) * total);
-        range__trainingnum$.innerHTML = trainingExamples;
-        range__testingnum$.innerHTML = testingExamples;
-        const trainingDownload$ = document.getElementById("training__download");
-        trainingDownload$.onclick = () => downloadDataset(DATASET, trainingExamples);
-    }
-    function updateStats() {
-        const $stats = document.getElementById("middlecolumn__stats");
-        const numberOfExamples = getNumberOfExamples();
-        if (!numberOfExamples) { return $stats.innerHTML = ""; }
-        $stats.innerHTML = `${numberOfExamples}`;
-        const range$ = document.getElementsByClassName("range-slider__range")[0];
-        range$.value = 50;
-        onRangeChangeHandler({ target: range$ });
-        const container$ = document.getElementsByClassName("middlecolumn__stats")[0];
-        container$.classList.remove("hide_me");
     }
     const genDataset = () => {
+        if (!flask) { throw new Error("Code editor not initialized.")}
+        const adapterName = document.getElementById("datasetAdapter").value;
+        const adapter = adapters[adapterName];
         document.getElementById("chatitoDSLResult").value = "";
-        DATASET = null;
         const code$ = document.getElementById("code");
-        let codeInputValue = code$.innerText;
+        let codeInputValue = flask.getCode();;
         let d = "";
+        
         changeLoadingButton(true);
-        updateStats();
-        setTimeout(() => {// make async
-            try {
-                const adapterSelector$ = document.getElementById("datasetAdapter");
-                DATASET = chatito.datasetFromString(codeInputValue, adapterSelector$.value);
-                d = jsonStringify(DATASET);
-                updateStats();
-            } catch (e) {
-                // IF its a js error, we just show it as string,
-                // if its a pegsj error, show the full error payload
-                d = e.constructor == Error ? e.toString() : `ERROR: \n\n ${jsonStringify(e, null, 2)}`;
-            }
+        adapter(codeInputValue, null).then(DATASET => {
+            d = jsonStringify(DATASET);
+            document.getElementById("chatitoDSLResult").value = d;
+            document.getElementById("training__download").onclick = () => downloadDataset(d, adapterName);
+            changeLoadingButton(false);
+            const container$ = document.getElementsByClassName("middlecolumn__download")[0];
+            container$.classList.remove("hide_me");
+        }).catch(e => {
+            d = e.constructor == Error ? e.toString() : `ERROR: \n\n ${jsonStringify(e, null, 2)}`;
             document.getElementById("chatitoDSLResult").value = d;
             changeLoadingButton(false);
-        }, 100);
-    };
-    const initRangeSlider = () => {
-        const range$ = document.getElementsByClassName("range-slider__range")[0];
-        range$.onchange = onRangeChangeHandler;
+        });
     };
     const validateChatitoDSL = _.debounce((val) => {
-        let ast = null;
         let err = null;
         try {
-            ast = jsonStringify(chatito.astFromString(codeInputValue), null, 2);
+            const ast = jsonStringify(parser.astFromString(codeInputValue), null, 2);
         } catch (e) {
             err = e.constructor == Error ?
-                e.toString() : `${e.name}: ${e.message} Line: ${e.location.start.line}, Column: ${e.location.start.column}`
+                e.toString() :
+                `${e.name}: ${e.message} Line: ${e.location.start.line}, Column: ${e.location.start.column}`;
         }
         const notification$ = document.getElementById("code__notification");
         if (err) {
@@ -314,23 +294,25 @@ SystemJS.import("jsonStringify").then(function (jsonStringify) {
             notification$.className = "";
             notification$.innerText = "Correct syntax!";
         }
-    }, 500);
+    }, 400);
     Prism.languages.chatito = {
-        "action": { pattern: /\%\[[^\]]+\](\?)?/i, greedy: true },
-        "argument": { pattern: /\@\[[^\]]+\](\?)?/i, greedy: true },
-        "alias": { pattern: /~\[[^\]]+\](\?)?/i, greedy: true },
+        'intentDefinition': { pattern: /^(((\n|\n\r)+)?)%\[[^\]]+\]((\([0-9]+\))?)/i, greedy: true },
+        'slot': { pattern: /\@\[[^\]]+(\?)?\]/i, greedy: true },
+        'alias': { pattern: /~\[[^\]]+(\?)?\]/i, greedy: true },
+        'default': { pattern: /[^\r\n]/i, greedy: true },
     };
-    const flask = new CodeFlask();
-    flask.run("#code", { language: "chatito", lineNumbers: true });
+    flask = new CodeFlask('#code', { language: "chatito", lineNumbers: false });
     flask.onUpdate((code) => {
         codeInputValue = code;
         clearDataset();
         validateChatitoDSL(code);
     });
-    document.getElementById("chatitoGenerate").addEventListener("click", genDataset);
-    document.getElementById("datasetAdapter").addEventListener("change", clearDataset);
-    initRangeSlider();
+    document.getElementById('chatitoGenerate').addEventListener('click', genDataset);
+    document.getElementById('datasetAdapter').addEventListener('change', clearDataset);
     genDataset();
+});
+});
+});
 });
 });
 </script>

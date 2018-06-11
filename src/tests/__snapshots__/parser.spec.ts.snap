@@ -1,0 +1,770 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Example for weird variations CORRECT parser output 1`] = `
+"[
+  {
+    \\"type\\": \\"IntentDefinition\\",
+    \\"key\\": \\"intent\\",
+    \\"max\\": null,
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 1,
+        \\"line\\": 2,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 10,
+        \\"line\\": 2,
+        \\"column\\": 10
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"[ adfd] adf ~ @ asdfasdf asdf \\",
+          \\"type\\": \\"Text\\"
+        },
+        {
+          \\"value\\": \\"alias_name ok\\",
+          \\"type\\": \\"Alias\\",
+          \\"opt\\": false
+        },
+        {
+          \\"value\\": \\" \\",
+          \\"type\\": \\"Text\\"
+        },
+        {
+          \\"value\\": \\"slot name\\",
+          \\"type\\": \\"Slot\\",
+          \\"opt\\": true,
+          \\"location\\": {
+            \\"start\\": {
+              \\"offset\\": 62,
+              \\"line\\": 3,
+              \\"column\\": 52
+            },
+            \\"end\\": {
+              \\"offset\\": 90,
+              \\"line\\": 3,
+              \\"column\\": 80
+            }
+          },
+          \\"variation\\": \\"variation name\\"
+        }
+      ],
+      [
+        {
+          \\"value\\": \\"~ @\\",
+          \\"type\\": \\"Text\\"
+        },
+        {
+          \\"value\\": \\"alias_name ok\\",
+          \\"type\\": \\"Alias\\",
+          \\"opt\\": false
+        },
+        {
+          \\"value\\": \\"slot name\\",
+          \\"type\\": \\"Slot\\",
+          \\"opt\\": true,
+          \\"location\\": {
+            \\"start\\": {
+              \\"offset\\": 114,
+              \\"line\\": 4,
+              \\"column\\": 24
+            },
+            \\"end\\": {
+              \\"offset\\": 142,
+              \\"line\\": 4,
+              \\"column\\": 52
+            }
+          },
+          \\"variation\\": \\"variation name\\"
+        }
+      ],
+      [
+        {
+          \\"value\\": \\"@@\\",
+          \\"type\\": \\"Text\\"
+        },
+        {
+          \\"value\\": \\"alias_name ok\\",
+          \\"type\\": \\"Alias\\",
+          \\"opt\\": false
+        },
+        {
+          \\"value\\": \\"~~\\",
+          \\"type\\": \\"Text\\"
+        },
+        {
+          \\"value\\": \\"slot name\\",
+          \\"type\\": \\"Slot\\",
+          \\"opt\\": true,
+          \\"location\\": {
+            \\"start\\": {
+              \\"offset\\": 167,
+              \\"line\\": 5,
+              \\"column\\": 25
+            },
+            \\"end\\": {
+              \\"offset\\": 195,
+              \\"line\\": 5,
+              \\"column\\": 53
+            }
+          },
+          \\"variation\\": \\"variation name\\"
+        }
+      ]
+    ]
+  },
+  {
+    \\"type\\": \\"SlotDefinition\\",
+    \\"key\\": \\"slot name\\",
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 197,
+        \\"line\\": 7,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 224,
+        \\"line\\": 7,
+        \\"column\\": 28
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"3 \\",
+          \\"type\\": \\"Text\\"
+        },
+        {
+          \\"value\\": \\"daysOrHours\\",
+          \\"type\\": \\"Alias\\",
+          \\"opt\\": false
+        }
+      ],
+      [
+        {
+          \\"value\\": \\"5 \\",
+          \\"type\\": \\"Text\\"
+        },
+        {
+          \\"value\\": \\"daysOrHours\\",
+          \\"type\\": \\"Alias\\",
+          \\"opt\\": false
+        }
+      ]
+    ],
+    \\"variation\\": \\"variation name\\"
+  },
+  {
+    \\"type\\": \\"AliasDefinition\\",
+    \\"key\\": \\"alias_name ok\\",
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 268,
+        \\"line\\": 11,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 284,
+        \\"line\\": 11,
+        \\"column\\": 17
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"as fast as possible\\",
+          \\"type\\": \\"Text\\"
+        }
+      ],
+      [
+        {
+          \\"value\\": \\"quickly\\",
+          \\"type\\": \\"Text\\"
+        }
+      ]
+    ]
+  },
+  {
+    \\"type\\": \\"AliasDefinition\\",
+    \\"key\\": \\"daysOrHours\\",
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 322,
+        \\"line\\": 15,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 336,
+        \\"line\\": 15,
+        \\"column\\": 15
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"days\\",
+          \\"type\\": \\"Text\\"
+        }
+      ],
+      [
+        {
+          \\"value\\": \\"hours\\",
+          \\"type\\": \\"Text\\"
+        }
+      ]
+    ]
+  }
+]"
+`;
+
+exports[`Example variation spec CORRECT parser output 1`] = `
+"[
+  {
+    \\"type\\": \\"IntentDefinition\\",
+    \\"key\\": \\"ask_for_delivery\\",
+    \\"max\\": null,
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 1,
+        \\"line\\": 2,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 20,
+        \\"line\\": 2,
+        \\"column\\": 20
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"my parcel should be delivered in \\",
+          \\"type\\": \\"Text\\"
+        },
+        {
+          \\"value\\": \\"delivery_time\\",
+          \\"type\\": \\"Slot\\",
+          \\"opt\\": false,
+          \\"location\\": {
+            \\"start\\": {
+              \\"offset\\": 58,
+              \\"line\\": 3,
+              \\"column\\": 38
+            },
+            \\"end\\": {
+              \\"offset\\": 88,
+              \\"line\\": 3,
+              \\"column\\": 68
+            }
+          },
+          \\"variation\\": \\"time_in_hours\\"
+        }
+      ],
+      [
+        {
+          \\"value\\": \\"my parcel should be delivered \\",
+          \\"type\\": \\"Text\\"
+        },
+        {
+          \\"value\\": \\"delivery_time\\",
+          \\"type\\": \\"Slot\\",
+          \\"opt\\": false,
+          \\"location\\": {
+            \\"start\\": {
+              \\"offset\\": 123,
+              \\"line\\": 4,
+              \\"column\\": 35
+            },
+            \\"end\\": {
+              \\"offset\\": 153,
+              \\"line\\": 4,
+              \\"column\\": 65
+            }
+          },
+          \\"variation\\": \\"relative_time\\"
+        }
+      ]
+    ]
+  },
+  {
+    \\"type\\": \\"SlotDefinition\\",
+    \\"key\\": \\"delivery_time\\",
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 155,
+        \\"line\\": 6,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 185,
+        \\"line\\": 6,
+        \\"column\\": 31
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"3 days\\",
+          \\"type\\": \\"Text\\"
+        }
+      ],
+      [
+        {
+          \\"value\\": \\"5 hours\\",
+          \\"type\\": \\"Text\\"
+        }
+      ]
+    ],
+    \\"variation\\": \\"time_in_hours\\"
+  },
+  {
+    \\"type\\": \\"SlotDefinition\\",
+    \\"key\\": \\"delivery_time\\",
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 210,
+        \\"line\\": 10,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 240,
+        \\"line\\": 10,
+        \\"column\\": 31
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"as fast as possible\\",
+          \\"type\\": \\"Text\\"
+        }
+      ],
+      [
+        {
+          \\"value\\": \\"quickly\\",
+          \\"type\\": \\"Text\\"
+        }
+      ]
+    ],
+    \\"variation\\": \\"relative_time\\"
+  }
+]"
+`;
+
+exports[`Simple example correct PEGJS output 1`] = `
+"[
+  {
+    \\"type\\": \\"IntentDefinition\\",
+    \\"key\\": \\"greet\\",
+    \\"max\\": null,
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 1,
+        \\"line\\": 2,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 9,
+        \\"line\\": 2,
+        \\"column\\": 9
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"hi\\",
+          \\"type\\": \\"Alias\\",
+          \\"opt\\": false
+        },
+        {
+          \\"value\\": \\" \\",
+          \\"type\\": \\"Text\\"
+        },
+        {
+          \\"value\\": \\"name\\",
+          \\"type\\": \\"Slot\\",
+          \\"opt\\": true,
+          \\"location\\": {
+            \\"start\\": {
+              \\"offset\\": 20,
+              \\"line\\": 3,
+              \\"column\\": 11
+            },
+            \\"end\\": {
+              \\"offset\\": 28,
+              \\"line\\": 3,
+              \\"column\\": 19
+            }
+          },
+          \\"variation\\": null
+        },
+        {
+          \\"value\\": \\" \\",
+          \\"type\\": \\"Text\\"
+        },
+        {
+          \\"value\\": \\"whatsUp\\",
+          \\"type\\": \\"Alias\\",
+          \\"opt\\": true
+        },
+        {
+          \\"value\\": \\" one two three im \\",
+          \\"type\\": \\"Text\\"
+        },
+        {
+          \\"value\\": \\"name\\",
+          \\"type\\": \\"Slot\\",
+          \\"opt\\": true,
+          \\"location\\": {
+            \\"start\\": {
+              \\"offset\\": 58,
+              \\"line\\": 3,
+              \\"column\\": 49
+            },
+            \\"end\\": {
+              \\"offset\\": 66,
+              \\"line\\": 3,
+              \\"column\\": 57
+            }
+          },
+          \\"variation\\": null
+        }
+      ]
+    ]
+  },
+  {
+    \\"type\\": \\"AliasDefinition\\",
+    \\"key\\": \\"hi\\",
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 68,
+        \\"line\\": 5,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 73,
+        \\"line\\": 5,
+        \\"column\\": 6
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"hi\\",
+          \\"type\\": \\"Text\\"
+        }
+      ],
+      [
+        {
+          \\"value\\": \\"hey\\",
+          \\"type\\": \\"Text\\"
+        }
+      ]
+    ]
+  },
+  {
+    \\"type\\": \\"SlotDefinition\\",
+    \\"key\\": \\"name\\",
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 90,
+        \\"line\\": 9,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 97,
+        \\"line\\": 9,
+        \\"column\\": 8
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"Janis\\",
+          \\"type\\": \\"Text\\"
+        }
+      ],
+      [
+        {
+          \\"value\\": \\"Bob\\",
+          \\"type\\": \\"Text\\"
+        }
+      ]
+    ],
+    \\"variation\\": null
+  },
+  {
+    \\"type\\": \\"AliasDefinition\\",
+    \\"key\\": \\"whatsUp\\",
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 117,
+        \\"line\\": 13,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 127,
+        \\"line\\": 13,
+        \\"column\\": 11
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"whats up\\",
+          \\"type\\": \\"Text\\"
+        }
+      ],
+      [
+        {
+          \\"value\\": \\"how is it going\\",
+          \\"type\\": \\"Text\\"
+        }
+      ]
+    ]
+  }
+]"
+`;
+
+exports[`Simple example for windows end of line CORRECT parser output 1`] = `
+"[
+  {
+    \\"type\\": \\"IntentDefinition\\",
+    \\"key\\": \\"greet\\",
+    \\"max\\": null,
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 0,
+        \\"line\\": 1,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 8,
+        \\"line\\": 1,
+        \\"column\\": 9
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"hi hi\\",
+          \\"type\\": \\"Text\\"
+        }
+      ],
+      [
+        {
+          \\"value\\": \\"how are you \\",
+          \\"type\\": \\"Text\\"
+        },
+        {
+          \\"value\\": \\"full names\\",
+          \\"type\\": \\"Slot\\",
+          \\"opt\\": false,
+          \\"location\\": {
+            \\"start\\": {
+              \\"offset\\": 37,
+              \\"line\\": 3,
+              \\"column\\": 17
+            },
+            \\"end\\": {
+              \\"offset\\": 50,
+              \\"line\\": 3,
+              \\"column\\": 30
+            }
+          },
+          \\"variation\\": null
+        },
+        {
+          \\"value\\": \\" sup\\",
+          \\"type\\": \\"Text\\"
+        }
+      ]
+    ]
+  },
+  {
+    \\"type\\": \\"SlotDefinition\\",
+    \\"key\\": \\"full names\\",
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 56,
+        \\"line\\": 4,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 69,
+        \\"line\\": 4,
+        \\"column\\": 14
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"jim raynor\\",
+          \\"type\\": \\"Text\\"
+        }
+      ]
+    ],
+    \\"variation\\": null
+  }
+]"
+`;
+
+exports[`Simple example with max CORRECT parser output 1`] = `
+"[
+  {
+    \\"type\\": \\"IntentDefinition\\",
+    \\"key\\": \\"greet\\",
+    \\"max\\": 3,
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 1,
+        \\"line\\": 2,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 12,
+        \\"line\\": 2,
+        \\"column\\": 12
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"hi\\",
+          \\"type\\": \\"Alias\\",
+          \\"opt\\": false
+        },
+        {
+          \\"value\\": \\" \\",
+          \\"type\\": \\"Text\\"
+        },
+        {
+          \\"value\\": \\"name\\",
+          \\"type\\": \\"Slot\\",
+          \\"opt\\": true,
+          \\"location\\": {
+            \\"start\\": {
+              \\"offset\\": 23,
+              \\"line\\": 3,
+              \\"column\\": 11
+            },
+            \\"end\\": {
+              \\"offset\\": 31,
+              \\"line\\": 3,
+              \\"column\\": 19
+            }
+          },
+          \\"variation\\": null
+        },
+        {
+          \\"value\\": \\" \\",
+          \\"type\\": \\"Text\\"
+        },
+        {
+          \\"value\\": \\"whatsUp\\",
+          \\"type\\": \\"Alias\\",
+          \\"opt\\": true
+        }
+      ]
+    ]
+  },
+  {
+    \\"type\\": \\"AliasDefinition\\",
+    \\"key\\": \\"hi\\",
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 44,
+        \\"line\\": 4,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 49,
+        \\"line\\": 4,
+        \\"column\\": 6
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"hi\\",
+          \\"type\\": \\"Text\\"
+        }
+      ],
+      [
+        {
+          \\"value\\": \\"hey\\",
+          \\"type\\": \\"Text\\"
+        }
+      ]
+    ]
+  },
+  {
+    \\"type\\": \\"SlotDefinition\\",
+    \\"key\\": \\"name\\",
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 65,
+        \\"line\\": 7,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 72,
+        \\"line\\": 7,
+        \\"column\\": 8
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"Janis\\",
+          \\"type\\": \\"Text\\"
+        }
+      ],
+      [
+        {
+          \\"value\\": \\"Bob\\",
+          \\"type\\": \\"Text\\"
+        }
+      ]
+    ],
+    \\"variation\\": null
+  },
+  {
+    \\"type\\": \\"AliasDefinition\\",
+    \\"key\\": \\"whatsUp\\",
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 91,
+        \\"line\\": 10,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 101,
+        \\"line\\": 10,
+        \\"column\\": 11
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"whats up\\",
+          \\"type\\": \\"Text\\"
+        }
+      ],
+      [
+        {
+          \\"value\\": \\"how is it going\\",
+          \\"type\\": \\"Text\\"
+        }
+      ]
+    ]
+  }
+]"
+`;
+
+exports[`Simple example with wrong identation ERROR with wrong indentation syntax 1`] = `[SyntaxError: Expected correct indentation but " " found.]`;
+
+exports[`Simple example with wrong syntax ERROR with wrong syntax after maximum 1`] = `[SyntaxError: Expected end of line  but "w" found.]`;
