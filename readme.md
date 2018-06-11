@@ -1,6 +1,10 @@
 # Chatito
 
-Chatito helps you generate dataset examples for training and validating chatbot models in a breeze using a simple DSL.
+[![Alt text](screenshot.jpg?raw=true "Screenshot of online IDE")](https://rodrigopivi.github.io/Chatito/)
+
+[Try the online IDE!](https://rodrigopivi.github.io/Chatito/)
+
+Chatito helps you generate datasets for training and validating chatbot models using a minimalistic DSL.
 
 If you are building chatbots using commercial models, open source frameworks or writing your own natural language processing model, you need training examples. Chatito is here to help you.
 
