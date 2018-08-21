@@ -14,6 +14,7 @@
     "ts": "tsc",
     "web:build": "npm run cleanup && gatsby build",
     "web:start": "gatsby develop",
+    "web:deploy": "npm run cleanup && gatsby build --prefix-paths && gh-pages -d public",
     "generate": "node -r ts-node/register ./src/bin.ts",
     "test": "npx jest",
     "lint": "npx tslint -c tslint.json 'src/**/*.ts' 'web/**/*.ts'"
