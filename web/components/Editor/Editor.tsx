@@ -1,7 +1,5 @@
-import CodeFlask from 'codeflask';
 import { saveAs } from 'file-saver/FileSaver';
 import * as React from 'react';
-import ReactJson from 'react-json-view';
 import * as rasaAdapter from '../../../src/adapters/rasa';
 import * as snipsAdapter from '../../../src/adapters/snips';
 import * as webAdapter from '../../../src/adapters/web';
@@ -16,6 +14,9 @@ const adapters = {
     rasa: rasaAdapter,
     snips: snipsAdapter
 };
+
+declare var CodeFlask;
+let ReactJson: any = null;
 
 interface IEditorState {
     error: null | string;
@@ -62,6 +63,7 @@ export default class Editor extends React.Component<{}, IEditorState> {
     }, 300);
 
     public componentDidMount() {
+        ReactJson = require('react-json-view').default;
         const flask = new CodeFlask('#my-code-editor', {
             language: 'chatito',
             lineNumbers: true
@@ -152,7 +154,7 @@ export default class Editor extends React.Component<{}, IEditorState> {
     };
 
     private renderEditAdapterOptions = () => {
-        if (!this.state.useCustomOptions) {
+        if (!this.state.useCustomOptions || !ReactJson) {
             return null;
         }
         return (
@@ -180,7 +182,7 @@ export default class Editor extends React.Component<{}, IEditorState> {
     };
 
     private renderDatasetPreviewer = () => {
-        if (!this.state.dataset) {
+        if (!this.state.dataset || !ReactJson) {
             return null;
         }
         return (

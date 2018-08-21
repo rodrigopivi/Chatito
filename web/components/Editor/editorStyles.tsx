@@ -21,6 +21,7 @@ export const CodeStyles = styled.div`
     width: inherit;
     height: calc(100vh - 210px) !important;
     min-height: 400px;
+    background-color: #282a35;
     > .codeflask {
         background-color: #282a35;
         > textarea.codeflask__textarea {

@@ -4,6 +4,7 @@ node_modules
 .DS_Store
 *.swp
 .tmp
+.cache
 /parser/chatito.js
 /public/**/*
 !/public/andorid-chrome-192x192.png
