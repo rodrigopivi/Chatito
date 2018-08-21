@@ -275,6 +275,7 @@ export default class Editor extends React.Component<{}, IEditorState> {
     private changeTab = (i: number, cb?: () => void) => {
         this.setState({ activeTabIndex: i }, () => {
             this.codeflask.updateCode(this.tabs[this.state.activeTabIndex].value);
+            this.codeflask.setLineNumber();
             if (cb) {
                 setTimeout(cb, 600); // note; hack using setTimeout because codeflask uses a timeout on update code
             }
