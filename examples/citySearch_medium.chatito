@@ -1,4 +1,4 @@
-%[findByCityAndCategory](1000)
+%[findByCityAndCategory]('training': '1000', 'testing': '100')
     ~[greet?] ~[botName?] ~[please?] ~[find?] ~[restaurants?] ~[nearby] @[city]
 
 ~[greet]

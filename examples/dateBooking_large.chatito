@@ -1,4 +1,4 @@
-%[bookRestaurantsAtDatetime](1000)
+%[bookRestaurantsAtDatetime]('training': '1000')
     ~[find?] ~[some?] ~[restaurants] ~[available?]  from @[bookTime] to @[bookTime]
     ~[find?] ~[some?] ~[restaurants] ~[available?]  from @[bookTime] to @[bookTime] on @[bookDate]
 

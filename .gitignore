@@ -5,3 +5,14 @@ node_modules
 *.swp
 .tmp
 /parser/chatito.js
+/public/**/*
+!/public/andorid-chrome-192x192.png
+!/public/andorid-chrome-512x512.png
+!/public/apple-touch-icon.png
+!/public/browserconfig.xml
+!/public/favicon-16x16.png
+!/public/favicon-32x32.png
+!/public/favicon.ico
+!/public/mstitle-150x150.png
+!/public/safari-pinned-tab.svg
+!/public/site.webmanifest

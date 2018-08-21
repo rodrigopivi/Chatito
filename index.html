@@ -50,6 +50,14 @@
             height: calc(100vh - 200px) !important;
             min-height: 300px;
         }
+        #code > .codeflask.codeflask--has-line-numbers > pre {
+            width: auto !important;
+        }
+        #code > .codeflask.codeflask--has-line-numbers > div.codeflask__lines {
+            z-index: 3;
+            height: auto !important;
+            background-color: rgb(221, 221, 221);
+        }
         .content__middlecolumn {
             padding: 20px;
             display: flex;
@@ -105,12 +113,14 @@
         }
         #code__notification.codeerror__notification { background-color: red; }
         .hide_me { visibility: hidden; display: none; }
+        .token.comments { color: #BBBBBB; }
         .token.intentDefinition { color: #F526aE; }
+        .token.slotDefinition { color: #6AAD28; }
         .token.slot { color: #6AAD28; }
         .token.alias { color: #245994; }
         .token.default { color: #444; }
     </style>
-    <script src='https://cdn.rawgit.com/kazzkiq/CodeFlask/v1.1.0/build/codeflask.min.js'></script>
+    <script src='https://cdn.rawgit.com/kazzkiq/CodeFlask/v1.2.0/build/codeflask.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.5/lodash.min.js'></script>
 </head>
 
@@ -127,7 +137,7 @@
             <div class='content__column'>
                 <div class='code-wrapper'>
 <div id='code' data-language='chatito'>
-%[findByCityAndCategory](3)
+%[findByCityAndCategory]('training': '3')
     ~[greet?] ~[botName?] ~[please?] ~[find?] ~[restaurants?] ~[nearby] @[city]
 
 ~[greet]
@@ -218,10 +228,10 @@ System.config({
     packages: { '': { defaultExtension: 'js' }, 'https://unpkg.com': { defaultExtension: 'js' } },
     map: {
         Babel: 'https://unpkg.com/babel-standalone@6.26.0/babel.min.js',
-        parser: 'https://unpkg.com/chatito@2.0.0/dist/main.js',
-        webAdapter: 'https://unpkg.com/chatito@2.0.0/dist/adapters/web.js',
-        rasaAdapter: 'https://unpkg.com/chatito@2.0.0/dist/adapters/rasa.js',
-        snipsAdapter: 'https://unpkg.com/chatito@2.0.0/dist/adapters/snips.js',
+        parser: '/dist/main.js',
+        webAdapter: '/dist/adapters/web.js',
+        rasaAdapter: '/dist/adapters/rasa.js',
+        snipsAdapter: '/dist/adapters/snips.js',
         jsonStringify: 'https://unpkg.com/json-stringify-pretty-compact@1.2.0/index.js',
     }
 });
@@ -296,20 +306,33 @@ SystemJS.import('jsonStringify').then(function (jsonStringify) {
         }
     }, 400);
     Prism.languages.chatito = {
-        'intentDefinition': { pattern: /%\[[^\]]+\]((\([0-9]+\))?)/i, greedy: true },
+        'comments': [
+            { pattern: /^\/\/.*/i, greedy: true },
+            { pattern: /((\n|\r\n)+)\/\/.*/i, greedy: true }
+        ],
+        'intentDefinition': [
+            { pattern: /^%\[[^\]]+\]((\(.+\))?)(\n|\r\n)/i, greedy: true },
+            { pattern: /((\n|\r\n)+)%\[[^\]]+\]((\(.+\))?)(\n|\r\n)/i, greedy: true }
+        ],
+        'slotDefinition': [
+            { pattern: /^\@\[[^\]]+\]((\(.+\))?)(\n|\r\n)/i, greedy: true },
+            { pattern: /((\n|\r\n)+)\@\[[^\]]+\]((\(.+\))?)(\n|\r\n)/i, greedy: true }
+        ],
         'slot': { pattern: /\@\[[^\]]+(\?)?\]/i, greedy: true },
         'alias': { pattern: /~\[[^\]]+(\?)?\]/i, greedy: true },
         'default': { pattern: /[^\r\n]/i, greedy: true },
     };
-    flask = new CodeFlask('#code', { language: "chatito", lineNumbers: false });
+    flask = new CodeFlask('#code', { language: "chatito", lineNumbers: true });
+    let editorStartupUpdaes = 0;
     flask.onUpdate((code) => {
         codeInputValue = code;
-        clearDataset();
+        // NOTE: ugly hack to know when codeflask is mounted (it makes 2 calls to update on mount) 
+        editorStartupUpdaes < 2 ? editorStartupUpdaes++ : clearDataset();
         validateChatitoDSL(code);
     });
+    genDataset();
     document.getElementById('chatitoGenerate').addEventListener('click', genDataset);
     document.getElementById('datasetAdapter').addEventListener('change', clearDataset);
-    genDataset();
 });
 });
 });

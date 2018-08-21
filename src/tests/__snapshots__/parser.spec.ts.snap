@@ -5,7 +5,7 @@ exports[`Example for weird variations CORRECT parser output 1`] = `
   {
     \\"type\\": \\"IntentDefinition\\",
     \\"key\\": \\"intent\\",
-    \\"max\\": null,
+    \\"args\\": null,
     \\"location\\": {
       \\"start\\": {
         \\"offset\\": 1,
@@ -119,6 +119,7 @@ exports[`Example for weird variations CORRECT parser output 1`] = `
   {
     \\"type\\": \\"SlotDefinition\\",
     \\"key\\": \\"slot name\\",
+    \\"args\\": null,
     \\"location\\": {
       \\"start\\": {
         \\"offset\\": 197,
@@ -225,7 +226,7 @@ exports[`Example variation spec CORRECT parser output 1`] = `
   {
     \\"type\\": \\"IntentDefinition\\",
     \\"key\\": \\"ask_for_delivery\\",
-    \\"max\\": null,
+    \\"args\\": null,
     \\"location\\": {
       \\"start\\": {
         \\"offset\\": 1,
@@ -292,6 +293,7 @@ exports[`Example variation spec CORRECT parser output 1`] = `
   {
     \\"type\\": \\"SlotDefinition\\",
     \\"key\\": \\"delivery_time\\",
+    \\"args\\": null,
     \\"location\\": {
       \\"start\\": {
         \\"offset\\": 155,
@@ -323,6 +325,7 @@ exports[`Example variation spec CORRECT parser output 1`] = `
   {
     \\"type\\": \\"SlotDefinition\\",
     \\"key\\": \\"delivery_time\\",
+    \\"args\\": null,
     \\"location\\": {
       \\"start\\": {
         \\"offset\\": 210,
@@ -354,12 +357,140 @@ exports[`Example variation spec CORRECT parser output 1`] = `
 ]"
 `;
 
+exports[`Example with comments spec CORRECT parser output for exampleWithCorrectComments 1`] = `
+"[
+  {
+    \\"type\\": \\"Comment\\",
+    \\"value\\": \\"this is a comment\\"
+  },
+  {
+    \\"type\\": \\"IntentDefinition\\",
+    \\"key\\": \\"ask_for_delivery\\",
+    \\"args\\": null,
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 22,
+        \\"line\\": 3,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 41,
+        \\"line\\": 3,
+        \\"column\\": 20
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"my parcel should be delivered in \\",
+          \\"type\\": \\"Text\\"
+        },
+        {
+          \\"value\\": \\"delivery_time\\",
+          \\"type\\": \\"Slot\\",
+          \\"opt\\": false,
+          \\"location\\": {
+            \\"start\\": {
+              \\"offset\\": 79,
+              \\"line\\": 4,
+              \\"column\\": 38
+            },
+            \\"end\\": {
+              \\"offset\\": 109,
+              \\"line\\": 4,
+              \\"column\\": 68
+            }
+          },
+          \\"variation\\": \\"time_in_hours\\"
+        }
+      ]
+    ]
+  },
+  {
+    \\"type\\": \\"Comment\\",
+    \\"value\\": \\"this is two\\"
+  },
+  {
+    \\"type\\": \\"Comment\\",
+    \\"value\\": \\"line comment\\"
+  },
+  {
+    \\"type\\": \\"SlotDefinition\\",
+    \\"key\\": \\"delivery_time\\",
+    \\"args\\": null,
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 142,
+        \\"line\\": 8,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 172,
+        \\"line\\": 8,
+        \\"column\\": 31
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"3 days\\",
+          \\"type\\": \\"Text\\"
+        }
+      ],
+      [
+        {
+          \\"value\\": \\"5 hours\\",
+          \\"type\\": \\"Text\\"
+        }
+      ]
+    ],
+    \\"variation\\": \\"time_in_hours\\"
+  },
+  {
+    \\"type\\": \\"Comment\\",
+    \\"value\\": \\"more comments here\\"
+  }
+]"
+`;
+
+exports[`Example with comments spec CORRECT parser output for exampleWithCorrectComments 2`] = `null`;
+
+exports[`Example with multi intent CORRECT parser output 1`] = `
+"[
+  {
+    \\"type\\": \\"IntentDefinition\\",
+    \\"key\\": \\"hi + bye\\",
+    \\"args\\": null,
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 1,
+        \\"line\\": 2,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 12,
+        \\"line\\": 2,
+        \\"column\\": 12
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"hi, i have to go, bye\\",
+          \\"type\\": \\"Text\\"
+        }
+      ]
+    ]
+  }
+]"
+`;
+
 exports[`Simple example correct PEGJS output 1`] = `
 "[
   {
     \\"type\\": \\"IntentDefinition\\",
     \\"key\\": \\"greet\\",
-    \\"max\\": null,
+    \\"args\\": null,
     \\"location\\": {
       \\"start\\": {
         \\"offset\\": 1,
@@ -468,6 +599,7 @@ exports[`Simple example correct PEGJS output 1`] = `
   {
     \\"type\\": \\"SlotDefinition\\",
     \\"key\\": \\"name\\",
+    \\"args\\": null,
     \\"location\\": {
       \\"start\\": {
         \\"offset\\": 90,
@@ -534,7 +666,7 @@ exports[`Simple example for windows end of line CORRECT parser output 1`] = `
   {
     \\"type\\": \\"IntentDefinition\\",
     \\"key\\": \\"greet\\",
-    \\"max\\": null,
+    \\"args\\": null,
     \\"location\\": {
       \\"start\\": {
         \\"offset\\": 0,
@@ -587,6 +719,7 @@ exports[`Simple example for windows end of line CORRECT parser output 1`] = `
   {
     \\"type\\": \\"SlotDefinition\\",
     \\"key\\": \\"full names\\",
+    \\"args\\": null,
     \\"location\\": {
       \\"start\\": {
         \\"offset\\": 56,
@@ -612,12 +745,21 @@ exports[`Simple example for windows end of line CORRECT parser output 1`] = `
 ]"
 `;
 
-exports[`Simple example with max CORRECT parser output 1`] = `
+exports[`Simple example with wrong identation ERROR with wrong indentation syntax 1`] = `[SyntaxError: Expected correct indentation but " " found.]`;
+
+exports[`Simple example with wrong syntax ERROR with wrong syntax after maximum 1`] = `[SyntaxError: Expected end of line  but "w" found.]`;
+
+exports[`Simple example with wrong syntax ERROR with wrong syntax after training and testing defined 1`] = `[SyntaxError: Expected " ", "'", or "\\"" but "3" found.]`;
+
+exports[`Simple examples with max training and testing CORRECT parser output for specExampleWithTrainingAndTesting 1`] = `
 "[
   {
     \\"type\\": \\"IntentDefinition\\",
     \\"key\\": \\"greet\\",
-    \\"max\\": 3,
+    \\"args\\": {
+      \\"training\\": \\"3\\",
+      \\"testing\\": \\"3\\"
+    },
     \\"location\\": {
       \\"start\\": {
         \\"offset\\": 1,
@@ -625,9 +767,9 @@ exports[`Simple example with max CORRECT parser output 1`] = `
         \\"column\\": 1
       },
       \\"end\\": {
-        \\"offset\\": 12,
+        \\"offset\\": 42,
         \\"line\\": 2,
-        \\"column\\": 12
+        \\"column\\": 42
       }
     },
     \\"inner\\": [
@@ -647,12 +789,12 @@ exports[`Simple example with max CORRECT parser output 1`] = `
           \\"opt\\": true,
           \\"location\\": {
             \\"start\\": {
-              \\"offset\\": 23,
+              \\"offset\\": 53,
               \\"line\\": 3,
               \\"column\\": 11
             },
             \\"end\\": {
-              \\"offset\\": 31,
+              \\"offset\\": 61,
               \\"line\\": 3,
               \\"column\\": 19
             }
@@ -676,12 +818,12 @@ exports[`Simple example with max CORRECT parser output 1`] = `
     \\"key\\": \\"hi\\",
     \\"location\\": {
       \\"start\\": {
-        \\"offset\\": 44,
+        \\"offset\\": 74,
         \\"line\\": 4,
         \\"column\\": 1
       },
       \\"end\\": {
-        \\"offset\\": 49,
+        \\"offset\\": 79,
         \\"line\\": 4,
         \\"column\\": 6
       }
@@ -704,14 +846,15 @@ exports[`Simple example with max CORRECT parser output 1`] = `
   {
     \\"type\\": \\"SlotDefinition\\",
     \\"key\\": \\"name\\",
+    \\"args\\": null,
     \\"location\\": {
       \\"start\\": {
-        \\"offset\\": 65,
+        \\"offset\\": 95,
         \\"line\\": 7,
         \\"column\\": 1
       },
       \\"end\\": {
-        \\"offset\\": 72,
+        \\"offset\\": 102,
         \\"line\\": 7,
         \\"column\\": 8
       }
@@ -737,12 +880,12 @@ exports[`Simple example with max CORRECT parser output 1`] = `
     \\"key\\": \\"whatsUp\\",
     \\"location\\": {
       \\"start\\": {
-        \\"offset\\": 91,
+        \\"offset\\": 121,
         \\"line\\": 10,
         \\"column\\": 1
       },
       \\"end\\": {
-        \\"offset\\": 101,
+        \\"offset\\": 131,
         \\"line\\": 10,
         \\"column\\": 11
       }
@@ -765,6 +908,315 @@ exports[`Simple example with max CORRECT parser output 1`] = `
 ]"
 `;
 
-exports[`Simple example with wrong identation ERROR with wrong indentation syntax 1`] = `[SyntaxError: Expected correct indentation but " " found.]`;
+exports[`Simple examples with max training and testing CORRECT parser output for specExampleWithTrainingAndTestingWithSpaces 1`] = `
+"[
+  {
+    \\"type\\": \\"IntentDefinition\\",
+    \\"key\\": \\"greet\\",
+    \\"args\\": {
+      \\"training\\": \\"3\\",
+      \\"testing\\": \\"3\\"
+    },
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 1,
+        \\"line\\": 2,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 50,
+        \\"line\\": 2,
+        \\"column\\": 50
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"hi\\",
+          \\"type\\": \\"Alias\\",
+          \\"opt\\": false
+        },
+        {
+          \\"value\\": \\" \\",
+          \\"type\\": \\"Text\\"
+        },
+        {
+          \\"value\\": \\"name\\",
+          \\"type\\": \\"Slot\\",
+          \\"opt\\": true,
+          \\"location\\": {
+            \\"start\\": {
+              \\"offset\\": 61,
+              \\"line\\": 3,
+              \\"column\\": 11
+            },
+            \\"end\\": {
+              \\"offset\\": 69,
+              \\"line\\": 3,
+              \\"column\\": 19
+            }
+          },
+          \\"variation\\": null
+        },
+        {
+          \\"value\\": \\" \\",
+          \\"type\\": \\"Text\\"
+        },
+        {
+          \\"value\\": \\"whatsUp\\",
+          \\"type\\": \\"Alias\\",
+          \\"opt\\": true
+        }
+      ]
+    ]
+  },
+  {
+    \\"type\\": \\"AliasDefinition\\",
+    \\"key\\": \\"hi\\",
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 82,
+        \\"line\\": 4,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 87,
+        \\"line\\": 4,
+        \\"column\\": 6
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"hi\\",
+          \\"type\\": \\"Text\\"
+        }
+      ],
+      [
+        {
+          \\"value\\": \\"hey\\",
+          \\"type\\": \\"Text\\"
+        }
+      ]
+    ]
+  },
+  {
+    \\"type\\": \\"SlotDefinition\\",
+    \\"key\\": \\"name\\",
+    \\"args\\": null,
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 103,
+        \\"line\\": 7,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 110,
+        \\"line\\": 7,
+        \\"column\\": 8
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"Janis\\",
+          \\"type\\": \\"Text\\"
+        }
+      ],
+      [
+        {
+          \\"value\\": \\"Bob\\",
+          \\"type\\": \\"Text\\"
+        }
+      ]
+    ],
+    \\"variation\\": null
+  },
+  {
+    \\"type\\": \\"AliasDefinition\\",
+    \\"key\\": \\"whatsUp\\",
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 129,
+        \\"line\\": 10,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 139,
+        \\"line\\": 10,
+        \\"column\\": 11
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"whats up\\",
+          \\"type\\": \\"Text\\"
+        }
+      ],
+      [
+        {
+          \\"value\\": \\"how is it going\\",
+          \\"type\\": \\"Text\\"
+        }
+      ]
+    ]
+  }
+]"
+`;
 
-exports[`Simple example with wrong syntax ERROR with wrong syntax after maximum 1`] = `[SyntaxError: Expected end of line  but "w" found.]`;
+exports[`Simple examples with max training and testing CORRECT parser output specExampleWithMaximum 1`] = `
+"[
+  {
+    \\"type\\": \\"IntentDefinition\\",
+    \\"key\\": \\"greet\\",
+    \\"args\\": {
+      \\"training\\": \\"3\\"
+    },
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 1,
+        \\"line\\": 2,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 26,
+        \\"line\\": 2,
+        \\"column\\": 26
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"hi\\",
+          \\"type\\": \\"Alias\\",
+          \\"opt\\": false
+        },
+        {
+          \\"value\\": \\" \\",
+          \\"type\\": \\"Text\\"
+        },
+        {
+          \\"value\\": \\"name\\",
+          \\"type\\": \\"Slot\\",
+          \\"opt\\": true,
+          \\"location\\": {
+            \\"start\\": {
+              \\"offset\\": 37,
+              \\"line\\": 3,
+              \\"column\\": 11
+            },
+            \\"end\\": {
+              \\"offset\\": 45,
+              \\"line\\": 3,
+              \\"column\\": 19
+            }
+          },
+          \\"variation\\": null
+        },
+        {
+          \\"value\\": \\" \\",
+          \\"type\\": \\"Text\\"
+        },
+        {
+          \\"value\\": \\"whatsUp\\",
+          \\"type\\": \\"Alias\\",
+          \\"opt\\": true
+        }
+      ]
+    ]
+  },
+  {
+    \\"type\\": \\"AliasDefinition\\",
+    \\"key\\": \\"hi\\",
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 58,
+        \\"line\\": 4,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 63,
+        \\"line\\": 4,
+        \\"column\\": 6
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"hi\\",
+          \\"type\\": \\"Text\\"
+        }
+      ],
+      [
+        {
+          \\"value\\": \\"hey\\",
+          \\"type\\": \\"Text\\"
+        }
+      ]
+    ]
+  },
+  {
+    \\"type\\": \\"SlotDefinition\\",
+    \\"key\\": \\"name\\",
+    \\"args\\": null,
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 79,
+        \\"line\\": 7,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 86,
+        \\"line\\": 7,
+        \\"column\\": 8
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"Janis\\",
+          \\"type\\": \\"Text\\"
+        }
+      ],
+      [
+        {
+          \\"value\\": \\"Bob\\",
+          \\"type\\": \\"Text\\"
+        }
+      ]
+    ],
+    \\"variation\\": null
+  },
+  {
+    \\"type\\": \\"AliasDefinition\\",
+    \\"key\\": \\"whatsUp\\",
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 105,
+        \\"line\\": 10,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 115,
+        \\"line\\": 10,
+        \\"column\\": 11
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"whats up\\",
+          \\"type\\": \\"Text\\"
+        }
+      ],
+      [
+        {
+          \\"value\\": \\"how is it going\\",
+          \\"type\\": \\"Text\\"
+        }
+      ]
+    ]
+  }
+]"
+`;

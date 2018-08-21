@@ -2,12 +2,16 @@
   "compilerOptions": {
     "target": "ES2015",
     "module": "commonjs",
+    "jsx": "react",
     "strict": true,
     "declaration": true,
     "removeComments": true,
     "outDir": "./dist",
     "types": ["node", "jest"]
   },
+  "include": [
+    "src/**/*"
+  ],
   "exclude": [
     "dist",
     "node_modules",
