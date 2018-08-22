@@ -341,9 +341,7 @@ export default class Editor extends React.Component<{}, IEditorState> {
             const localTabs = this.loadFromLocalIfPresent('tabs', true);
             const localAdapterOptions = this.loadFromLocalIfPresent('adapterOptions', true);
             const localCurrentAdapter = this.loadFromLocalIfPresent('currentAdapter', false);
-            if (localTabs) {
-                this.tabs = localTabs;
-            }
+            this.tabs = localTabs ? localTabs : tabs;
             if (localAdapterOptions) {
                 newState.adapterOptions = localAdapterOptions;
                 newState.useCustomOptions = true;
@@ -354,8 +352,8 @@ export default class Editor extends React.Component<{}, IEditorState> {
             this.setState(newState, cb);
         } else {
             this.tabs = tabs;
-            cb();
         }
+        cb();
     };
 
     private changeTab = (i: number, cb?: () => void) => {
