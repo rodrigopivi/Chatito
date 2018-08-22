@@ -85,11 +85,18 @@ export default class Editor extends React.Component<{}, IEditorState> {
             });
             flask.addLanguage('chatito', chatitoPrism);
             flask.onUpdate(code => {
+                if (!this.tabs || !this.tabs[this.state.activeTabIndex]) {
+                    return;
+                }
                 this.codeInputValue = code;
                 this.tabs[this.state.activeTabIndex].value = code;
                 // NOTE: ugly hack to know when codeflask is mounted (it makes 2 calls to update on mount)
-                this.editorUpdatesSetupCount < 2 ? this.editorUpdatesSetupCount++ : this.setState({ dataset: null });
-                this.debouncedTabDSLValidation();
+                if (this.editorUpdatesSetupCount < 2) {
+                    this.editorUpdatesSetupCount++;
+                } else {
+                    this.setState({ dataset: null });
+                    this.debouncedTabDSLValidation();
+                }
             });
             flask.updateCode(this.tabs[this.state.activeTabIndex].value);
             flask.setLineNumber();
@@ -379,6 +386,7 @@ export default class Editor extends React.Component<{}, IEditorState> {
                 this.tabs.push({ title: 'newFile.chatito', value: '' });
                 newActiveTabIndex = 0;
             }
+            this.saveToLocalStorage(true, false, false);
             this.changeTab(newActiveTabIndex);
         };
     };
