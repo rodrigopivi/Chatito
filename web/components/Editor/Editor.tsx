@@ -15,9 +15,6 @@ const adapters = {
     snips: snipsAdapter
 };
 
-declare var CodeFlask;
-let ReactJson: any = null;
-
 interface IEditorState {
     error: null | string;
     warning: null | string;
@@ -28,6 +25,17 @@ interface IEditorState {
     currentAdapter: 'default' | 'rasa' | 'snips';
     useCustomOptions: boolean;
 }
+
+// NOTE: for SSR, wrap the require in check for window
+let CodeFlask = null;
+let ReactJson = null;
+if (typeof window !== `undefined`) {
+    // tslint:disable-next-line:no-var-requires
+    CodeFlask = require('codeflask').default;
+    // tslint:disable-next-line:no-var-requires
+    ReactJson = require('react-json-view').default;
+}
+
 export default class Editor extends React.Component<{}, IEditorState> {
     public state: IEditorState = {
         error: null,
@@ -53,33 +61,40 @@ export default class Editor extends React.Component<{}, IEditorState> {
             return;
         }
         const validation = this.getDSLValidation(this.codeInputValue);
+        let newState = {};
         if (validation && validation.error) {
-            this.setState({ error: validation.error, warning: null });
+            newState = { error: validation.error, warning: null };
         } else if (validation && validation.warning) {
-            this.setState({ error: null, warning: validation.warning });
+            newState = { error: null, warning: validation.warning };
         } else {
-            this.setState({ error: null, warning: null });
+            newState = { error: null, warning: null };
         }
+        this.setState(newState, () => {
+            this.saveToLocalStorage(true, false, false);
+        });
     }, 300);
 
     public componentDidMount() {
-        ReactJson = require('react-json-view').default;
-        const flask = new CodeFlask('#my-code-editor', {
-            language: 'chatito',
-            lineNumbers: true
+        if (!CodeFlask) {
+            return;
+        }
+        this.loadFromLocalStorage(() => {
+            const flask = new CodeFlask('#my-code-editor', {
+                language: 'chatito',
+                lineNumbers: true
+            });
+            flask.addLanguage('chatito', chatitoPrism);
+            flask.onUpdate(code => {
+                this.codeInputValue = code;
+                this.tabs[this.state.activeTabIndex].value = code;
+                // NOTE: ugly hack to know when codeflask is mounted (it makes 2 calls to update on mount)
+                this.editorUpdatesSetupCount < 2 ? this.editorUpdatesSetupCount++ : this.setState({ dataset: null });
+                this.debouncedTabDSLValidation();
+            });
+            flask.updateCode(this.tabs[this.state.activeTabIndex].value);
+            flask.setLineNumber();
+            this.codeflask = flask;
         });
-        flask.addLanguage('chatito', chatitoPrism);
-        flask.onUpdate(code => {
-            this.codeInputValue = code;
-            this.tabs[this.state.activeTabIndex].value = code;
-            // NOTE: ugly hack to know when codeflask is mounted (it makes 2 calls to update on mount)
-            this.editorUpdatesSetupCount < 2 ? this.editorUpdatesSetupCount++ : this.setState({ dataset: null });
-            this.debouncedTabDSLValidation();
-        });
-        flask.highlight();
-        flask.updateCode(this.tabs[this.state.activeTabIndex].value);
-        flask.setLineNumber();
-        this.codeflask = flask;
     }
 
     public render() {
@@ -212,9 +227,9 @@ export default class Editor extends React.Component<{}, IEditorState> {
             </es.TabButton>
         );
     };
-    /* ================== Event Handlers ================== */
 
-    private onCloseDrawer = () => this.setState({ showDrawer: false });
+    /* ================== Event Handlers ================== */
+    private onCloseDrawer = () => this.setState({ showDrawer: false, dataset: null });
 
     private onCustomOptionsCheckboxChange = e => {
         this.setState({ useCustomOptions: e.target.checked });
@@ -227,12 +242,16 @@ export default class Editor extends React.Component<{}, IEditorState> {
         } else if (e.target.value === 'snips') {
             adapterOptions = Object.assign({}, snipsDefaultOptions);
         }
-        this.setState({ currentAdapter: e.target.value, adapterOptions, dataset: null });
+        this.setState({ currentAdapter: e.target.value, adapterOptions, dataset: null }, () => {
+            this.saveToLocalStorage(false, true, true);
+        });
     };
 
     private onEditAdapterOptions = changes => {
         if (changes && changes.updated_src) {
-            this.setState({ adapterOptions: changes.updated_src });
+            this.setState({ adapterOptions: changes.updated_src }, () => {
+                this.saveToLocalStorage(false, true, false);
+            });
             return null;
         }
         return false;
@@ -271,6 +290,63 @@ export default class Editor extends React.Component<{}, IEditorState> {
     };
 
     /* ================== Utils ================== */
+
+    private saveToLocalStorage = (saveTabs, saveAdapterOptions, saveCurrentAdapter) => {
+        if (window && localStorage) {
+            if (saveTabs) {
+                localStorage.setItem('tabs', JSON.stringify(this.tabs));
+            }
+            if (saveAdapterOptions) {
+                localStorage.setItem('adapterOptions', this.state.useCustomOptions ? JSON.stringify(this.state.adapterOptions) : '');
+            }
+            if (saveCurrentAdapter) {
+                localStorage.setItem('currentAdapter', this.state.currentAdapter);
+            }
+        }
+    };
+
+    private loadFromLocalIfPresent = (key: string, parseAsJSON: boolean) => {
+        if (window && localStorage) {
+            try {
+                const item = localStorage.getItem(key);
+                if (!parseAsJSON) {
+                    return item;
+                }
+                if (item) {
+                    try {
+                        return JSON.parse(item);
+                    } catch (e) {
+                        // just catch the error
+                    }
+                }
+            } catch (e) {
+                // tslint:disable-next-line:no-console
+                console.error(e);
+            }
+        }
+    };
+
+    private loadFromLocalStorage = (cb: () => void) => {
+        if (window && localStorage) {
+            const newState: any = {};
+            const localTabs = this.loadFromLocalIfPresent('tabs', true);
+            const localAdapterOptions = this.loadFromLocalIfPresent('adapterOptions', true);
+            const localCurrentAdapter = this.loadFromLocalIfPresent('currentAdapter', false);
+            if (localTabs) {
+                this.tabs = localTabs;
+            }
+            if (localAdapterOptions) {
+                newState.adapterOptions = localAdapterOptions;
+                newState.useCustomOptions = true;
+            }
+            if (localCurrentAdapter) {
+                newState.currentAdapter = localCurrentAdapter;
+            }
+            this.setState(newState, cb);
+        } else {
+            cb();
+        }
+    };
 
     private changeTab = (i: number, cb?: () => void) => {
         this.setState({ activeTabIndex: i }, () => {
