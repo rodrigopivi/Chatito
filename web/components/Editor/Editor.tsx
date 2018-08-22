@@ -98,7 +98,9 @@ export default class Editor extends React.Component<{}, IEditorState> {
                     this.debouncedTabDSLValidation();
                 }
             });
-            flask.updateCode(this.tabs[this.state.activeTabIndex].value);
+            if (this.tabs && this.tabs[this.state.activeTabIndex]) {
+                flask.updateCode(this.tabs[this.state.activeTabIndex].value);
+            }
             flask.setLineNumber();
             this.codeflask = flask;
         });
