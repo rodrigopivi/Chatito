@@ -51,7 +51,7 @@ export default class Editor extends React.Component<{}, IEditorState> {
     private codeflask = null;
     private editorUpdatesSetupCount = 0;
     private codeInputValue = '';
-    private tabs = tabs;
+    private tabs = [];
 
     private debouncedTabDSLValidation = debounce(() => {
         if (!this.codeInputValue.length) {
@@ -344,6 +344,7 @@ export default class Editor extends React.Component<{}, IEditorState> {
             }
             this.setState(newState, cb);
         } else {
+            this.tabs = tabs;
             cb();
         }
     };
