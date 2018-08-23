@@ -68,7 +68,7 @@ There are three types of entities: `intent`, `slot` and `alias`.
 
 The intent entity is defined by the `%[` symbols at the start of a line, following by the entity name and `]`.
 
-Entity names should be at least 1 character long and can contain any characters except `]`, `line end` and `?`
+Intent names should be at least 1 character long and can contain any characters except `]`, `line end` and `?`
 . e.g.: (%[intentName], %[intent_name], %[intent name])
 
 Repeating intent name definitions should not be allowed.

@@ -306,11 +306,11 @@ describe('Example with comments spec', () => {
     3 days
     5 hours
 `;
-    test('CORRECT parser output for exampleWithCorrectComments', () => {
+    test('CORRECT parser output for exampleWithWrongComments', () => {
         let error: any = null;
         let result = null;
         try {
-            result = chatitoParser.parse(exampleWithCorrectComments);
+            result = chatitoParser.parse(exampleWithWrongComments);
         } catch (e) {
             error = { error: e };
             if (e.location) {
@@ -321,5 +321,32 @@ describe('Example with comments spec', () => {
             }
         }
         expect(error).toMatchSnapshot();
+    });
+});
+
+describe('Example with international language characters', () => {
+    const slotExamplesWithWeirdKeywords = `
+%[中文]
+    中文 @[中文] ~[中文]
+
+@[中文]
+    中文
+`;
+    test('CORRECT parser output', () => {
+        let error: any = null;
+        let result = null;
+        try {
+            result = chatitoParser.parse(slotExamplesWithWeirdKeywords);
+        } catch (e) {
+            error = { error: e };
+            if (e.location) {
+                error.location = {
+                    line: e.location.start.line,
+                    column: e.location.start.column
+                };
+            }
+        }
+        expect(error).toBeNull();
+        expect(JSON.stringify(result, null, 2)).toMatchSnapshot();
     });
 });

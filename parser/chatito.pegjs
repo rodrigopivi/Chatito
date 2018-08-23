@@ -5,8 +5,8 @@ TopLevelStatement = od:(IntentDefinition/SlotDefinition/AliasDefinition) { retur
 
 // ============= Entities =============
 EntityOpt = "?"
-EntityBody = "[" value:KeywordLiteral "]" { return value }
-EntityOptionalBody = "[" value:KeywordLiteral opt:EntityOpt? "]"
+EntityBody = "[" value:EntityKeywordLiteral "]" { return value }
+EntityOptionalBody = "[" value:EntityKeywordLiteral opt:EntityOpt? "]"
     { return { value: value, opt: !!opt  }; }
 BasicKeywordLiterals = value:AnyTextWithAlias { return { value: value, type: "Text" }}
 // Entities (slot and aliases) allow any text except end of lines and alias definitions
@@ -30,10 +30,10 @@ IntentDefinition = EOL? o:EntityIntentDefinition EOL
 
 // Slot
 SlotVariationStartDefinition = "#"
-SlotVariationDefinition = SlotVariationStartDefinition id:KeywordLiteral { return id }
-EntitySlotDefinition = "@[" value:KeywordLiteral variation:SlotVariationDefinition? "]" args:EntityArguments?
+SlotVariationDefinition = SlotVariationStartDefinition id:SlotKeywordLiteral { return id }
+EntitySlotDefinition = "@[" value:SlotKeywordLiteral variation:SlotVariationDefinition? "]" args:EntityArguments?
     { return { value: value, type: "SlotDefinition", variation: variation, args: args, location: location() } }
-SlotOptionalBody = "[" value:KeywordLiteral variation:SlotVariationDefinition? opt:EntityOpt? "]"
+SlotOptionalBody = "[" value:SlotKeywordLiteral variation:SlotVariationDefinition? opt:EntityOpt? "]"
     { return { value: value, opt: !!opt, variation: variation }; }
 OptionalSlot = "@" op:SlotOptionalBody
     { return { value: op.value, type: "Slot", opt: op.opt, location: location(), variation: op.variation } }
@@ -55,7 +55,11 @@ Dedent = &{ level--; return true; }
 // ============= Primitives =============
 AnyTextWithoutEOL = v:(t:((!"\r\n")(!"\n") .) { return t.join(""); })+ { return v.join(""); }
 CommentLine = EOL? "//" c:AnyTextWithoutEOL EOS? { return { type: "Comment" , value: c.trim() }; }
-KeywordLiteral "word" = v:([a-zA-Z0-9_ \:\+]+) { return v.join(""); }
+
+// KeywordLiteral "word" = v:([a-zA-Z0-9_ \:\+]+) { return v.join(""); }
+EntityKeywordLiteral "entity name" = v:(t:((!"\r\n")(!"\n")(!"]")(!"?") .) { return t.join(""); })+ { return v.join(""); }
+SlotKeywordLiteral "entity name" = v:(t:((!"\r\n")(!"\n")(!"#")(!"]")(!"?") .) { return t.join(""); })+ { return v.join(""); }
+
 Integer "integer" = [0-9]+ { return parseInt(text(), 10); }
 EOS "end of sentence" = EOL / EOF
 EOL "end of line "= (EOLNonWindows/EOLWindows)+

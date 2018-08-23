@@ -453,7 +453,98 @@ exports[`Example with comments spec CORRECT parser output for exampleWithCorrect
 ]"
 `;
 
-exports[`Example with comments spec CORRECT parser output for exampleWithCorrectComments 2`] = `null`;
+exports[`Example with comments spec CORRECT parser output for exampleWithWrongComments 1`] = `
+Object {
+  "error": [SyntaxError: Expected "%", "//", "@[", or "~" but " " found.],
+  "location": Object {
+    "column": 1,
+    "line": 2,
+  },
+}
+`;
+
+exports[`Example with international language characters CORRECT parser output 1`] = `
+"[
+  {
+    \\"type\\": \\"IntentDefinition\\",
+    \\"key\\": \\"中文\\",
+    \\"args\\": null,
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 1,
+        \\"line\\": 2,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 6,
+        \\"line\\": 2,
+        \\"column\\": 6
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"中文 \\",
+          \\"type\\": \\"Text\\"
+        },
+        {
+          \\"value\\": \\"中文\\",
+          \\"type\\": \\"Slot\\",
+          \\"opt\\": false,
+          \\"location\\": {
+            \\"start\\": {
+              \\"offset\\": 14,
+              \\"line\\": 3,
+              \\"column\\": 8
+            },
+            \\"end\\": {
+              \\"offset\\": 19,
+              \\"line\\": 3,
+              \\"column\\": 13
+            }
+          },
+          \\"variation\\": null
+        },
+        {
+          \\"value\\": \\" \\",
+          \\"type\\": \\"Text\\"
+        },
+        {
+          \\"value\\": \\"中文\\",
+          \\"type\\": \\"Alias\\",
+          \\"opt\\": false
+        }
+      ]
+    ]
+  },
+  {
+    \\"type\\": \\"SlotDefinition\\",
+    \\"key\\": \\"中文\\",
+    \\"args\\": null,
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 27,
+        \\"line\\": 5,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 32,
+        \\"line\\": 5,
+        \\"column\\": 6
+      }
+    },
+    \\"inner\\": [
+      [
+        {
+          \\"value\\": \\"中文\\",
+          \\"type\\": \\"Text\\"
+        }
+      ]
+    ],
+    \\"variation\\": null
+  }
+]"
+`;
 
 exports[`Example with multi intent CORRECT parser output 1`] = `
 "[
