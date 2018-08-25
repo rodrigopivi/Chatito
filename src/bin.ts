@@ -79,7 +79,7 @@ const adapterAccumulator = (format: 'default' | 'rasa' | 'snips', formatOptions?
         console.error(`Invalid format argument: ${format}`);
         process.exit(1);
     }
-    const outputPath = argv.outputPath || __dirname;
+    const outputPath = argv.outputPath || process.cwd();
     try {
         // parse the formatOptions argument
         let formatOptions = null;

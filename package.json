@@ -1,6 +1,6 @@
 {
   "name": "chatito",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "Generate training datasets for NLU chatbots using a simple DSL",
   "bin": {
     "chatito": "./dist/bin.js"

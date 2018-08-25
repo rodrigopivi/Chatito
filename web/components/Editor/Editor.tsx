@@ -241,7 +241,15 @@ export default class Editor extends React.Component<{}, IEditorState> {
     private onCloseDrawer = () => this.setState({ showDrawer: false, dataset: null });
 
     private onCustomOptionsCheckboxChange = e => {
-        this.setState({ useCustomOptions: e.target.checked });
+        let adapterOptions = {};
+        if (this.state.currentAdapter === 'rasa') {
+            adapterOptions = Object.assign({}, rasaDefaultOptions);
+        } else if (this.state.currentAdapter === 'snips') {
+            adapterOptions = Object.assign({}, snipsDefaultOptions);
+        }
+        this.setState({ useCustomOptions: e.target.checked, adapterOptions, dataset: null }, () => {
+            this.saveToLocalStorage(false, true, true);
+        });
     };
 
     private onAdapterChange = e => {
