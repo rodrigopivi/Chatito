@@ -47,7 +47,9 @@ export async function adapter(dsl: string, formatOptions?: any) {
                             if (!synonyms[next.synonym]) {
                                 synonyms[next.synonym] = new Set();
                             }
-                            synonyms[next.synonym].add(next.value);
+                            if (next.synonym !== next.value) {
+                                synonyms[next.synonym].add(next.value);
+                            }
                         }
                         acc.entities.push({
                             end: acc.text.length + next.value.length,

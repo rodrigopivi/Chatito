@@ -3,39 +3,67 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as rasa from './adapters/rasa';
 import * as snips from './adapters/snips';
-import * as gen from './main';
-import { ISentenceTokens, IUtteranceWriter } from './types';
+import * as web from './adapters/web';
+import * as utils from './utils';
 
 // tslint:disable-next-line:no-var-requires
 const argv = require('minimist')(process.argv.slice(2));
 
-const workingDirectory = process.cwd();
-const getExampleFilePath = (filename: string) => path.resolve(workingDirectory, filename);
+const adapters = { default: web, rasa, snips };
 
-const writeFileStreams = (dir: string) => {
-    if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir);
+const workingDirectory = process.cwd();
+const getFileWithPath = (filename: string) => path.resolve(workingDirectory, filename);
+
+const chatitoFilesFromDir = async (startPath: string, cb: (filename: string) => Promise<void>) => {
+    if (!fs.existsSync(startPath)) {
+        // tslint:disable-next-line:no-console
+        console.error(`Invalid directory: ${startPath}`);
+        process.exit(1);
     }
-    let openWriteStreamsTraining: { [key: string]: fs.WriteStream } = {};
-    let openWriteStreamsTesting: { [key: string]: fs.WriteStream } = {};
-    const writeStream: IUtteranceWriter = (u: ISentenceTokens[], intentKey: string, isTrainingExample: boolean) => {
-        const openWriteStreams = isTrainingExample ? openWriteStreamsTraining : openWriteStreamsTesting;
-        let writer: fs.WriteStream;
-        if (openWriteStreams[intentKey]) {
-            writer = openWriteStreams[intentKey];
-        } else {
-            writer = fs.createWriteStream(path.resolve(dir, `${intentKey}_${isTrainingExample ? 'training' : 'testing'}.ndjson`));
-            openWriteStreams[intentKey] = writer;
+    const files = fs.readdirSync(startPath);
+    for (const file of files) {
+        const filename = path.join(startPath, file);
+        const stat = fs.lstatSync(filename);
+        if (stat.isDirectory()) {
+            await chatitoFilesFromDir(filename, cb);
+        } else if (/\.chatito$/.test(filename)) {
+            await cb(filename);
         }
-        writer.write(JSON.stringify(u) + '\n');
+    }
+};
+
+const adapterAccumulator = (format: 'default' | 'rasa' | 'snips', formatOptions?: any) => {
+    const trainingDataset: snips.ISnipsDataset | rasa.IRasaDataset | {} = {};
+    const testingDataset: any = {};
+    const adapterHandler = adapters[format];
+    if (!adapterHandler) {
+        throw new Error(`Invalid adapter: ${format}`);
+    }
+    return {
+        write: async (fullFilenamePath: string) => {
+            // tslint:disable-next-line:no-console
+            console.log(`Processing file: ${fullFilenamePath}`);
+            const dsl = fs.readFileSync(fullFilenamePath, 'utf8');
+            const { training, testing } = await adapterHandler.adapter(dsl, formatOptions);
+            utils.mergeDeep(trainingDataset, training);
+            utils.mergeDeep(testingDataset, testing);
+        },
+        save: (outputPath: string) => {
+            if (!fs.existsSync(outputPath)) {
+                fs.mkdirSync(outputPath);
+            }
+            const trainingJsonFilePath = path.resolve(outputPath, `${format}_dataset_training.json`);
+            fs.writeFileSync(trainingJsonFilePath, JSON.stringify(trainingDataset));
+            // tslint:disable-next-line:no-console
+            console.log(`Saved training dataset: ./${format}_dataset_training.json`);
+            if (Object.keys(testingDataset).length) {
+                const testingJsonFilePath = path.resolve(outputPath, `${format}_dataset_testing.json`);
+                fs.writeFileSync(testingJsonFilePath, JSON.stringify(testingDataset));
+                // tslint:disable-next-line:no-console
+                console.log(`Saved testing dataset: ./${format}_dataset_training.json`);
+            }
+        }
     };
-    const closeStreams = () => {
-        Object.keys(openWriteStreamsTraining).forEach(k => openWriteStreamsTraining[k].end());
-        openWriteStreamsTraining = {};
-        Object.keys(openWriteStreamsTesting).forEach(k => openWriteStreamsTesting[k].end());
-        openWriteStreamsTesting = {};
-    };
-    return { writeStream, closeStreams };
 };
 
 (async () => {
@@ -51,44 +79,22 @@ const writeFileStreams = (dir: string) => {
         console.error(`Invalid format argument: ${format}`);
         process.exit(1);
     }
+    const outputPath = argv.outputPath || __dirname;
     try {
         // parse the formatOptions argument
-        const dslFilePath = getExampleFilePath(configFile);
-        const file = fs.readFileSync(dslFilePath, 'utf8');
-        const splittedPath = path.posix.basename(dslFilePath).split('.');
-        if (!splittedPath.length || 'chatito' !== splittedPath[splittedPath.length - 1].toLowerCase()) {
-            throw new Error('Invalid filename extension.');
+        let formatOptions = null;
+        if (argv.formatOptions) {
+            formatOptions = JSON.parse(fs.readFileSync(path.resolve(argv.formatOptions), 'utf8'));
         }
-        const keyName = path.basename(dslFilePath, '.chatito');
-        if (format === 'default') {
-            const directory = path.resolve(path.dirname(dslFilePath), keyName);
-            const fileWriterStreams = writeFileStreams(directory);
-            await gen.datasetFromString(file, fileWriterStreams.writeStream);
-            // tslint:disable-next-line:no-console
-            console.log(`DONE! - Examples generated by intent at ${directory} directory`);
-            fileWriterStreams.closeStreams();
+        const dslFilePath = getFileWithPath(configFile);
+        const isDirectory = fs.existsSync(dslFilePath) && fs.lstatSync(dslFilePath).isDirectory();
+        const accumulator = adapterAccumulator(format, formatOptions);
+        if (isDirectory) {
+            await chatitoFilesFromDir(dslFilePath, accumulator.write);
         } else {
-            let formatOptions = null;
-            if (argv.formatOptions) {
-                formatOptions = JSON.parse(fs.readFileSync(path.resolve(argv.formatOptions), 'utf8'));
-            }
-            const adapter = format === 'rasa' ? rasa : snips;
-            const { training, testing } = await adapter.adapter(file, formatOptions);
-            const trainingJsonFileName = splittedPath
-                .slice(0, splittedPath.length - 1)
-                .concat([`_${format}_training.json`])
-                .join('');
-            const trainingJsonFilePath = path.resolve(path.dirname(dslFilePath), trainingJsonFileName);
-            fs.writeFileSync(trainingJsonFilePath, JSON.stringify(training, null, 1));
-            if (Object.keys(testing).length) {
-                const testingJsonFileName = splittedPath
-                    .slice(0, splittedPath.length - 1)
-                    .concat([`_${format}_testing.json`])
-                    .join('');
-                const testingJsonFilePath = path.resolve(path.dirname(dslFilePath), testingJsonFileName);
-                fs.writeFileSync(testingJsonFilePath, JSON.stringify(testing, null, 1));
-            }
+            await accumulator.write(dslFilePath);
         }
+        accumulator.save(outputPath);
     } catch (e) {
         // tslint:disable:no-console
         if (e && e.message && e.location) {

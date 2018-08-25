@@ -477,13 +477,14 @@ describe('example with duplicate sentences', () => {
     });
 });
 
-describe('example with synonyms', () => {
+describe('rasa example with synonyms', () => {
     const synonymsExample = `
 %[test]
     @[slot]
 @[slot]
     ~[aliases]
     ~[aliases] not synonym
+    ~[valid alias]
 ~[aliases]
     alias
     alias2
@@ -491,22 +492,20 @@ describe('example with synonyms', () => {
 `;
     test('correctly maps synonyms', async () => {
         let error = null;
-        const dataset: { [key: string]: ISentenceTokens[][] } = {};
-        const writer: IUtteranceWriter = (u, k, n) => {
-            if (!dataset[k]) {
-                dataset[k] = [];
-            }
-            dataset[k].push(u);
-        };
+        let dataset: any;
         try {
-            await chatito.datasetFromString(synonymsExample, writer);
+            dataset = await rasa.adapter(synonymsExample, null);
         } catch (e) {
             error = e;
         }
         expect(error).toBeNull();
-        expect(dataset.test).not.toBeUndefined();
-        expect(dataset.test.length).toBe(6);
-        expect(dataset.test.filter(u => u.some(t => t.synonym === 'aliases')).length).toBe(3);
+        expect(dataset).not.toBeNull();
+        expect(dataset.training).not.toBeUndefined();
+        expect(dataset.testing).not.toBeUndefined();
+        expect(dataset.training.rasa_nlu_data.entity_synonyms.length).toBe(2);
+        expect(dataset.training.rasa_nlu_data.entity_synonyms.find(t => t.value === 'aliases').synonyms.length).toBe(3);
+        expect(dataset.training.rasa_nlu_data.entity_synonyms.find(t => t.value === 'valid alias').synonyms.length).toBe(0);
+        expect(dataset.training.rasa_nlu_data.common_examples.length).toBe(7);
     });
 });
 

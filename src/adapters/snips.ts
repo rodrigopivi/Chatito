@@ -68,7 +68,9 @@ export async function adapter(dsl: string, formatOptions?: any) {
                             if (!synonyms[u.synonym]) {
                                 synonyms[u.synonym] = new Set();
                             }
-                            synonyms[u.synonym].add(u.value);
+                            if (u.synonym !== u.value) {
+                                synonyms[u.synonym].add(u.value);
+                            }
                         }
                     }
                 }
