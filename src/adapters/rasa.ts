@@ -21,7 +21,7 @@ export interface IRasaDataset {
     };
 }
 
-interface IRasaTestingDataset {
+export interface IRasaTestingDataset {
     [intent: string]: ISentenceTokens[][];
 }
 

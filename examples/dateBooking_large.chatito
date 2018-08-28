@@ -1,4 +1,4 @@
-%[bookRestaurantsAtDatetime]('training': '1000')
+%[bookRestaurantsAtDatetime]('training': '1000', 'testing': '100')
     ~[find?] ~[some?] ~[restaurants] ~[available?]  from @[bookTime] to @[bookTime]
     ~[find?] ~[some?] ~[restaurants] ~[available?]  from @[bookTime] to @[bookTime] on @[bookDate]
 
@@ -32,10 +32,12 @@
     ~[24hour]~[:]~[minute]
 
 @[bookDate]
-    ~[contextDate]
     ~[monthNames] ~[monthDays]
     ~[monthDays] of ~[monthNames]
     ~[monthDayNumbers]/~[monthNumbers]
+    today
+    tomorrow
+    next ~[weekDays]
 
 ~[:]
     :
@@ -43,11 +45,6 @@
 ~[timePeriods]
     am
     pm
-
-~[contextDate]
-    today
-    tomorrow
-    next ~[weekDays]
 
 
 ~[monthNames]

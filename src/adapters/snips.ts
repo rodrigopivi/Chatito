@@ -25,7 +25,7 @@ export interface ISnipsDataset {
     language: string;
 }
 
-interface ISnipsTestingDataset {
+export interface ISnipsTestingDataset {
     [intent: string]: ISentenceTokens[][];
 }
 

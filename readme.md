@@ -21,7 +21,7 @@ For the full language specification and documentation, please refer to the [DSL 
 The language is independent from the generated output format and because each model can receive different parameters and settings, there are 3 data format adapters provided. This section describes the adapters, their specific behaviors and use cases:
 
 #### Default format
-Use the default format if you plan to train a custom model or if you are writting a custom adapter. This is the most flexible format because you can annotate `Slots` and `Intentts` with custom entity arguments, and they all will be present at the generated output, so for example, you could also include dialog/response generation logic with the dsl. E.g.:
+Use the default format if you plan to train a custom model or if you are writting a custom adapter. This is the most flexible format because you can annotate `Slots` and `Intents` with custom entity arguments, and they all will be present at the generated output, so for example, you could also include dialog/response generation logic with the dsl. E.g.:
 
 ```
 %[some intent]('context': 'some annotation')
@@ -50,7 +50,7 @@ One particular behavior of the Rasa adapter is that when a slot definition sente
     synonym 2
 ```
 
-In this example, the generated rasa dataset will contain the `entity_synonyms` of `synonym 1` and `synonym 1` mapping to `some slot synonyms`.
+In this example, the generated rasa dataset will contain the `entity_synonyms` of `synonym 1` and `synonym 2` mapping to `some slot synonyms`.
 
 #### [Snips NLU](https://snips-nlu.readthedocs.io/en/latest/)
 [Snips NLU](https://snips-nlu.readthedocs.io/en/latest/) is another great open source framework for NLU. One particular behavior of the Snips adapter is that you can define entity types for the slots. e.g.:

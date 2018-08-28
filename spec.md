@@ -86,7 +86,7 @@ The previous example will generate all possible unique examples for greet (in th
 
 Entity arguments are comma separated key-values declared with the entity definition inside parenthesis. Each entity argument is composed of a key, followed by the `:` symbol and the value. The argument key or value are just strings wrapped with single or double quotes, optional spaces between the parenthesis and comma are allowed, the format is similar to ndjson but only for string values.
 
-By default, intent definitions can expect the `training` and `testing` argument keys, when defined, are used to declare the maximum number of unique examples to generate for the given intent, and splitting them in two datasets. The generator will first populate the training dataset, then testing dataset until reaching the sum of both values, each value must be `>= 1`. e.g.:
+By default, intent definitions can expect the `training` and `testing` argument keys, when defined, are used to declare the maximum number of unique examples to generate for the given intent, and splitting them in two datasets, the training dataset is to be used to train the NLU model, and the testing dataset should be used to evaluate the accuracy of the model with examples it never trained with. Creating a testing dataset is not required, but it is important to be aware of the accuracy of your model to detect overfitting and compare against previous accuracies. The generator will first populate the training dataset, then testing dataset until reaching the sum of both values, each value must be `>= 1`. e.g.:
 
 ```
 %[greet]('training: '2', 'testing': '1')
