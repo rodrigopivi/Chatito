@@ -50,7 +50,7 @@ A chatito file, is a document containing the grammar definitions. Because of the
 non printable characters, this are the requirements of document source text and some terminology:
 
 - Format: UTF-8
-- Valid characters: only the printable basic ASCII range
+- Valid characters: Allow international language characters.
 - White space: allows white space character, not horizontal tab
 - Line end: new line, carriage return, carriage return + new line (supporting non windows and windows)
 - Indentation: should use a 4 space character to define the scope of entities
