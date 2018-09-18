@@ -33,42 +33,39 @@ export async function adapter(dsl: string, formatOptions?: any) {
             common_examples: []
         }
     };
-    const testing: IRasaTestingDataset = {};
+    const testing = { rasa_nlu_data: { common_examples: [] as IRasaExample[] } };
     const synonyms: { [key: string]: Set<string> } = {};
     if (formatOptions) {
         utils.mergeDeep(training, formatOptions);
     }
     const utteranceWriter = (utterance: ISentenceTokens[], intentKey: string, isTrainingExample: boolean) => {
-        if (isTrainingExample) {
-            const example = utterance.reduce(
-                (acc, next) => {
-                    if (next.type === 'Slot' && next.slot) {
-                        if (next.synonym) {
-                            if (!synonyms[next.synonym]) {
-                                synonyms[next.synonym] = new Set();
-                            }
-                            if (next.synonym !== next.value) {
-                                synonyms[next.synonym].add(next.value);
-                            }
+        const example = utterance.reduce(
+            (acc, next) => {
+                if (next.type === 'Slot' && next.slot) {
+                    if (next.synonym) {
+                        if (!synonyms[next.synonym]) {
+                            synonyms[next.synonym] = new Set();
                         }
-                        acc.entities.push({
-                            end: acc.text.length + next.value.length,
-                            entity: next.slot,
-                            start: acc.text.length,
-                            value: next.value
-                        });
+                        if (next.synonym !== next.value) {
+                            synonyms[next.synonym].add(next.value);
+                        }
                     }
-                    acc.text += next.value;
-                    return acc;
-                },
-                { text: '', intent: intentKey, entities: [] } as IRasaExample
-            );
+                    acc.entities.push({
+                        end: acc.text.length + next.value.length,
+                        entity: next.slot,
+                        start: acc.text.length,
+                        value: next.value
+                    });
+                }
+                acc.text += next.value;
+                return acc;
+            },
+            { text: '', intent: intentKey, entities: [] } as IRasaExample
+        );
+        if (isTrainingExample) {
             training.rasa_nlu_data.common_examples.push(example);
         } else {
-            if (!testing[intentKey]) {
-                testing[intentKey] = [];
-            }
-            testing[intentKey].push(utterance);
+            testing.rasa_nlu_data.common_examples.push(example);
         }
     };
     await gen.datasetFromString(dsl, utteranceWriter);

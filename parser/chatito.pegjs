@@ -8,24 +8,18 @@ EntityOpt = "?"
 EntityBody = "[" value:EntityKeywordLiteral "]" { return value }
 EntityOptionalBody = "[" value:EntityKeywordLiteral opt:EntityOpt? "]"
     { return { value: value, opt: !!opt  }; }
-BasicKeywordLiterals = value:AnyTextWithAlias { return { value: value, type: "Text" }}
-// Entities (slot and aliases) allow any text except end of lines and alias definitions
-AnyTextWithAlias = v:(t:((!"\r\n")(!"\n")(!"~[") .) { return t.join(""); })+ { return v.join(""); }
-BasicValidInner = (OptionalAlias/BasicKeywordLiterals)+
-BasicInnerStatement =  Samedent s:BasicValidInner EOS { return s; }
-BasicInnerStatements =  BasicInnerStatement+
 
 // Intent
 EntityIntentDefinition = "%" value:EntityBody args:EntityArguments?
     { return { value: value, type: "IntentDefinition", args: args, location: location() } }
-// Intents allow any text except end of lines, alias and slot definitions
+// Intents allow any text except end of lines, alias and slot definitions (because they are parsed as another value)
 AnyTextWithSlotAndAlias = v:(t:((!"\r\n")(!"\n")(!"~[")(!"@[") .) { return t.join(""); })+ { return v.join(""); }
-IntentKeywordLiterals = value:AnyTextWithSlotAndAlias { return { value: value, type: "Text" }}
-IntentValidInner = (OptionalSlot/OptionalAlias/IntentKeywordLiterals)+
-IntentInnerStatements =  IntentInnerStatement+
-IntentInnerStatement =  Samedent s:IntentValidInner EOS { return s; }
+IntentAndSlotKeywordLiterals = value:AnyTextWithSlotAndAlias { return { value: value, type: "Text" }}
+IntentAndSlotValidInner = (OptionalSlot/OptionalAlias/IntentAndSlotKeywordLiterals)+
+IntentAndSlotInnerStatements =  IntentAndSlotInnerStatement+
+IntentAndSlotInnerStatement =  Samedent s:IntentAndSlotValidInner EOS { return s; }
 IntentDefinition = EOL? o:EntityIntentDefinition EOL
-    Indent s:IntentInnerStatements Dedent
+    Indent s:IntentAndSlotInnerStatements Dedent
     { return { type: o.type, key: o.value, args: o.args, location: o.location, inner: s } }
 
 // Slot
@@ -37,14 +31,21 @@ SlotOptionalBody = "[" value:SlotKeywordLiteral variation:SlotVariationDefinitio
     { return { value: value, opt: !!opt, variation: variation }; }
 OptionalSlot = "@" op:SlotOptionalBody
     { return { value: op.value, type: "Slot", opt: op.opt, location: location(), variation: op.variation } }
+// Slots allow any text except end of lines and alias definitions (because they are parsed as another value)
+AnyTextWithAlias = v:(t:((!"\r\n")(!"\n")(!"~[") .) { return t.join(""); })+ { return v.join(""); }
+SlotKeywordLiterals = value:AnyTextWithAlias { return { value: value, type: "Text" }}
+SlotValidInner = (OptionalAlias/SlotKeywordLiterals)+
+SlotInnerStatement =  Samedent s:SlotValidInner EOS { return s; }
+SlotInnerStatements =  SlotInnerStatement+
 SlotDefinition = EOL? o:EntitySlotDefinition EOL
-    Indent s:BasicInnerStatements Dedent
+    Indent s:SlotInnerStatements Dedent
     { return { type: o.type, key: o.value, args: o.args, location: o.location, inner: s, variation: o.variation } }
 
 // Alias
 EntityAliasDefinition = "~" value:EntityBody { return { value: value, type: "AliasDefinition", location: location() } }
 OptionalAlias = "~" op:EntityOptionalBody { return { value: op.value, type: "Alias", opt: op.opt } }
-AliasDefinition = EOL? o:EntityAliasDefinition EOL Indent s:BasicInnerStatements Dedent
+AliasDefinition = EOL? o:EntityAliasDefinition EOL
+    Indent s:IntentAndSlotInnerStatements Dedent
     { return { type: o.type, key: o.value, location: o.location, inner: s } }
 
 // ============= Identation =============

@@ -46,7 +46,7 @@
 ~[city]
     city
 
-@[city]
+@[city]('entity': 'location')
     ~[newYork]
     ~[sanFrancisco]
     ~[atlanta]

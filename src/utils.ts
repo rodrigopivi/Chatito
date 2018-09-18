@@ -9,7 +9,27 @@ export const shuffle = <T>(array: T[]) => {
     }
 };
 
-export const maxSentencesForSentence = (entities: IEntities) => (sentence: ISentenceTokens[]) => {
+export const validateAndPushToStack = (entity: IChatitoEntityAST, entitiesStack: IChatitoEntityAST[]) => {
+    let numberOfSlotsInStack = 0;
+    const found = entitiesStack.find((et) => {
+        if (et.type === 'SlotDefinition') { numberOfSlotsInStack++; }
+        return et.key === entity.key && et.type === entity.type;
+    });
+    if (found) {
+        const last = entitiesStack.pop() || found;
+        throw new Error(`Invalid nesting of entity: '${entity.key}' inside entity '${last.key}'. Infinite loop prevented.`)
+    }
+    if (numberOfSlotsInStack !== 0 && entity.type === 'SlotDefinition') {
+        const last = entitiesStack.pop() || entity;
+        throw new Error(`Invalid nesting of slot: '${entity.key}' inside '${last.key}'. An slot can't reference other slot.`)
+    }
+    entitiesStack.push(entity);
+    return entitiesStack;
+}
+
+export const maxSentencesForSentence = (
+    entities: IEntities, stack?: IChatitoEntityAST[],
+) => (sentence: ISentenceTokens[]) => {
     const sr = sentence.reduce((accumulator, t) => {
         let acc = accumulator;
         if (t.type === 'Slot' || t.type === 'Alias') {
@@ -26,7 +46,8 @@ export const maxSentencesForSentence = (entities: IEntities) => (sentence: ISent
                     throw new Error(`${t.type} not defined: ${innerEntityKey}`);
                 }
             }
-            let innerEntityVariations = maxSentencesForEntity(def[innerEntityKey], entities);
+            const s = stack ? stack.slice(0) : [];
+            let innerEntityVariations = maxSentencesForEntity(def[innerEntityKey], entities, s);
             if (t.opt) {
                 innerEntityVariations++;
             }
@@ -37,8 +58,10 @@ export const maxSentencesForSentence = (entities: IEntities) => (sentence: ISent
     return sr;
 };
 
-export const maxSentencesForEntity = (ed: IChatitoEntityAST, entities: IEntities): number =>
-    ed.inner.map(maxSentencesForSentence(entities)).reduce((acc, val) => acc + val);
+export const maxSentencesForEntity = (ed: IChatitoEntityAST, entities: IEntities, stack: IChatitoEntityAST[] = []): number => {
+    validateAndPushToStack(ed, stack);
+    return ed.inner.map(maxSentencesForSentence(entities, stack)).reduce((acc, val) => acc + val);
+}
 
 // Deep merge objects
 // https://gist.github.com/Salakar/1d7137de9cb8b704e48a

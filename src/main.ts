@@ -14,13 +14,53 @@ import {
 // tslint:disable-next-line:no-var-requires
 const chatito = require('../parser/chatito') as IChatitoParser;
 
+const chatitoFormatPostProcess = (data: ISentenceTokens[]) => {
+    const arr = data.reduce(
+        (accumulator: ISentenceTokens[], next: ISentenceTokens, i, arrShadow) => {
+            if (accumulator.length) {
+                const lastWord = accumulator[accumulator.length - 1];
+                if (lastWord.type === next.type && lastWord.type === 'Text') {
+                    accumulator[accumulator.length - 1] = {
+                        type: lastWord.type,
+                        value: (lastWord.value + next.value).replace(/\s+/g, ' ')
+                    };
+                } else {
+                    accumulator.push(next);
+                }
+            } else if (next.value.trim()) {
+                accumulator.push(next);
+            }
+            if (i === arrShadow.length - 1) {
+                // if its the last token of a sentence
+                // remove empty strings at the end
+                if (!accumulator[accumulator.length - 1].value.trim()) {
+                    accumulator.pop();
+                }
+                if (accumulator.length) {
+                    accumulator[accumulator.length - 1] = Object.assign({}, accumulator[accumulator.length - 1], {
+                        value: accumulator[accumulator.length - 1].value.replace(/\s+$/g, '')
+                    });
+                }
+            }
+            return accumulator;
+        },
+        [] as ISentenceTokens[]
+    );
+    if (arr.length) {
+        arr[0] = Object.assign({}, arr[0], {
+            value: arr[0].value.replace(/^\s+/, '')
+        });
+    }
+    return arr;
+};
+
 // recursive function that generates variations using a cache
 // that uses counts to avoid repetitions
 const getVariationsFromEntity = async <T>(
     ed: IChatitoEntityAST,
     entities: IEntities,
     optional: boolean,
-    cache: IChatitoCache
+    cache: IChatitoCache,
 ): Promise<ISentenceTokens[]> => {
     // if this entity is a slot variation, add that as the key
     const variationKey = ed.variation ? `#${ed.variation}` : '';
@@ -102,31 +142,21 @@ const getVariationsFromEntity = async <T>(
             slotsInSentenceKeys.add(innerEntityKey);
             const sentenceVariation = await getVariationsFromEntity(def[innerEntityKey], entities, !!t.opt, currentCache);
             if (sentenceVariation.length) {
-                const returnSentence = sentenceVariation.reduce(
-                    (prev, next) => {
-                        const ret: ISentenceTokens = {
-                            type: next.type,
-                            value: prev.value + next.value
-                        };
-                        if (next.synonym) {
-                            ret.synonym = next.synonym;
-                        }
-                        return ret;
-                    },
-                    { value: '', type: 'Text' }
-                );
-                if (slotSynonyms) {
-                    returnSentence.synonym = t.value;
-                }
-                if (t.type === 'Slot') {
-                    if (def[innerEntityKey].args) {
-                        returnSentence.args = def[innerEntityKey].args;
+                const returnSentenceTokens = chatitoFormatPostProcess(sentenceVariation);
+                for (const returnToken of returnSentenceTokens) {
+                    if (slotSynonyms) {
+                        returnToken.synonym = t.value;
                     }
-                    returnSentence.value = returnSentence.value.trim();
-                    returnSentence.type = t.type;
-                    returnSentence.slot = t.value;
+                    if (t.type === 'Slot') {
+                        if (def[innerEntityKey].args) {
+                            returnToken.args = def[innerEntityKey].args;
+                        }
+                        returnToken.value = returnToken.value.trim();
+                        returnToken.type = t.type;
+                        returnToken.slot = t.value;
+                    }
+                    accumulator = accumulator.concat(returnToken);
                 }
-                accumulator = accumulator.concat(returnSentence);
             }
         } else {
             accumulator = accumulator.concat(t);
@@ -233,44 +263,4 @@ export const datasetFromAST = async (ast: IChatitoEntityAST[], writterFn: IUtter
             }
         }
     }
-};
-
-const chatitoFormatPostProcess = (data: ISentenceTokens[]) => {
-    const arr = data.reduce(
-        (accumulator: ISentenceTokens[], next: ISentenceTokens, i, arrShadow) => {
-            if (accumulator.length) {
-                const lastWord = accumulator[accumulator.length - 1];
-                if (lastWord.type === next.type && lastWord.type === 'Text') {
-                    accumulator[accumulator.length - 1] = {
-                        type: lastWord.type,
-                        value: (lastWord.value + next.value).replace(/\s+/g, ' ')
-                    };
-                } else {
-                    accumulator.push(next);
-                }
-            } else {
-                accumulator.push(next);
-            }
-            if (i === arrShadow.length - 1) {
-                // if its the last token of a sentence
-                // remove empty strings at the end
-                if (!accumulator[accumulator.length - 1].value.trim()) {
-                    accumulator.pop();
-                }
-                if (accumulator.length) {
-                    accumulator[accumulator.length - 1] = Object.assign({}, accumulator[accumulator.length - 1], {
-                        value: accumulator[accumulator.length - 1].value.replace(/\s+$/g, '')
-                    });
-                }
-            }
-            return accumulator;
-        },
-        [] as ISentenceTokens[]
-    );
-    if (arr.length) {
-        arr[0] = Object.assign({}, arr[0], {
-            value: arr[0].value.replace(/^\s+/, '')
-        });
-    }
-    return arr;
 };

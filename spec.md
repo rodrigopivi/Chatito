@@ -171,7 +171,7 @@ When an alias is referenced inside a slot definition, and it is the only token o
 
 Alias definitions are not allowed to declare entity arguments.
 
-Nesting entities: Sentences defined inside aliases can reference other aliases but preventing recursive loops
+Nesting entities: Sentences defined inside aliases can reference slots and other aliases but preventing recursive loops
 
 ## 3 - Data Generation
 

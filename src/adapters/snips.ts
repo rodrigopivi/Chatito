@@ -60,17 +60,17 @@ export async function adapter(dsl: string, formatOptions?: any) {
                     if (!ret.entity) {
                         ret.entity = u.slot;
                         entities.add(u.slot);
-                        if (u.synonym) {
-                            if (!synonymsForSlots[u.slot]) {
-                                synonymsForSlots[u.slot] = {};
-                            }
-                            const synonyms = synonymsForSlots[u.slot];
-                            if (!synonyms[u.synonym]) {
-                                synonyms[u.synonym] = new Set();
-                            }
-                            if (u.synonym !== u.value) {
-                                synonyms[u.synonym].add(u.value);
-                            }
+                    }
+                    if (u.synonym && ret.entity) {
+                        if (!synonymsForSlots[ret.entity]) {
+                            synonymsForSlots[ret.entity] = {};
+                        }
+                        const synonyms = synonymsForSlots[ret.entity];
+                        if (!synonyms[u.synonym]) {
+                            synonyms[u.synonym] = new Set();
+                        }
+                        if (u.synonym !== u.value) {
+                            synonyms[u.synonym].add(u.value);
                         }
                     }
                 }

@@ -60,7 +60,7 @@ const adapterAccumulator = (format: 'default' | 'rasa' | 'snips', formatOptions?
                 const testingJsonFilePath = path.resolve(outputPath, `${format}_dataset_testing.json`);
                 fs.writeFileSync(testingJsonFilePath, JSON.stringify(testingDataset));
                 // tslint:disable-next-line:no-console
-                console.log(`Saved testing dataset: ./${format}_dataset_training.json`);
+                console.log(`Saved testing dataset: ./${format}_dataset_testing.json`);
             }
         }
     };

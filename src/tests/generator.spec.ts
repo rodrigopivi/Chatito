@@ -578,3 +578,74 @@ describe('example with synonyms and arguments', () => {
         expect(result.training.entities.slot.data[0].synonyms.length).toEqual(3);
     });
 });
+
+describe('example with alias referencing itself', () => {
+    const badReferenceExample = `
+%[test]
+    @[slot]
+@[slot]
+    ~[aliases]
+~[aliases]
+    ~[aliases]
+`;
+    test('correctly throws an error', async () => {
+        let error = null;
+        let dataset: any;
+        try {
+            dataset = await web.adapter(badReferenceExample, null);
+        } catch (e) {
+            error = e;
+        }
+        expect(error.toString()).toEqual("Error: Invalid nesting of entity: 'aliases' inside entity 'aliases'. Infinite loop prevented.");
+    });
+});
+
+describe('example with slots nest inside slots', () => {
+    const badReferenceExample = `
+%[test]
+    @[slot]
+@[slot]
+    ~[aliases]
+@[slot2]
+    s2
+~[aliases]
+    @[slot2]
+`;
+    test('correctly throws an error', async () => {
+        let error = null;
+        let dataset: any;
+        try {
+            dataset = await web.adapter(badReferenceExample, null);
+        } catch (e) {
+            error = e;
+        }
+        expect(error.toString())
+            .toEqual("Error: Invalid nesting of slot: 'slot2' inside 'aliases'. An slot can't reference other slot.");
+    });
+});
+
+describe('example with slots nest inside alias', () => {
+    const badReferenceExample = `
+%[test]
+    ~[hi?] ~[sent]
+~[sent]
+    @[slot]
+@[slot]
+    some
+    slot
+`;
+    test('correctly works', async () => {
+        let error = null;
+        let result: any;
+        try {
+            result = await web.adapter(badReferenceExample, null);
+        } catch (e) {
+            error = e;
+        }
+        expect(error).toBeNull();
+        expect(result).not.toBeNull();
+        expect(result.training).not.toBeNull();
+        expect(result.testing).not.toBeNull();
+        expect(result.training.test.length).toEqual(4);
+    });
+});

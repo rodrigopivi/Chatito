@@ -1,9 +1,22 @@
 # Chatito
 
+[![npm version](https://badge.fury.io/js/chatito.svg)](https://badge.fury.io/js/chatito)
+![CircleCI (all branches)](https://img.shields.io/circleci/project/github/rodrigopivi/Chatito.svg)
+![npm](https://img.shields.io/npm/dm/chatito.svg)
+![GitHub](https://img.shields.io/github/license/rodrigopivi/Chatito.svg)
+
+
 [![Alt text](screenshot.jpg?raw=true "Screenshot of online IDE")](https://rodrigopivi.github.io/Chatito/)
 
 [Try the online IDE!](https://rodrigopivi.github.io/Chatito/)
 
+## Donate
+
+[![Alt text](https://c5.patreon.com/external/logo/become_a_patron_button.png "Become a Patron!")](https://www.patreon.com/bePatron?u=13643440)
+
+Designing and maintaining chatito takes time and effort, if it was usefull for you, please consider making a donation and share the abundance! :)
+
+## Overview
 Chatito helps you generate datasets for training and validating chatbot models using a minimalistic DSL.
 
 If you are building chatbots using commercial models, open source frameworks or writing your own natural language processing model, you need training examples. Chatito is here to help you.
@@ -98,9 +111,6 @@ npx chatito <pathToFileOrDirectory> --format=<format> --formatOptions=<formatOpt
  - `<format>` Optional. `default`, `rasa` or `snips`
  - `<formatOptions>` Optional. Path to a .json file that each adapter optionally can use
  - `<outputPath>` Optional. The directory where to save the generated dataset. Uses the current directory as default.
-
-### Donate
-Designing and maintaining chatito takes time and effort, if it was usefull for you, please consider making a donation and share the abundance! :)
 
 ### Author and maintainer
 Rodrigo Pimentel
