@@ -1,9 +1,11 @@
 # Chatito
 
-[![npm version](https://badge.fury.io/js/chatito.svg)](https://badge.fury.io/js/chatito)
-![CircleCI (all branches)](https://img.shields.io/circleci/project/github/rodrigopivi/Chatito.svg)
-![npm](https://img.shields.io/npm/dm/chatito.svg)
-![GitHub](https://img.shields.io/github/license/rodrigopivi/Chatito.svg)
+[![npm version](https://badge.fury.io/js/chatito.svg)](https://www.npmjs.com/package/chatito)
+[![CircleCI branch](
+https://img.shields.io/circleci/project/github/RedSparr0w/node-csgo-parser/master.svg
+)](https://circleci.com/gh/rodrigopivi/workflows/Chatito)
+[![npm](https://img.shields.io/npm/dm/chatito.svg)](https://www.npmjs.com/package/chatito)
+[![License](https://img.shields.io/github/license/rodrigopivi/Chatito.svg)](https://www.npmjs.com/package/chatito)
 
 
 [![Alt text](screenshot.jpg?raw=true "Screenshot of online IDE")](https://rodrigopivi.github.io/Chatito/)
