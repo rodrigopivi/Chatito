@@ -52,15 +52,19 @@ const adapterAccumulator = (format: 'default' | 'rasa' | 'snips', formatOptions?
             if (!fs.existsSync(outputPath)) {
                 fs.mkdirSync(outputPath);
             }
-            const trainingJsonFilePath = path.resolve(outputPath, `${format}_dataset_training.json`);
+
+            const trainingJsonFileName = argv.trainingFileName || `${format}_dataset_training.json`;
+            const trainingJsonFilePath = path.resolve(outputPath, trainingJsonFileName);
             fs.writeFileSync(trainingJsonFilePath, JSON.stringify(trainingDataset));
             // tslint:disable-next-line:no-console
-            console.log(`Saved training dataset: ./${format}_dataset_training.json`);
+            console.log(`Saved training dataset: ${trainingJsonFilePath}`);
+
             if (Object.keys(testingDataset).length) {
-                const testingJsonFilePath = path.resolve(outputPath, `${format}_dataset_testing.json`);
+                const testingFileName = argv.testingFileName || `${format}_dataset_testing.json`;
+                const testingJsonFilePath = path.resolve(outputPath, testingFileName);
                 fs.writeFileSync(testingJsonFilePath, JSON.stringify(testingDataset));
                 // tslint:disable-next-line:no-console
-                console.log(`Saved testing dataset: ./${format}_dataset_testing.json`);
+                console.log(`Saved testing dataset: ${testingJsonFilePath}`);
             }
         }
     };
