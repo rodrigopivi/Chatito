@@ -50,7 +50,7 @@ Use the default format if you plan to train a custom model or if you are writtin
 Custom entities like 'context', 'required' and 'type' will be available at the output so you can handle this custom arguments as you want.
 
 #### [Rasa NLU](https://rasa.com/docs/nlu/)
-[Rasa NLU](https://rasa.com/docs/nlu/) is a great open source framework for training NLU models. 
+[Rasa NLU](https://rasa.com/docs/nlu/) is a great open source framework for training NLU models.
 One particular behavior of the Rasa adapter is that when a slot definition sentence only contains one alias, the generated rasa dataset will map the alias as a synonym. e.g.:
 
 ```
@@ -112,7 +112,9 @@ npx chatito <pathToFileOrDirectory> --format=<format> --formatOptions=<formatOpt
  - `<pathToFileOrDirectory>` path to a `.chatito` file or a directory that contains chatito files. If it is a directory, will search recursively for all `*.chatito` files inside and use them to generate the dataset. e.g.: `lightsChange.chatito` or `./chatitoFilesFolder`
  - `<format>` Optional. `default`, `rasa` or `snips`
  - `<formatOptions>` Optional. Path to a .json file that each adapter optionally can use
- - `<outputPath>` Optional. The directory where to save the generated dataset. Uses the current directory as default.
+ - `<outputPath>` Optional. The directory where to save the generated datasets. Uses the current directory as default.
+- `<trainingFileName>` Optional. The name of the generated training dataset file. Do not forget to add a .json extension at the end. Uses `<format>`_dataset_training.json as default file name.
+- `<testingFileName>` Optional. The name of the generated testing dataset file. Do not forget to add a .json extension at the end. Uses `<format>`_dataset_testing.json as default file name.
 
 ### Author and maintainer
 Rodrigo Pimentel
