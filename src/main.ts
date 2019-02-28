@@ -210,20 +210,35 @@ export const datasetFromAST = async (ast: IChatitoEntityAST[], writterFn: IUtter
         let generatedTrainingExamplesCount = 0;
         if (entityArgs) {
             if (entityArgs.training) {
-                trainingN = parseInt(entityArgs.training, 10);
-                if (trainingN < 1) {
+                trainingN = parseFloat(entityArgs.training);
+
+                if (trainingN < 0.01) {
                     throw new Error(`The 'training' argument for ${intentKey} must be higher than 0.`);
                 }
+
                 if (entityArgs.testing) {
-                    testingN = parseInt(entityArgs.testing, 10);
-                    if (testingN < 1) {
+                    testingN = parseFloat(entityArgs.testing);
+                    if (testingN < 0.01) {
                         throw new Error(`The 'testing' argument for ${intentKey} must be higher than 0.`);
                     }
                 }
+
+                console.log(trainingN) ;
+
+                // Working with percentages now
+                trainingN = Math.floor(trainingN*maxIntentExamples) ;
+
+                testingN = maxIntentExamples - trainingN ;
+
             }
+
+
             const intentMax = trainingN + testingN;
+            console.log('IntentMax:', trainingN, testingN, maxIntentExamples) ;
+
             if (intentMax > maxIntentExamples) {
                 throw new Error(`Can't generate ${intentMax} examples. Max possible examples is ${maxIntentExamples}`);
+
             } else if (intentMax < maxIntentExamples) {
                 maxIntentExamples = intentMax;
             }

@@ -76,8 +76,9 @@ const adapterAccumulator = (format: 'default' | 'rasa' | 'snips', formatOptions?
         console.error('Invalid chatito file.');
         process.exit(1);
     }
+    //console.log(argv);
     const configFile = argv._[0];
-    const format = (argv.format || 'default').toLowerCase();
+    const format = (argv.format || 'rasa').toLowerCase();
     if (['default', 'rasa', 'snips'].indexOf(format) === -1) {
         // tslint:disable-next-line:no-console
         console.error(`Invalid format argument: ${format}`);
