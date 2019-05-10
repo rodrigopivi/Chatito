@@ -25,7 +25,7 @@ export interface IRasaTestingDataset {
     [intent: string]: ISentenceTokens[][];
 }
 
-export async function adapter(dsl: string, formatOptions?: any) {
+export async function adapter(dsl: string, formatOptions?: any, importer?: gen.IFileImporter, currentPath?: string) {
     const training: IRasaDataset = {
         rasa_nlu_data: {
             regex_features: [],
@@ -54,7 +54,7 @@ export async function adapter(dsl: string, formatOptions?: any) {
                         end: acc.text.length + next.value.length,
                         entity: next.slot,
                         start: acc.text.length,
-                        value: next.value
+                        value: next.synonym ? next.synonym : next.value
                     });
                 }
                 acc.text += next.value;
@@ -68,7 +68,7 @@ export async function adapter(dsl: string, formatOptions?: any) {
             testing.rasa_nlu_data.common_examples.push(example);
         }
     };
-    await gen.datasetFromString(dsl, utteranceWriter);
+    await gen.datasetFromString(dsl, utteranceWriter, importer, currentPath);
     Object.keys(synonyms).forEach(k => {
         training.rasa_nlu_data.entity_synonyms.push({
             synonyms: [...synonyms[k]],

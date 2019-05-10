@@ -1,8 +1,7 @@
-import 'babel-polyfill';
 import * as React from 'react';
 import Helmet from 'react-helmet';
 import Editor from '../components/Editor/Editor';
-import { Header } from '../components/globalStyles';
+import { Global, Header } from '../components/globalStyles';
 import Logo from '../components/Logo';
 
 // NOTE: gatsby global for prefix
@@ -30,6 +29,7 @@ export default class Index extends React.Component<{}, {}> {
                         content="Chatito helps you helps you generate datasets for natural language understanding models using a simple DSL"
                     />
                 </Helmet>
+                <Global />
                 <Header>
                     <div style={{ display: 'inline-block', width: 50, minWidth: 50, height: 43 }}>
                         <Logo />

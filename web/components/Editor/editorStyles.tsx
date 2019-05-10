@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const AlertNotification = styled.div`
+export const AlertNotification = styled('div')`
     width: 100%;
     background-color: ${({ state }: { state: 'error' | 'warning' | 'success' }) =>
         state === 'error' ? '#c80000' : state === 'warning' ? '#7f8000' : '#008800'};
@@ -14,7 +14,7 @@ export const AlertNotification = styled.div`
     font-size: 14px;
 `;
 
-export const CodeStyles = styled.div`
+export const CodeStyles = styled('div')`
     white-space: pre-wrap;
     position: relative;
     margin: auto;
@@ -60,6 +60,9 @@ export const CodeStyles = styled.div`
             background-color: transparent;
         }
     }
+    .token.imports {
+        color: #F7717D;
+    }
     .token.comments {
         color: #999;
     }
@@ -68,6 +71,9 @@ export const CodeStyles = styled.div`
     }
     .token.slotDefinition {
         color: #ffaf56;
+    }
+    .token.probability {
+        color: #00F0B5;
     }
     .token.slot {
         color: #ffaf56;
@@ -86,7 +92,7 @@ export const CodeStyles = styled.div`
     }
 `;
 
-export const TabButton = styled.div`
+export const TabButton = styled('div')`
     cursor: pointer;
     display: inline-block;
     background-color: ${({ active }: { active: boolean }) => (active ? '#282A35' : '#3c3c4c')};
@@ -102,7 +108,7 @@ export const TabButton = styled.div`
     user-select: none;
 `;
 
-export const CloseTab = styled.div`
+export const CloseTab = styled('div')`
     :after {
         content: 'x';
     }
@@ -116,7 +122,7 @@ export const CloseTab = styled.div`
     font-weight: bold;
 `;
 
-export const EditorHeader = styled.div`
+export const EditorHeader = styled('div')`
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -126,7 +132,7 @@ export const EditorHeader = styled.div`
     padding-top: 10px;
 `;
 
-export const TabsAreaButton = styled.button`
+export const TabsAreaButton = styled('button')`
     cursor: pointer;
     background-color: #6c1de2;
     font-size: 12px;
@@ -151,7 +157,7 @@ export const TabsAreaButton = styled.button`
     }
 `;
 
-export const TabsArea = styled.div`
+export const TabsArea = styled('div')`
     width: auto;
     max-width: 100%;
     white-space: nowrap;
@@ -174,7 +180,7 @@ export const TabsArea = styled.div`
     }
 `;
 
-export const EditorWrapper = styled.div`
+export const EditorWrapper = styled('div')`
     width: 90vw;
     overflow: auto;
     margin: auto;
@@ -184,7 +190,7 @@ export const EditorWrapper = styled.div`
     box-shadow: 0px 0px 36px 2px rgba(0, 0, 0, 0.63);
 `;
 
-export const Drawer = styled.div`
+export const Drawer = styled('div')`
     z-index: 99;
     position: absolute;
     background-color: #352252;
@@ -203,7 +209,7 @@ export const Drawer = styled.div`
     overflow: auto;
 `;
 
-export const EditorOverlay = styled.div`
+export const EditorOverlay = styled('div')`
     z-index: 999;
     position: absolute;
     top: 0;
@@ -218,7 +224,7 @@ export const EditorOverlay = styled.div`
     transition: 0.25s ease;
 `;
 
-export const BlockWrapper = styled.div`
+export const BlockWrapper = styled('div')`
     background-color: #e4e4e4;
     margin: 20px;
     overflow: auto;
@@ -229,7 +235,7 @@ export const BlockWrapper = styled.div`
     clear: both;
 `;
 
-export const BlockWrapperTitle = styled.div`
+export const BlockWrapperTitle = styled('div')`
     background-color: #6b5a86;
     color: #efefef;
     font-size: 13px;
@@ -238,7 +244,7 @@ export const BlockWrapperTitle = styled.div`
     border-top-right-radius: 8px;
 `;
 
-export const CloseDrawerButton = styled.div`
+export const CloseDrawerButton = styled('div')`
     cursor: pointer;
     color: white;
     font-size: 16px;
@@ -248,7 +254,7 @@ export const CloseDrawerButton = styled.div`
     float: right;
 `;
 
-export const DrawerFormField = styled.div`
+export const DrawerFormField = styled('div')`
     padding: 10px 20px;
     display: flex;
     align-items: center;
@@ -259,7 +265,7 @@ export const DrawerFormField = styled.div`
     }
 `;
 
-export const SelectWrapper = styled.div`
+export const SelectWrapper = styled('div')`
     position: relative;
     z-index: 0;
     display: inline-block;
@@ -292,7 +298,7 @@ export const SelectWrapper = styled.div`
     }
 `;
 
-export const CheckboxWrapper = styled.div`
+export const CheckboxWrapper = styled('div')`
     font-size: 12px;
     text-decoration: underline;
     cursor: pointer;

@@ -1,0 +1,5 @@
+import ../nestedimport.chatito
+
+~[hi]
+    ~[saludos1] ~[saludos2?]
+    ~[saludos2]

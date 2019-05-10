@@ -57,7 +57,8 @@ non printable characters, this are the requirements of document source text and 
 - Entities: Special keywords with special behaviors used to declare the sentence combinations
 - Sentences: 4 space indented text lines after an entity definition
 - Definition order: It does not matter if an entity is defined after it is being referenced
-- Comments: Lines of text starting with '//' (no spaces before)
+- Comments: Lines of text starting with '//' or '#' (no spaces before)
+- Imports: Lines of text starting with 'import' keyword followed by a relative filepath
 - Entity arguments: Optional key-values that can be declared at intents and slot definitions
 
 ### 2.1 - Entities
@@ -89,7 +90,7 @@ Entity arguments are comma separated key-values declared with the entity definit
 By default, intent definitions can expect the `training` and `testing` argument keys, when defined, are used to declare the maximum number of unique examples to generate for the given intent, and splitting them in two datasets, the training dataset is to be used to train the NLU model, and the testing dataset should be used to evaluate the accuracy of the model with examples it never trained with. Creating a testing dataset is not required, but it is important to be aware of the accuracy of your model to detect overfitting and compare against previous accuracies. The generator will first populate the training dataset, then testing dataset until reaching the sum of both values, each value must be `>= 1`. e.g.:
 
 ```
-%[greet]('training: '2', 'testing': '1')
+%[greet]('training': '2', 'testing': '1')
     hello
     hi
     hola
@@ -173,10 +174,57 @@ Alias definitions are not allowed to declare entity arguments.
 
 Nesting entities: Sentences defined inside aliases can reference slots and other aliases but preventing recursive loops
 
+
+### 2.2 - Sentence probability operator
+
+The way Chatito works, is like pulling samples from a cloud of possible combinations, but once the sentences definitions start getting more complex, the max possible combination possibilities increments exponentially, causing a problem where the generator will most likely pick sentences that have more possible combinations, and omit some sentences that may be more important at the dataset. To have some control of the generator principle, you can use the this operator.
+
+The sentence probability operator is defined by the `*[` symbols at the start of a sentence, following by the probability of generating the sentence (max 100) and `]`. The value inside the probability operator must by an integer betwen 1 and 100.
+
+```
+%[greet]('training': '2', 'testing': '2')
+    *[50] ~[phrase1]
+    *[30] ~[phrase2] ~[phrase3?]
+    ~[another phrase] ~[something] ~[something else]
+```
+
+This way, it is possible to declare that from the first sentence we want 5 testing and 5 training examples (50%). The second sentence will generate 30% of the utterances. And the 20% remaining will come from the remaining possibilities of all sentences.
+
+NOTE: Be carefull when using probability operator, because if the sentence reaches its max number of unique generated values, it will start producing duplicates and possibly slowing down the generator that may filter duplicates.
+
+### 2.3 - Importing chatito files
+
+To allow reusing entity declarations. It is possible to import another chatito file using the import keyword. Importing another chatito file, only allows using the slots and aliases defined there, if the imported file defines intents, they will be ignored since intents are generation entry points.
+
+As an example, given two chatito files:
+
+```
+# file slot1.chatito
+@[slot1]
+    s1v1
+    s1v2
+```
+
+and
+
+```
+# file main.chatito
+import ./slot1.chatito
+
+%[some intent]
+    ~[word] @[slot1]
+```
+
+The file `main.chatito` will import all alias and slot definitions from `./slot1.chatito`.
+The text next to the import statement should be a relative path from the main file to the imported file.
+
+Note: Chatito will throw an exception if two imports define the same entity.
+
 ## 3 - Data Generation
 
 The entry points for the data generation are the intent definitions, for each intent definition:
 - If the intent does not specify the 'training' or 'testing' arguments, generate all possible unique combinations and add them to the training dataset.
+- Respect the probabilities opreator declarations
 - Generate unique combinations for the training dataset until the 'training' argument number is reached, then until 'testing' argument number is reached for the testing dataset.
 
 Recursive loop references should be prevented.

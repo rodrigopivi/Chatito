@@ -1,0 +1,4 @@
+import ./dir/import.chatito
+
+%[greet]
+    ~[hi] ~[how are you?]

@@ -1,11 +1,11 @@
 import * as gen from '../main';
-import { ISentenceTokens, IUtteranceWriter } from '../types';
+import { ISentenceTokens } from '../types';
 import * as utils from '../utils';
 
 export interface IDefaultDataset {
     [intent: string]: ISentenceTokens[][];
 }
-export async function adapter(dsl: string, formatOptions?: any) {
+export async function adapter(dsl: string, formatOptions?: any, importer?: gen.IFileImporter, currentPath?: string) {
     const training: IDefaultDataset = {};
     const testing: IDefaultDataset = {};
     if (formatOptions) {
@@ -18,6 +18,6 @@ export async function adapter(dsl: string, formatOptions?: any) {
         }
         dataset[intentKey].push(utterance);
     };
-    await gen.datasetFromString(dsl, utteranceWriter);
+    await gen.datasetFromString(dsl, utteranceWriter, importer, currentPath);
     return { training, testing };
 }

@@ -29,7 +29,7 @@ export interface ISnipsTestingDataset {
     [intent: string]: ISentenceTokens[][];
 }
 
-export async function adapter(dsl: string, formatOptions?: any) {
+export async function adapter(dsl: string, formatOptions?: any, importer?: gen.IFileImporter, currentPath?: string) {
     const training: ISnipsDataset = { language: 'en', entities: {}, intents: {} };
     const testing: ISnipsTestingDataset = {};
     if (formatOptions) {
@@ -84,7 +84,7 @@ export async function adapter(dsl: string, formatOptions?: any) {
             testing[intentKey].push(utterance);
         }
     };
-    await gen.datasetFromString(dsl, utteranceWriter);
+    await gen.datasetFromString(dsl, utteranceWriter, importer, currentPath);
     entities.forEach(slotKey => {
         if (!synonymsForSlots[slotKey]) {
             if (!training.entities[slotKey]) {

@@ -19,101 +19,110 @@ exports[`Example for weird variations CORRECT parser output 1`] = `
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"[ adfd] adf ~ @ asdfasdf asdf \\",
-          \\"type\\": \\"Text\\"
-        },
-        {
-          \\"value\\": \\"alias_name ok\\",
-          \\"type\\": \\"Alias\\",
-          \\"opt\\": false
-        },
-        {
-          \\"value\\": \\" \\",
-          \\"type\\": \\"Text\\"
-        },
-        {
-          \\"value\\": \\"slot name\\",
-          \\"type\\": \\"Slot\\",
-          \\"opt\\": true,
-          \\"location\\": {
-            \\"start\\": {
-              \\"offset\\": 62,
-              \\"line\\": 3,
-              \\"column\\": 52
-            },
-            \\"end\\": {
-              \\"offset\\": 90,
-              \\"line\\": 3,
-              \\"column\\": 80
-            }
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"[ adfd] adf ~ @ asdfasdf asdf \\",
+            \\"type\\": \\"Text\\"
           },
-          \\"variation\\": \\"variation name\\"
-        }
-      ],
-      [
-        {
-          \\"value\\": \\"~ @\\",
-          \\"type\\": \\"Text\\"
-        },
-        {
-          \\"value\\": \\"alias_name ok\\",
-          \\"type\\": \\"Alias\\",
-          \\"opt\\": false
-        },
-        {
-          \\"value\\": \\"slot name\\",
-          \\"type\\": \\"Slot\\",
-          \\"opt\\": true,
-          \\"location\\": {
-            \\"start\\": {
-              \\"offset\\": 114,
-              \\"line\\": 4,
-              \\"column\\": 24
-            },
-            \\"end\\": {
-              \\"offset\\": 142,
-              \\"line\\": 4,
-              \\"column\\": 52
-            }
+          {
+            \\"value\\": \\"alias_name ok\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": false
           },
-          \\"variation\\": \\"variation name\\"
-        }
-      ],
-      [
-        {
-          \\"value\\": \\"@@\\",
-          \\"type\\": \\"Text\\"
-        },
-        {
-          \\"value\\": \\"alias_name ok\\",
-          \\"type\\": \\"Alias\\",
-          \\"opt\\": false
-        },
-        {
-          \\"value\\": \\"~~\\",
-          \\"type\\": \\"Text\\"
-        },
-        {
-          \\"value\\": \\"slot name\\",
-          \\"type\\": \\"Slot\\",
-          \\"opt\\": true,
-          \\"location\\": {
-            \\"start\\": {
-              \\"offset\\": 167,
-              \\"line\\": 5,
-              \\"column\\": 25
-            },
-            \\"end\\": {
-              \\"offset\\": 195,
-              \\"line\\": 5,
-              \\"column\\": 53
-            }
+          {
+            \\"value\\": \\" \\",
+            \\"type\\": \\"Text\\"
           },
-          \\"variation\\": \\"variation name\\"
-        }
-      ]
+          {
+            \\"value\\": \\"slot name\\",
+            \\"type\\": \\"Slot\\",
+            \\"opt\\": true,
+            \\"location\\": {
+              \\"start\\": {
+                \\"offset\\": 62,
+                \\"line\\": 3,
+                \\"column\\": 52
+              },
+              \\"end\\": {
+                \\"offset\\": 90,
+                \\"line\\": 3,
+                \\"column\\": 80
+              }
+            },
+            \\"variation\\": \\"variation name\\"
+          }
+        ],
+        \\"probability\\": null
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"~ @\\",
+            \\"type\\": \\"Text\\"
+          },
+          {
+            \\"value\\": \\"alias_name ok\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": false
+          },
+          {
+            \\"value\\": \\"slot name\\",
+            \\"type\\": \\"Slot\\",
+            \\"opt\\": true,
+            \\"location\\": {
+              \\"start\\": {
+                \\"offset\\": 114,
+                \\"line\\": 4,
+                \\"column\\": 24
+              },
+              \\"end\\": {
+                \\"offset\\": 142,
+                \\"line\\": 4,
+                \\"column\\": 52
+              }
+            },
+            \\"variation\\": \\"variation name\\"
+          }
+        ],
+        \\"probability\\": null
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"@@\\",
+            \\"type\\": \\"Text\\"
+          },
+          {
+            \\"value\\": \\"alias_name ok\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": false
+          },
+          {
+            \\"value\\": \\"~~\\",
+            \\"type\\": \\"Text\\"
+          },
+          {
+            \\"value\\": \\"slot name\\",
+            \\"type\\": \\"Slot\\",
+            \\"opt\\": true,
+            \\"location\\": {
+              \\"start\\": {
+                \\"offset\\": 167,
+                \\"line\\": 5,
+                \\"column\\": 25
+              },
+              \\"end\\": {
+                \\"offset\\": 195,
+                \\"line\\": 5,
+                \\"column\\": 53
+              }
+            },
+            \\"variation\\": \\"variation name\\"
+          }
+        ],
+        \\"probability\\": null
+      }
     ]
   },
   {
@@ -133,28 +142,34 @@ exports[`Example for weird variations CORRECT parser output 1`] = `
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"3 \\",
-          \\"type\\": \\"Text\\"
-        },
-        {
-          \\"value\\": \\"daysOrHours\\",
-          \\"type\\": \\"Alias\\",
-          \\"opt\\": false
-        }
-      ],
-      [
-        {
-          \\"value\\": \\"5 \\",
-          \\"type\\": \\"Text\\"
-        },
-        {
-          \\"value\\": \\"daysOrHours\\",
-          \\"type\\": \\"Alias\\",
-          \\"opt\\": false
-        }
-      ]
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"3 \\",
+            \\"type\\": \\"Text\\"
+          },
+          {
+            \\"value\\": \\"daysOrHours\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": false
+          }
+        ],
+        \\"probability\\": null
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"5 \\",
+            \\"type\\": \\"Text\\"
+          },
+          {
+            \\"value\\": \\"daysOrHours\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": false
+          }
+        ],
+        \\"probability\\": null
+      }
     ],
     \\"variation\\": \\"variation name\\"
   },
@@ -174,18 +189,24 @@ exports[`Example for weird variations CORRECT parser output 1`] = `
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"as fast as possible\\",
-          \\"type\\": \\"Text\\"
-        }
-      ],
-      [
-        {
-          \\"value\\": \\"quickly\\",
-          \\"type\\": \\"Text\\"
-        }
-      ]
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"as fast as possible\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"quickly\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      }
     ]
   },
   {
@@ -204,18 +225,24 @@ exports[`Example for weird variations CORRECT parser output 1`] = `
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"days\\",
-          \\"type\\": \\"Text\\"
-        }
-      ],
-      [
-        {
-          \\"value\\": \\"hours\\",
-          \\"type\\": \\"Text\\"
-        }
-      ]
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"days\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"hours\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      }
     ]
   }
 ]"
@@ -240,54 +267,60 @@ exports[`Example variation spec CORRECT parser output 1`] = `
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"my parcel should be delivered in \\",
-          \\"type\\": \\"Text\\"
-        },
-        {
-          \\"value\\": \\"delivery_time\\",
-          \\"type\\": \\"Slot\\",
-          \\"opt\\": false,
-          \\"location\\": {
-            \\"start\\": {
-              \\"offset\\": 58,
-              \\"line\\": 3,
-              \\"column\\": 38
-            },
-            \\"end\\": {
-              \\"offset\\": 88,
-              \\"line\\": 3,
-              \\"column\\": 68
-            }
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"my parcel should be delivered in \\",
+            \\"type\\": \\"Text\\"
           },
-          \\"variation\\": \\"time_in_hours\\"
-        }
-      ],
-      [
-        {
-          \\"value\\": \\"my parcel should be delivered \\",
-          \\"type\\": \\"Text\\"
-        },
-        {
-          \\"value\\": \\"delivery_time\\",
-          \\"type\\": \\"Slot\\",
-          \\"opt\\": false,
-          \\"location\\": {
-            \\"start\\": {
-              \\"offset\\": 123,
-              \\"line\\": 4,
-              \\"column\\": 35
+          {
+            \\"value\\": \\"delivery_time\\",
+            \\"type\\": \\"Slot\\",
+            \\"opt\\": false,
+            \\"location\\": {
+              \\"start\\": {
+                \\"offset\\": 58,
+                \\"line\\": 3,
+                \\"column\\": 38
+              },
+              \\"end\\": {
+                \\"offset\\": 88,
+                \\"line\\": 3,
+                \\"column\\": 68
+              }
             },
-            \\"end\\": {
-              \\"offset\\": 153,
-              \\"line\\": 4,
-              \\"column\\": 65
-            }
+            \\"variation\\": \\"time_in_hours\\"
+          }
+        ],
+        \\"probability\\": null
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"my parcel should be delivered \\",
+            \\"type\\": \\"Text\\"
           },
-          \\"variation\\": \\"relative_time\\"
-        }
-      ]
+          {
+            \\"value\\": \\"delivery_time\\",
+            \\"type\\": \\"Slot\\",
+            \\"opt\\": false,
+            \\"location\\": {
+              \\"start\\": {
+                \\"offset\\": 123,
+                \\"line\\": 4,
+                \\"column\\": 35
+              },
+              \\"end\\": {
+                \\"offset\\": 153,
+                \\"line\\": 4,
+                \\"column\\": 65
+              }
+            },
+            \\"variation\\": \\"relative_time\\"
+          }
+        ],
+        \\"probability\\": null
+      }
     ]
   },
   {
@@ -307,18 +340,24 @@ exports[`Example variation spec CORRECT parser output 1`] = `
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"3 days\\",
-          \\"type\\": \\"Text\\"
-        }
-      ],
-      [
-        {
-          \\"value\\": \\"5 hours\\",
-          \\"type\\": \\"Text\\"
-        }
-      ]
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"3 days\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"5 hours\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      }
     ],
     \\"variation\\": \\"time_in_hours\\"
   },
@@ -339,18 +378,24 @@ exports[`Example variation spec CORRECT parser output 1`] = `
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"as fast as possible\\",
-          \\"type\\": \\"Text\\"
-        }
-      ],
-      [
-        {
-          \\"value\\": \\"quickly\\",
-          \\"type\\": \\"Text\\"
-        }
-      ]
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"as fast as possible\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"quickly\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      }
     ],
     \\"variation\\": \\"relative_time\\"
   }
@@ -380,30 +425,33 @@ exports[`Example with comments spec CORRECT parser output for exampleWithCorrect
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"my parcel should be delivered in \\",
-          \\"type\\": \\"Text\\"
-        },
-        {
-          \\"value\\": \\"delivery_time\\",
-          \\"type\\": \\"Slot\\",
-          \\"opt\\": false,
-          \\"location\\": {
-            \\"start\\": {
-              \\"offset\\": 79,
-              \\"line\\": 4,
-              \\"column\\": 38
-            },
-            \\"end\\": {
-              \\"offset\\": 109,
-              \\"line\\": 4,
-              \\"column\\": 68
-            }
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"my parcel should be delivered in \\",
+            \\"type\\": \\"Text\\"
           },
-          \\"variation\\": \\"time_in_hours\\"
-        }
-      ]
+          {
+            \\"value\\": \\"delivery_time\\",
+            \\"type\\": \\"Slot\\",
+            \\"opt\\": false,
+            \\"location\\": {
+              \\"start\\": {
+                \\"offset\\": 79,
+                \\"line\\": 4,
+                \\"column\\": 38
+              },
+              \\"end\\": {
+                \\"offset\\": 109,
+                \\"line\\": 4,
+                \\"column\\": 68
+              }
+            },
+            \\"variation\\": \\"time_in_hours\\"
+          }
+        ],
+        \\"probability\\": null
+      }
     ]
   },
   {
@@ -431,18 +479,24 @@ exports[`Example with comments spec CORRECT parser output for exampleWithCorrect
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"3 days\\",
-          \\"type\\": \\"Text\\"
-        }
-      ],
-      [
-        {
-          \\"value\\": \\"5 hours\\",
-          \\"type\\": \\"Text\\"
-        }
-      ]
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"3 days\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"5 hours\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      }
     ],
     \\"variation\\": \\"time_in_hours\\"
   },
@@ -453,14 +507,110 @@ exports[`Example with comments spec CORRECT parser output for exampleWithCorrect
 ]"
 `;
 
+exports[`Example with comments spec CORRECT parser output for exampleWithCorrectHashComments 1`] = `
+"[
+  {
+    \\"type\\": \\"Comment\\",
+    \\"value\\": \\"this is a comment\\"
+  },
+  {
+    \\"type\\": \\"IntentDefinition\\",
+    \\"key\\": \\"ask_for_delivery\\",
+    \\"args\\": null,
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 20,
+        \\"line\\": 3,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 39,
+        \\"line\\": 3,
+        \\"column\\": 20
+      }
+    },
+    \\"inner\\": [
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"my parcel should be delivered in \\",
+            \\"type\\": \\"Text\\"
+          },
+          {
+            \\"value\\": \\"delivery_time\\",
+            \\"type\\": \\"Slot\\",
+            \\"opt\\": false,
+            \\"location\\": {
+              \\"start\\": {
+                \\"offset\\": 77,
+                \\"line\\": 4,
+                \\"column\\": 38
+              },
+              \\"end\\": {
+                \\"offset\\": 107,
+                \\"line\\": 4,
+                \\"column\\": 68
+              }
+            },
+            \\"variation\\": \\"time_in_hours\\"
+          }
+        ],
+        \\"probability\\": null
+      }
+    ]
+  }
+]"
+`;
+
 exports[`Example with comments spec CORRECT parser output for exampleWithWrongComments 1`] = `
 Object {
-  "error": [SyntaxError: Expected "%", "//", "@[", or "~" but " " found.],
+  "error": [SyntaxError: Expected "#", "%", "//", "@[", "import ", or "~" but " " found.],
   "location": Object {
     "column": 1,
     "line": 2,
   },
 }
+`;
+
+exports[`Example with import statement at start CORRECT parser output 1`] = `
+"[
+  {
+    \\"type\\": \\"ImportFile\\",
+    \\"value\\": \\"../some/file.chatito\\"
+  },
+  {
+    \\"type\\": \\"ImportFile\\",
+    \\"value\\": \\"../some/file.chatito\\"
+  },
+  {
+    \\"type\\": \\"IntentDefinition\\",
+    \\"key\\": \\"greet\\",
+    \\"args\\": null,
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 59,
+        \\"line\\": 6,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 67,
+        \\"line\\": 6,
+        \\"column\\": 9
+      }
+    },
+    \\"inner\\": [
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"hey yo!\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      }
+    ]
+  }
+]"
 `;
 
 exports[`Example with international language characters CORRECT parser output 1`] = `
@@ -482,39 +632,42 @@ exports[`Example with international language characters CORRECT parser output 1`
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"中文 \\",
-          \\"type\\": \\"Text\\"
-        },
-        {
-          \\"value\\": \\"中文\\",
-          \\"type\\": \\"Slot\\",
-          \\"opt\\": false,
-          \\"location\\": {
-            \\"start\\": {
-              \\"offset\\": 14,
-              \\"line\\": 3,
-              \\"column\\": 8
-            },
-            \\"end\\": {
-              \\"offset\\": 19,
-              \\"line\\": 3,
-              \\"column\\": 13
-            }
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"中文 \\",
+            \\"type\\": \\"Text\\"
           },
-          \\"variation\\": null
-        },
-        {
-          \\"value\\": \\" \\",
-          \\"type\\": \\"Text\\"
-        },
-        {
-          \\"value\\": \\"中文\\",
-          \\"type\\": \\"Alias\\",
-          \\"opt\\": false
-        }
-      ]
+          {
+            \\"value\\": \\"中文\\",
+            \\"type\\": \\"Slot\\",
+            \\"opt\\": false,
+            \\"location\\": {
+              \\"start\\": {
+                \\"offset\\": 14,
+                \\"line\\": 3,
+                \\"column\\": 8
+              },
+              \\"end\\": {
+                \\"offset\\": 19,
+                \\"line\\": 3,
+                \\"column\\": 13
+              }
+            },
+            \\"variation\\": null
+          },
+          {
+            \\"value\\": \\" \\",
+            \\"type\\": \\"Text\\"
+          },
+          {
+            \\"value\\": \\"中文\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": false
+          }
+        ],
+        \\"probability\\": null
+      }
     ]
   },
   {
@@ -534,12 +687,15 @@ exports[`Example with international language characters CORRECT parser output 1`
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"中文\\",
-          \\"type\\": \\"Text\\"
-        }
-      ]
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"中文\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      }
     ],
     \\"variation\\": null
   }
@@ -565,12 +721,185 @@ exports[`Example with multi intent CORRECT parser output 1`] = `
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"hi, i have to go, bye\\",
-          \\"type\\": \\"Text\\"
-        }
-      ]
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"hi, i have to go, bye\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      }
+    ]
+  }
+]"
+`;
+
+exports[`Example with probability opreator CORRECT parser output 1`] = `
+"[
+  {
+    \\"type\\": \\"IntentDefinition\\",
+    \\"key\\": \\"greet\\",
+    \\"args\\": {
+      \\"training\\": \\"10\\",
+      \\"testing\\": \\"10\\"
+    },
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 1,
+        \\"line\\": 2,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 44,
+        \\"line\\": 2,
+        \\"column\\": 44
+      }
+    },
+    \\"inner\\": [
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\" \\",
+            \\"type\\": \\"Text\\"
+          },
+          {
+            \\"value\\": \\"phrase1\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": false
+          }
+        ],
+        \\"probability\\": \\"50\\"
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\" \\",
+            \\"type\\": \\"Text\\"
+          },
+          {
+            \\"value\\": \\"phrase2\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": false
+          },
+          {
+            \\"value\\": \\" \\",
+            \\"type\\": \\"Text\\"
+          },
+          {
+            \\"value\\": \\"phrase3\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": true
+          }
+        ],
+        \\"probability\\": \\"30\\"
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"another phrase\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": false
+          },
+          {
+            \\"value\\": \\" \\",
+            \\"type\\": \\"Text\\"
+          },
+          {
+            \\"value\\": \\"something\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": false
+          },
+          {
+            \\"value\\": \\" \\",
+            \\"type\\": \\"Text\\"
+          },
+          {
+            \\"value\\": \\"something else\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": true
+          }
+        ],
+        \\"probability\\": null
+      }
+    ]
+  }
+]"
+`;
+
+exports[`Example with probability opreator but no aftre spacee parses as text CORRECT parser output 1`] = `
+"[
+  {
+    \\"type\\": \\"IntentDefinition\\",
+    \\"key\\": \\"greet\\",
+    \\"args\\": {
+      \\"training\\": \\"10\\",
+      \\"testing\\": \\"10\\"
+    },
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 1,
+        \\"line\\": 2,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 44,
+        \\"line\\": 2,
+        \\"column\\": 44
+      }
+    },
+    \\"inner\\": [
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"phrase1\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": false
+          }
+        ],
+        \\"probability\\": \\"50\\"
+      }
+    ]
+  }
+]"
+`;
+
+exports[`Example with probability opreator but non int value parses as text CORRECT parser output 1`] = `
+"[
+  {
+    \\"type\\": \\"IntentDefinition\\",
+    \\"key\\": \\"greet\\",
+    \\"args\\": {
+      \\"training\\": \\"10\\",
+      \\"testing\\": \\"10\\"
+    },
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 1,
+        \\"line\\": 2,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 44,
+        \\"line\\": 2,
+        \\"column\\": 44
+      }
+    },
+    \\"inner\\": [
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\" \\",
+            \\"type\\": \\"Text\\"
+          },
+          {
+            \\"value\\": \\"phrase1\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": false
+          }
+        ],
+        \\"probability\\": \\"5c0\\"
+      }
     ]
   }
 ]"
@@ -595,66 +924,69 @@ exports[`Simple example correct PEGJS output 1`] = `
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"hi\\",
-          \\"type\\": \\"Alias\\",
-          \\"opt\\": false
-        },
-        {
-          \\"value\\": \\" \\",
-          \\"type\\": \\"Text\\"
-        },
-        {
-          \\"value\\": \\"name\\",
-          \\"type\\": \\"Slot\\",
-          \\"opt\\": true,
-          \\"location\\": {
-            \\"start\\": {
-              \\"offset\\": 20,
-              \\"line\\": 3,
-              \\"column\\": 11
-            },
-            \\"end\\": {
-              \\"offset\\": 28,
-              \\"line\\": 3,
-              \\"column\\": 19
-            }
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"hi\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": false
           },
-          \\"variation\\": null
-        },
-        {
-          \\"value\\": \\" \\",
-          \\"type\\": \\"Text\\"
-        },
-        {
-          \\"value\\": \\"whatsUp\\",
-          \\"type\\": \\"Alias\\",
-          \\"opt\\": true
-        },
-        {
-          \\"value\\": \\" one two three im \\",
-          \\"type\\": \\"Text\\"
-        },
-        {
-          \\"value\\": \\"name\\",
-          \\"type\\": \\"Slot\\",
-          \\"opt\\": true,
-          \\"location\\": {
-            \\"start\\": {
-              \\"offset\\": 58,
-              \\"line\\": 3,
-              \\"column\\": 49
-            },
-            \\"end\\": {
-              \\"offset\\": 66,
-              \\"line\\": 3,
-              \\"column\\": 57
-            }
+          {
+            \\"value\\": \\" \\",
+            \\"type\\": \\"Text\\"
           },
-          \\"variation\\": null
-        }
-      ]
+          {
+            \\"value\\": \\"name\\",
+            \\"type\\": \\"Slot\\",
+            \\"opt\\": true,
+            \\"location\\": {
+              \\"start\\": {
+                \\"offset\\": 20,
+                \\"line\\": 3,
+                \\"column\\": 11
+              },
+              \\"end\\": {
+                \\"offset\\": 28,
+                \\"line\\": 3,
+                \\"column\\": 19
+              }
+            },
+            \\"variation\\": null
+          },
+          {
+            \\"value\\": \\" \\",
+            \\"type\\": \\"Text\\"
+          },
+          {
+            \\"value\\": \\"whatsUp\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": true
+          },
+          {
+            \\"value\\": \\" one two three im \\",
+            \\"type\\": \\"Text\\"
+          },
+          {
+            \\"value\\": \\"name\\",
+            \\"type\\": \\"Slot\\",
+            \\"opt\\": true,
+            \\"location\\": {
+              \\"start\\": {
+                \\"offset\\": 58,
+                \\"line\\": 3,
+                \\"column\\": 49
+              },
+              \\"end\\": {
+                \\"offset\\": 66,
+                \\"line\\": 3,
+                \\"column\\": 57
+              }
+            },
+            \\"variation\\": null
+          }
+        ],
+        \\"probability\\": null
+      }
     ]
   },
   {
@@ -673,18 +1005,24 @@ exports[`Simple example correct PEGJS output 1`] = `
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"hi\\",
-          \\"type\\": \\"Text\\"
-        }
-      ],
-      [
-        {
-          \\"value\\": \\"hey\\",
-          \\"type\\": \\"Text\\"
-        }
-      ]
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"hi\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"hey\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      }
     ]
   },
   {
@@ -704,18 +1042,24 @@ exports[`Simple example correct PEGJS output 1`] = `
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"Janis\\",
-          \\"type\\": \\"Text\\"
-        }
-      ],
-      [
-        {
-          \\"value\\": \\"Bob\\",
-          \\"type\\": \\"Text\\"
-        }
-      ]
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"Janis\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"Bob\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      }
     ],
     \\"variation\\": null
   },
@@ -735,18 +1079,24 @@ exports[`Simple example correct PEGJS output 1`] = `
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"whats up\\",
-          \\"type\\": \\"Text\\"
-        }
-      ],
-      [
-        {
-          \\"value\\": \\"how is it going\\",
-          \\"type\\": \\"Text\\"
-        }
-      ]
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"whats up\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"how is it going\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      }
     ]
   }
 ]"
@@ -771,40 +1121,46 @@ exports[`Simple example for windows end of line CORRECT parser output 1`] = `
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"hi hi\\",
-          \\"type\\": \\"Text\\"
-        }
-      ],
-      [
-        {
-          \\"value\\": \\"how are you \\",
-          \\"type\\": \\"Text\\"
-        },
-        {
-          \\"value\\": \\"full names\\",
-          \\"type\\": \\"Slot\\",
-          \\"opt\\": false,
-          \\"location\\": {
-            \\"start\\": {
-              \\"offset\\": 37,
-              \\"line\\": 3,
-              \\"column\\": 17
-            },
-            \\"end\\": {
-              \\"offset\\": 50,
-              \\"line\\": 3,
-              \\"column\\": 30
-            }
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"hi hi\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"how are you \\",
+            \\"type\\": \\"Text\\"
           },
-          \\"variation\\": null
-        },
-        {
-          \\"value\\": \\" sup\\",
-          \\"type\\": \\"Text\\"
-        }
-      ]
+          {
+            \\"value\\": \\"full names\\",
+            \\"type\\": \\"Slot\\",
+            \\"opt\\": false,
+            \\"location\\": {
+              \\"start\\": {
+                \\"offset\\": 37,
+                \\"line\\": 3,
+                \\"column\\": 17
+              },
+              \\"end\\": {
+                \\"offset\\": 50,
+                \\"line\\": 3,
+                \\"column\\": 30
+              }
+            },
+            \\"variation\\": null
+          },
+          {
+            \\"value\\": \\" sup\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      }
     ]
   },
   {
@@ -824,12 +1180,15 @@ exports[`Simple example for windows end of line CORRECT parser output 1`] = `
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"jim raynor\\",
-          \\"type\\": \\"Text\\"
-        }
-      ]
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"jim raynor\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      }
     ],
     \\"variation\\": null
   }
@@ -864,44 +1223,47 @@ exports[`Simple examples with max training and testing CORRECT parser output for
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"hi\\",
-          \\"type\\": \\"Alias\\",
-          \\"opt\\": false
-        },
-        {
-          \\"value\\": \\" \\",
-          \\"type\\": \\"Text\\"
-        },
-        {
-          \\"value\\": \\"name\\",
-          \\"type\\": \\"Slot\\",
-          \\"opt\\": true,
-          \\"location\\": {
-            \\"start\\": {
-              \\"offset\\": 53,
-              \\"line\\": 3,
-              \\"column\\": 11
-            },
-            \\"end\\": {
-              \\"offset\\": 61,
-              \\"line\\": 3,
-              \\"column\\": 19
-            }
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"hi\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": false
           },
-          \\"variation\\": null
-        },
-        {
-          \\"value\\": \\" \\",
-          \\"type\\": \\"Text\\"
-        },
-        {
-          \\"value\\": \\"whatsUp\\",
-          \\"type\\": \\"Alias\\",
-          \\"opt\\": true
-        }
-      ]
+          {
+            \\"value\\": \\" \\",
+            \\"type\\": \\"Text\\"
+          },
+          {
+            \\"value\\": \\"name\\",
+            \\"type\\": \\"Slot\\",
+            \\"opt\\": true,
+            \\"location\\": {
+              \\"start\\": {
+                \\"offset\\": 53,
+                \\"line\\": 3,
+                \\"column\\": 11
+              },
+              \\"end\\": {
+                \\"offset\\": 61,
+                \\"line\\": 3,
+                \\"column\\": 19
+              }
+            },
+            \\"variation\\": null
+          },
+          {
+            \\"value\\": \\" \\",
+            \\"type\\": \\"Text\\"
+          },
+          {
+            \\"value\\": \\"whatsUp\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": true
+          }
+        ],
+        \\"probability\\": null
+      }
     ]
   },
   {
@@ -920,18 +1282,24 @@ exports[`Simple examples with max training and testing CORRECT parser output for
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"hi\\",
-          \\"type\\": \\"Text\\"
-        }
-      ],
-      [
-        {
-          \\"value\\": \\"hey\\",
-          \\"type\\": \\"Text\\"
-        }
-      ]
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"hi\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"hey\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      }
     ]
   },
   {
@@ -951,18 +1319,24 @@ exports[`Simple examples with max training and testing CORRECT parser output for
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"Janis\\",
-          \\"type\\": \\"Text\\"
-        }
-      ],
-      [
-        {
-          \\"value\\": \\"Bob\\",
-          \\"type\\": \\"Text\\"
-        }
-      ]
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"Janis\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"Bob\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      }
     ],
     \\"variation\\": null
   },
@@ -982,18 +1356,24 @@ exports[`Simple examples with max training and testing CORRECT parser output for
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"whats up\\",
-          \\"type\\": \\"Text\\"
-        }
-      ],
-      [
-        {
-          \\"value\\": \\"how is it going\\",
-          \\"type\\": \\"Text\\"
-        }
-      ]
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"whats up\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"how is it going\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      }
     ]
   }
 ]"
@@ -1021,44 +1401,47 @@ exports[`Simple examples with max training and testing CORRECT parser output for
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"hi\\",
-          \\"type\\": \\"Alias\\",
-          \\"opt\\": false
-        },
-        {
-          \\"value\\": \\" \\",
-          \\"type\\": \\"Text\\"
-        },
-        {
-          \\"value\\": \\"name\\",
-          \\"type\\": \\"Slot\\",
-          \\"opt\\": true,
-          \\"location\\": {
-            \\"start\\": {
-              \\"offset\\": 61,
-              \\"line\\": 3,
-              \\"column\\": 11
-            },
-            \\"end\\": {
-              \\"offset\\": 69,
-              \\"line\\": 3,
-              \\"column\\": 19
-            }
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"hi\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": false
           },
-          \\"variation\\": null
-        },
-        {
-          \\"value\\": \\" \\",
-          \\"type\\": \\"Text\\"
-        },
-        {
-          \\"value\\": \\"whatsUp\\",
-          \\"type\\": \\"Alias\\",
-          \\"opt\\": true
-        }
-      ]
+          {
+            \\"value\\": \\" \\",
+            \\"type\\": \\"Text\\"
+          },
+          {
+            \\"value\\": \\"name\\",
+            \\"type\\": \\"Slot\\",
+            \\"opt\\": true,
+            \\"location\\": {
+              \\"start\\": {
+                \\"offset\\": 61,
+                \\"line\\": 3,
+                \\"column\\": 11
+              },
+              \\"end\\": {
+                \\"offset\\": 69,
+                \\"line\\": 3,
+                \\"column\\": 19
+              }
+            },
+            \\"variation\\": null
+          },
+          {
+            \\"value\\": \\" \\",
+            \\"type\\": \\"Text\\"
+          },
+          {
+            \\"value\\": \\"whatsUp\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": true
+          }
+        ],
+        \\"probability\\": null
+      }
     ]
   },
   {
@@ -1077,18 +1460,24 @@ exports[`Simple examples with max training and testing CORRECT parser output for
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"hi\\",
-          \\"type\\": \\"Text\\"
-        }
-      ],
-      [
-        {
-          \\"value\\": \\"hey\\",
-          \\"type\\": \\"Text\\"
-        }
-      ]
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"hi\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"hey\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      }
     ]
   },
   {
@@ -1108,18 +1497,24 @@ exports[`Simple examples with max training and testing CORRECT parser output for
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"Janis\\",
-          \\"type\\": \\"Text\\"
-        }
-      ],
-      [
-        {
-          \\"value\\": \\"Bob\\",
-          \\"type\\": \\"Text\\"
-        }
-      ]
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"Janis\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"Bob\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      }
     ],
     \\"variation\\": null
   },
@@ -1139,18 +1534,24 @@ exports[`Simple examples with max training and testing CORRECT parser output for
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"whats up\\",
-          \\"type\\": \\"Text\\"
-        }
-      ],
-      [
-        {
-          \\"value\\": \\"how is it going\\",
-          \\"type\\": \\"Text\\"
-        }
-      ]
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"whats up\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"how is it going\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      }
     ]
   }
 ]"
@@ -1177,44 +1578,47 @@ exports[`Simple examples with max training and testing CORRECT parser output spe
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"hi\\",
-          \\"type\\": \\"Alias\\",
-          \\"opt\\": false
-        },
-        {
-          \\"value\\": \\" \\",
-          \\"type\\": \\"Text\\"
-        },
-        {
-          \\"value\\": \\"name\\",
-          \\"type\\": \\"Slot\\",
-          \\"opt\\": true,
-          \\"location\\": {
-            \\"start\\": {
-              \\"offset\\": 37,
-              \\"line\\": 3,
-              \\"column\\": 11
-            },
-            \\"end\\": {
-              \\"offset\\": 45,
-              \\"line\\": 3,
-              \\"column\\": 19
-            }
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"hi\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": false
           },
-          \\"variation\\": null
-        },
-        {
-          \\"value\\": \\" \\",
-          \\"type\\": \\"Text\\"
-        },
-        {
-          \\"value\\": \\"whatsUp\\",
-          \\"type\\": \\"Alias\\",
-          \\"opt\\": true
-        }
-      ]
+          {
+            \\"value\\": \\" \\",
+            \\"type\\": \\"Text\\"
+          },
+          {
+            \\"value\\": \\"name\\",
+            \\"type\\": \\"Slot\\",
+            \\"opt\\": true,
+            \\"location\\": {
+              \\"start\\": {
+                \\"offset\\": 37,
+                \\"line\\": 3,
+                \\"column\\": 11
+              },
+              \\"end\\": {
+                \\"offset\\": 45,
+                \\"line\\": 3,
+                \\"column\\": 19
+              }
+            },
+            \\"variation\\": null
+          },
+          {
+            \\"value\\": \\" \\",
+            \\"type\\": \\"Text\\"
+          },
+          {
+            \\"value\\": \\"whatsUp\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": true
+          }
+        ],
+        \\"probability\\": null
+      }
     ]
   },
   {
@@ -1233,18 +1637,24 @@ exports[`Simple examples with max training and testing CORRECT parser output spe
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"hi\\",
-          \\"type\\": \\"Text\\"
-        }
-      ],
-      [
-        {
-          \\"value\\": \\"hey\\",
-          \\"type\\": \\"Text\\"
-        }
-      ]
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"hi\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"hey\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      }
     ]
   },
   {
@@ -1264,18 +1674,24 @@ exports[`Simple examples with max training and testing CORRECT parser output spe
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"Janis\\",
-          \\"type\\": \\"Text\\"
-        }
-      ],
-      [
-        {
-          \\"value\\": \\"Bob\\",
-          \\"type\\": \\"Text\\"
-        }
-      ]
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"Janis\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"Bob\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      }
     ],
     \\"variation\\": null
   },
@@ -1295,18 +1711,24 @@ exports[`Simple examples with max training and testing CORRECT parser output spe
       }
     },
     \\"inner\\": [
-      [
-        {
-          \\"value\\": \\"whats up\\",
-          \\"type\\": \\"Text\\"
-        }
-      ],
-      [
-        {
-          \\"value\\": \\"how is it going\\",
-          \\"type\\": \\"Text\\"
-        }
-      ]
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"whats up\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"how is it going\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      }
     ]
   }
 ]"

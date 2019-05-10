@@ -1,5 +1,6 @@
-import { saveAs } from 'file-saver/FileSaver';
+import { saveAs } from 'file-saver';
 import * as React from 'react';
+import * as luisAdapter from '../../../src/adapters/luis';
 import * as rasaAdapter from '../../../src/adapters/rasa';
 import * as snipsAdapter from '../../../src/adapters/snips';
 import * as webAdapter from '../../../src/adapters/web';
@@ -12,7 +13,8 @@ import * as es from './editorStyles';
 const adapters = {
     default: webAdapter,
     rasa: rasaAdapter,
-    snips: snipsAdapter
+    snips: snipsAdapter,
+    luis: luisAdapter
 };
 
 interface IEditorState {
@@ -22,9 +24,11 @@ interface IEditorState {
     showDrawer: boolean;
     dataset: any;
     adapterOptions: any;
-    currentAdapter: 'default' | 'rasa' | 'snips';
+    currentAdapter: 'default' | 'rasa' | 'snips' | 'luis';
     useCustomOptions: boolean;
 }
+
+type IDataset = webAdapter.IDefaultDataset | snipsAdapter.ISnipsDataset | rasaAdapter.IRasaDataset | luisAdapter.ILuisDataset;
 
 // NOTE: for SSR, wrap the require in check for window
 let CodeFlask = null;
@@ -51,7 +55,7 @@ export default class Editor extends React.Component<{}, IEditorState> {
     private codeflask = null;
     private editorUpdatesSetupCount = 0;
     private codeInputValue = '';
-    private tabs = [];
+    private tabs: Array<{ title: string; value: string }> = [];
 
     private debouncedTabDSLValidation = debounce(() => {
         if (!this.codeInputValue.length) {
@@ -152,6 +156,7 @@ export default class Editor extends React.Component<{}, IEditorState> {
                             >
                                 <option value="default">Default</option>
                                 <option value="rasa">Rasa NLU</option>
+                                <option value="luis">LUIS</option>
                                 <option value="snips">Snips NLU</option>
                             </select>
                         </es.SelectWrapper>
@@ -433,8 +438,18 @@ export default class Editor extends React.Component<{}, IEditorState> {
         });
     };
 
+    private importFile = (startPath: string, endPath: string) => {
+        const filename = endPath.replace(/^\.\//, '');
+        const tabFound = this.tabs.find(t => t.title.trim() === filename);
+        if (!tabFound) {
+            throw new Error(`Can't import ${endPath}. Not found.`);
+        }
+        // note: returning empty path since there is no actual filesystem
+        return { filePath: '', dsl: tabFound.value };
+    };
+
     private generateDataset = async () => {
-        let dataset: webAdapter.IDefaultDataset | snipsAdapter.ISnipsDataset | rasaAdapter.IRasaDataset | null = null;
+        let dataset: IDataset | null = null;
         const testingDataset = {};
         const adapter = adapters[this.state.currentAdapter];
         if (!adapter) {
@@ -445,7 +460,7 @@ export default class Editor extends React.Component<{}, IEditorState> {
                 if (dataset === null && this.state.useCustomOptions && this.state.adapterOptions) {
                     dataset = JSON.parse(JSON.stringify(this.state.adapterOptions));
                 }
-                const { training, testing } = await adapter.adapter(tab.value, dataset);
+                const { training, testing } = await adapter.adapter(tab.value, dataset, this.importFile, '');
                 dataset = training;
                 utils.mergeDeep(testingDataset, testing);
             } catch (e) {
@@ -453,6 +468,7 @@ export default class Editor extends React.Component<{}, IEditorState> {
                     this.changeTab(i, () =>
                         this.setState({ error: e.message }, () => {
                             if (window && window.alert) {
+                                console.log(e);
                                 window.alert(`Please fix error: ${e.message}`);
                             }
                         })

@@ -1,7 +1,7 @@
-import styled, { injectGlobal } from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 
 // tslint:disable-next-line:no-unused-expression
-injectGlobal`
+export const Global: any = createGlobalStyle`
   *, *::after, *::before {
     margin: 0;
     padding: 0;
@@ -30,7 +30,7 @@ injectGlobal`
   a:focus, a:active, a:any-link { text-decoration: none; }
 `;
 
-export const Header = styled.div`
+export const Header = styled('div')`
     display: flex;
     align-items: center;
     justify-content: center;

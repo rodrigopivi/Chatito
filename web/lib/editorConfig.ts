@@ -2,25 +2,25 @@ import * as rasaAdapter from '../../src/adapters/rasa';
 import * as snipsAdapter from '../../src/adapters/snips';
 import * as webAdapter from '../../src/adapters/web';
 
-const findRestaurantsByCity = `// Find restaurants by city
+const findRestaurantsByCity = `import ./common.chatito
+
 %[findRestaurantsByCity]('training': '100', 'testing': '100')
-    ~[greet?] ~[please?] ~[find?] ~[restaurants] ~[located at] @[city] ~[city?]
+    ~[hi?] ~[please?] ~[find?] ~[restaurants] ~[located at] @[city] ~[city?] ~[thanks?]
 
 @[city]
     ~[new york]
     ~[san francisco]
     ~[atlanta]
 
-~[greet]
-    hey
-    hi
-    hello
-    greetings
+~[find]
+    find
+    i'm looking for
+    help me find
 
 ~[located at]
-    at
-    in the area of
     located at
+    in the area of
+    near
 
 ~[restaurants]
     restaurants
@@ -29,56 +29,48 @@ const findRestaurantsByCity = `// Find restaurants by city
 `;
 
 const affirmative = `// Ways to say yes
-%[affirmative]('training': '100', 'testing': '100')
+
+import ./common.chatito
+
+%[affirmative]('training': '50', 'testing': '50')
     ~[yes]
-    ~[yes] ~[yes?] ~[please?]
-    you got that ~[yes]
-    you're goddamn ~[yes]
-    ~[yes] ~[wantThat]
-    yes that is ~[yes]
-    ~[yes] ~[yes?] ~[yes?] ~[yes?]
-    ~[wantThat]
+    ~[yes] ~[please?]
+    ~[yes] ~[yes?] ~[thanks?]
+    ~[yes?] ~[that is good] ~[yes?]
 
 ~[yes]
     yes
     right
     affirmative
-    yes to that
+    agreed
     correct
     yep
     yes sir
-    si
-    correcto
-    ok
-    right
-    allright
+    sounds good
+    im ok with that
 
-~[wantThat]
-    i want that
-    i desire that
-    i agree
+~[that is good]
+    that is good
     i want that
     that is fine
     that is correct
     that is what i want
     you understood me
     that is right
-    that is what i mean
-    want that
-    im ok with that
-    ok its good
-    im good with that
-    ok its fine
-    is good
-    it is fine
-    im ok with this
-    im good with this
+    its fine
+    good
 `;
 
 const bye = `// Ways to say goodbye
-%[bye]('training': '100', 'testing': '100')
-    ~[leaving?] ~[bye] ~[bye?] ~[bye?] ~[leaving?]
-    ~[leaving] ~[bye?]
+
+import ./common.chatito
+
+%[bye]('training': '50', 'testing': '50')
+    ~[bye]
+    ~[thanks?] ~[bye]
+    ~[bye] ~[thanks?]
+    ~[leaving]
+    ~[leaving] ~[bye]
 
 ~[bye]
     bye
@@ -103,31 +95,31 @@ const bye = `// Ways to say goodbye
 `;
 
 const greet = `// Ways to say hello
-%[greet]('training': '100', 'testing': '100')
-    ~[hi] ~[hi?] ~[hi?]
-    ~[greetings] ~[greetings?]
-    ~[hi] ~[greetings] ~[hi?]
-    ~[greetings] ~[hi] ~[hi?]
 
-~[hi]
-    hi
-    hello
-    hey
-    howdy
-    hola
+import ./common.chatito
+
+%[greet]('training': '50', 'testing': '50')
+    ~[hi]
+    ~[greetings]
+    ~[hi] ~[greetings?]
+    ~[hi] ~[whats up]
+    ~[greetings] ~[whats up]
+    ~[hi] ~[greetings] ~[whats up]
 
 ~[greetings]
     greetings
-    how are you
-    whats up
-    how are you doing
-    how is it going
     good morning
     good afternoon
     good day
     good night
-    are you there
     morning
+
+~[whats up]
+    how are you
+    whats up
+    how are you doing
+    how is it going
+    are you there
     how are things going
     are you around
     whatsup
@@ -136,43 +128,51 @@ const greet = `// Ways to say hello
 `;
 
 const negative = `// Ways to say no
-%[negative]('training': '100', 'testing': '100')
-    ~[no] ~[no?] ~[please?]
-    ~[no] ~[notWhatIWant]
-    ~[no?] ~[notWhatIWant] ~[no?]
-    ~[no] ~[no?] ~[no?]
+
+import ./common.chatito
+
+%[negative]('training': '50', 'testing': '50')
+    ~[no]
+    ~[no] ~[please?] ~[its not ok?]
+    ~[please?] ~[no] ~[its not ok?]
+    ~[its not ok]
 
 ~[no]
     no
     nope
-    negative
-    not correct
+    not really
+    that's not right
     incorrect
-    no sir
-    wrong
+    don't do that
 
-~[notWhatIWant]
-    dont want that
-    dont desire that
-    dont agree on that
+~[its not ok]
+    i don't want that
     didnt meant that
     dont mean that
-    not what i want
-    not correct
-    wrong
-    bad
-    incorrect
-    im not ok with that
-    not good
-    its bad
-    that is bad
+    that's not what i want
+    that's not correct
+    that's wrong
+    it's not good
     that is wrong
-    im not good with that
-    ok its not fine
-    definitely no
-    not good for me
     its not ok
     its not correct
+`;
+
+const common = `// Common entities to be imported and reused
+~[hi]
+    hi
+    hello
+    hey
+
+~[please]
+    please
+    plz
+    pls
+
+~[thanks]
+    thanks
+    thank you
+
 `;
 
 export const tabs = [
@@ -180,11 +180,13 @@ export const tabs = [
     { title: 'greet.chatito', value: greet },
     { title: 'bye.chatito', value: bye },
     { title: 'affirmative.chatito', value: affirmative },
-    { title: 'negative.chatito', value: negative }
+    { title: 'negative.chatito', value: negative },
+    { title: 'common.chatito', value: common }
 ];
 
 export const chatitoPrism = {
-    comments: [{ pattern: /^\/\/.*/, greedy: true }, { pattern: /((\n|\r\n)+)\/\/.*/, greedy: true }],
+    comments: [{ pattern: /^(\/\/|\#).*/, greedy: true }, { pattern: /((\n|\r\n)+)(\/\/|\#).*/, greedy: true }],
+    imports: [{ pattern: /(\n|\r\n)import\s/, greedy: true }, { pattern: /^import\s/, greedy: true }],
     intentDefinition: [
         {
             pattern: /^%\[[^\]]+\]((\(.+\))?)/,
@@ -205,6 +207,7 @@ export const chatitoPrism = {
             inside: { slotArguments: /((\(.+\))?)$/ }
         }
     ],
+    probability: { pattern: /(\n|\r\n)\s\s\s\s\*\[[^\]]+\]/, greedy: true },
     slot: { pattern: /\@\[[^\]]+(\?)?\]/, greedy: true },
     alias: { pattern: /~\[[^\]]+(\?)?\]/, greedy: true },
     default: { pattern: /[^\r\n]/i, greedy: true }

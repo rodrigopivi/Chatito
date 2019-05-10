@@ -1,4 +1,4 @@
-import { IChatitoEntityAST, IEntities, ISentenceTokens } from './types';
+import { IChatitoEntityAST, IEntities, ISingleSentence } from './types';
 
 //  Durstenfeld shuffle, a computer-optimized version of Fisher-Yates:
 // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
@@ -11,26 +11,26 @@ export const shuffle = <T>(array: T[]) => {
 
 export const validateAndPushToStack = (entity: IChatitoEntityAST, entitiesStack: IChatitoEntityAST[]) => {
     let numberOfSlotsInStack = 0;
-    const found = entitiesStack.find((et) => {
-        if (et.type === 'SlotDefinition') { numberOfSlotsInStack++; }
+    const found = entitiesStack.find(et => {
+        if (et.type === 'SlotDefinition') {
+            numberOfSlotsInStack++;
+        }
         return et.key === entity.key && et.type === entity.type;
     });
     if (found) {
-        const last = entitiesStack.pop() || found;
-        throw new Error(`Invalid nesting of entity: '${entity.key}' inside entity '${last.key}'. Infinite loop prevented.`)
+        const last = entitiesStack.pop() || found;
+        throw new Error(`Invalid nesting of entity: '${entity.key}' inside entity '${last.key}'. Infinite loop prevented.`);
     }
     if (numberOfSlotsInStack !== 0 && entity.type === 'SlotDefinition') {
         const last = entitiesStack.pop() || entity;
-        throw new Error(`Invalid nesting of slot: '${entity.key}' inside '${last.key}'. An slot can't reference other slot.`)
+        throw new Error(`Invalid nesting of slot: '${entity.key}' inside '${last.key}'. An slot can't reference other slot.`);
     }
     entitiesStack.push(entity);
     return entitiesStack;
-}
+};
 
-export const maxSentencesForSentence = (
-    entities: IEntities, stack?: IChatitoEntityAST[],
-) => (sentence: ISentenceTokens[]) => {
-    const sr = sentence.reduce((accumulator, t) => {
+export const maxSentencesForSentence = (entities: IEntities, stack?: IChatitoEntityAST[]) => (sentence: ISingleSentence) => {
+    const sr = sentence.sentence.reduce((accumulator, t) => {
         let acc = accumulator;
         if (t.type === 'Slot' || t.type === 'Alias') {
             const def = entities[t.type];
@@ -38,7 +38,12 @@ export const maxSentencesForSentence = (
             if (!def[innerEntityKey]) {
                 if (t.type === 'Alias') {
                     def[innerEntityKey] = {
-                        inner: [[{ value: innerEntityKey, type: 'Text' }]],
+                        inner: [
+                            {
+                                sentence: [{ value: innerEntityKey, type: 'Text' }],
+                                probability: null
+                            }
+                        ],
                         key: t.value,
                         type: 'AliasDefinition'
                     };
@@ -61,7 +66,7 @@ export const maxSentencesForSentence = (
 export const maxSentencesForEntity = (ed: IChatitoEntityAST, entities: IEntities, stack: IChatitoEntityAST[] = []): number => {
     validateAndPushToStack(ed, stack);
     return ed.inner.map(maxSentencesForSentence(entities, stack)).reduce((acc, val) => acc + val);
-}
+};
 
 // Deep merge objects
 // https://gist.github.com/Salakar/1d7137de9cb8b704e48a

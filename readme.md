@@ -12,16 +12,11 @@ https://img.shields.io/circleci/project/github/RedSparr0w/node-csgo-parser/maste
 
 [Try the online IDE!](https://rodrigopivi.github.io/Chatito/)
 
-## Donate
-
-[![Alt text](https://c5.patreon.com/external/logo/become_a_patron_button.png "Become a Patron!")](https://www.patreon.com/bePatron?u=13643440)
-
-Designing and maintaining chatito takes time and effort, if it was usefull for you, please consider making a donation and share the abundance! :)
 
 ## Overview
-Chatito helps you generate datasets for training and validating chatbot models using a minimalistic DSL.
+Chatito helps you generate datasets for training and validating chatbot models using a simple DSL.
 
-If you are building chatbots using commercial models, open source frameworks or writing your own natural language processing model, you need training examples. Chatito is here to help you.
+If you are building chatbots using commercial models, open source frameworks or writing your own natural language processing model, you need training and testing examples. Chatito is here to help you.
 
 This project contains the:
 - [Online chatito IDE](https://rodrigopivi.github.io/Chatito/)
@@ -66,6 +61,13 @@ One particular behavior of the Rasa adapter is that when a slot definition sente
 ```
 
 In this example, the generated rasa dataset will contain the `entity_synonyms` of `synonym 1` and `synonym 2` mapping to `some slot synonyms`.
+
+#### [LUIS](https://www.luis.ai/)
+[LUIS](https://www.luis.ai/) is part of Microsoft's Cognitive services. Chatito supports training a LUIS NLU model through its [batch add labeled utterances endpoint](https://westus.dev.cognitive.microsoft.com/docs/services/5890b47c39e2bb17b84a55ff/operations/5890b47c39e2bb052c5b9c09), and its [batch testing api](https://docs.microsoft.com/en-us/azure/cognitive-services/LUIS/luis-how-to-batch-test).
+
+To train a LUIS model, you will need to post the utterance in batches to the relevant api for training or testing.
+
+Reference issue: [#61](https://github.com/rodrigopivi/Chatito/issues/)
 
 #### [Snips NLU](https://snips-nlu.readthedocs.io/en/latest/)
 [Snips NLU](https://snips-nlu.readthedocs.io/en/latest/) is another great open source framework for NLU. One particular behavior of the Snips adapter is that you can define entity types for the slots. e.g.:
@@ -115,6 +117,10 @@ npx chatito <pathToFileOrDirectory> --format=<format> --formatOptions=<formatOpt
  - `<outputPath>` Optional. The directory where to save the generated datasets. Uses the current directory as default.
 - `<trainingFileName>` Optional. The name of the generated training dataset file. Do not forget to add a .json extension at the end. Uses `<format>`_dataset_training.json as default file name.
 - `<testingFileName>` Optional. The name of the generated testing dataset file. Do not forget to add a .json extension at the end. Uses `<format>`_dataset_testing.json as default file name.
+
+### Notes to prevent overfitting
+
+Overfitting (https://en.wikipedia.org/wiki/Overfitting) is a problem that can be prevented if we use Chatito correctly. The idea behind this tool, is to have an intersection between data augmentation and having probabilistic description of possible sentences. It is not intended to generate deterministic datasets, you should avoid generating all possible combinations.
 
 ### Author and maintainer
 Rodrigo Pimentel
