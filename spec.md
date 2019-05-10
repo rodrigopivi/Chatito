@@ -60,6 +60,7 @@ non printable characters, this are the requirements of document source text and 
 - Comments: Lines of text starting with '//' or '#' (no spaces before)
 - Imports: Lines of text starting with 'import' keyword followed by a relative filepath
 - Entity arguments: Optional key-values that can be declared at intents and slot definitions
+- Probability operator: an optional keyword declared at the start of sentences to control the probabilities.
 
 ### 2.1 - Entities
 Entities are the way to define keywords that wrap sentence variations and attach some properties to them.
@@ -83,7 +84,7 @@ added to the sentences defined inside. e.g.:
     hi
 ```
 
-The previous example will generate all possible unique examples for greet (in this case 2 utterances). But there are cases where there is no need to generate all utterances, or when we want to attach some extra properties to the genreated utterance, that is where entity arguments can help.
+The previous example will generate all possible unique examples for greet (in this case 2 utterances). But there are cases where there is no need to generate all utterances, or when we want to attach some extra properties to the generated utterance, that is where entity arguments can help.
 
 Entity arguments are comma separated key-values declared with the entity definition inside parenthesis. Each entity argument is composed of a key, followed by the `:` symbol and the value. The argument key or value are just strings wrapped with single or double quotes, optional spaces between the parenthesis and comma are allowed, the format is similar to ndjson but only for string values.
 
@@ -154,7 +155,7 @@ Nesting entities: Sentences defined inside a slot can only reference alias entit
 
 #### 2.1.3 - Alias
 The alias entity is defined by the `~[` symbols at the start of a line, following by the name of the alias and `]`.
-Alias are just variations of a word and does not generate any tag. By default if an alias is referenced but not defined (like in the next example for `how are you`, it just uses the alias key name, this is usefull for making a word optional but not having to add the extra lines of code defining a new alias. e.g.:
+Alias are just variations of a word and does not generate any tag. By default if an alias is referenced but not defined (like in the next example for `how are you`, it just uses the alias key name, this is useful for making a word optional but not having to add the extra lines of code defining a new alias. e.g.:
 
 ```
 %[greet]
@@ -172,14 +173,14 @@ When an alias is referenced inside a slot definition, and it is the only token o
 
 Alias definitions are not allowed to declare entity arguments.
 
-Nesting entities: Sentences defined inside aliases can reference slots and other aliases but preventing recursive loops
+Nesting entities: Sentences defined inside aliases can reference slots and other aliases but preventing recursive loops.
 
 
 ### 2.2 - Sentence probability operator
 
-The way Chatito works, is like pulling samples from a cloud of possible combinations, but once the sentences definitions start getting more complex, the max possible combination possibilities increments exponentially, causing a problem where the generator will most likely pick sentences that have more possible combinations, and omit some sentences that may be more important at the dataset. To have some control of the generator principle, you can use the this operator.
+The way Chatito works, is like pulling samples from a cloud of possible combinations, but once the sentences definitions start getting more complex, the max possible combination possibilities increments exponentially, causing a problem where the generator will most likely pick sentences that have more possible combinations, and omit some sentences that may be more important at the dataset. To have some control of the generator principle, you can use the probability operator.
 
-The sentence probability operator is defined by the `*[` symbols at the start of a sentence, following by the probability of generating the sentence (max 100) and `]`. The value inside the probability operator must by an integer betwen 1 and 100.
+The sentence probability operator is defined by the `*[` symbols at the start of a sentence, following by a number, the probability of generating the sentence and `]`. The value inside the probability operator must be an integer between 1 and 100, and the sum of all probability operators inside an entity definition should never exceed 100.
 
 ```
 %[greet]('training': '2', 'testing': '2')
@@ -190,11 +191,11 @@ The sentence probability operator is defined by the `*[` symbols at the start of
 
 This way, it is possible to declare that from the first sentence we want 5 testing and 5 training examples (50%). The second sentence will generate 30% of the utterances. And the 20% remaining will come from the remaining possibilities of all sentences.
 
-NOTE: Be carefull when using probability operator, because if the sentence reaches its max number of unique generated values, it will start producing duplicates and possibly slowing down the generator that may filter duplicates.
+NOTE: Be careful when using probability operator, because if the sentence reaches its max number of unique generated values, it will start producing duplicates and possibly slowing down the generator that may filter duplicates.
 
 ### 2.3 - Importing chatito files
 
-To allow reusing entity declarations. It is possible to import another chatito file using the import keyword. Importing another chatito file, only allows using the slots and aliases defined there, if the imported file defines intents, they will be ignored since intents are generation entry points.
+To allow reusing entity declarations. It is possible to import another chatito file using the import keyword. Importing another chatito file only allows using the slots and aliases defined there, if the imported file defines intents, they will be ignored since intents are generation entry points.
 
 As an example, given two chatito files:
 
@@ -216,7 +217,7 @@ import ./slot1.chatito
 ```
 
 The file `main.chatito` will import all alias and slot definitions from `./slot1.chatito`.
-The text next to the import statement should be a relative path from the main file to the imported file.
+The text next to the import statement should be a relative path from the main file to the imported file. Imports can be nested, and the path is always relative to the file that declares the reference.
 
 Note: Chatito will throw an exception if two imports define the same entity.
 

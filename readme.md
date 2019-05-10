@@ -20,9 +20,9 @@ If you are building chatbots using commercial models, open source frameworks or 
 
 This project contains the:
 - [Online chatito IDE](https://rodrigopivi.github.io/Chatito/)
- - [Chatito DSL specification](https://github.com/rodrigopivi/Chatito/blob/master/spec.md)
+- [Chatito DSL specification](https://github.com/rodrigopivi/Chatito/blob/master/spec.md)
 - [DSL AST parser in pegjs format](https://github.com/rodrigopivi/Chatito/blob/master/parser/chatito.pegjs)
- - [Generator implemented in typescript + npm package](https://github.com/rodrigopivi/Chatito/tree/master/src)
+- [Generator implemented in typescript + npm package](https://github.com/rodrigopivi/Chatito/tree/master/src)
 
 ### Chatito language
 For the full language specification and documentation, please refer to the [DSL spec document](https://github.com/rodrigopivi/Chatito/blob/master/spec.md).
@@ -31,7 +31,7 @@ For the full language specification and documentation, please refer to the [DSL 
 The language is independent from the generated output format and because each model can receive different parameters and settings, there are 3 data format adapters provided. This section describes the adapters, their specific behaviors and use cases:
 
 #### Default format
-Use the default format if you plan to train a custom model or if you are writting a custom adapter. This is the most flexible format because you can annotate `Slots` and `Intents` with custom entity arguments, and they all will be present at the generated output, so for example, you could also include dialog/response generation logic with the dsl. E.g.:
+Use the default format if you plan to train a custom model or if you are writing a custom adapter. This is the most flexible format because you can annotate `Slots` and `Intents` with custom entity arguments, and they all will be present at the generated output, so for example, you could also include dialog/response generation logic with the DSL. E.g.:
 
 ```
 %[some intent]('context': 'some annotation')
@@ -46,7 +46,7 @@ Custom entities like 'context', 'required' and 'type' will be available at the o
 
 #### [Rasa NLU](https://rasa.com/docs/nlu/)
 [Rasa NLU](https://rasa.com/docs/nlu/) is a great open source framework for training NLU models.
-One particular behavior of the Rasa adapter is that when a slot definition sentence only contains one alias, the generated rasa dataset will map the alias as a synonym. e.g.:
+One particular behavior of the Rasa adapter is that when a slot definition sentence only contains one alias, the generated Rasa dataset will map the alias as a synonym. e.g.:
 
 ```
 %[some intent]('training': '1')
@@ -60,14 +60,14 @@ One particular behavior of the Rasa adapter is that when a slot definition sente
     synonym 2
 ```
 
-In this example, the generated rasa dataset will contain the `entity_synonyms` of `synonym 1` and `synonym 2` mapping to `some slot synonyms`.
+In this example, the generated Rasa dataset will contain the `entity_synonyms` of `synonym 1` and `synonym 2` mapping to `some slot synonyms`.
 
 #### [LUIS](https://www.luis.ai/)
 [LUIS](https://www.luis.ai/) is part of Microsoft's Cognitive services. Chatito supports training a LUIS NLU model through its [batch add labeled utterances endpoint](https://westus.dev.cognitive.microsoft.com/docs/services/5890b47c39e2bb17b84a55ff/operations/5890b47c39e2bb052c5b9c09), and its [batch testing api](https://docs.microsoft.com/en-us/azure/cognitive-services/LUIS/luis-how-to-batch-test).
 
-To train a LUIS model, you will need to post the utterance in batches to the relevant api for training or testing.
+To train a LUIS model, you will need to post the utterance in batches to the relevant API for training or testing.
 
-Reference issue: [#61](https://github.com/rodrigopivi/Chatito/issues/)
+Reference issue: [#61](https://github.com/rodrigopivi/Chatito/issues/61)
 
 #### [Snips NLU](https://snips-nlu.readthedocs.io/en/latest/)
 [Snips NLU](https://snips-nlu.readthedocs.io/en/latest/) is another great open source framework for NLU. One particular behavior of the Snips adapter is that you can define entity types for the slots. e.g.:
@@ -81,11 +81,11 @@ Reference issue: [#61](https://github.com/rodrigopivi/Chatito/issues/)
     ~[tomorrow]
 ```
 
-In the previous example, all `@[date]` values will be taged with the `snips/datetime` entity tag.
+In the previous example, all `@[date]` values will be tagged with the `snips/datetime` entity tag.
 
 ### NPM package
 
-Chatito is supports nodejs `v8.11.2 LTS` or higher.
+Chatito supports Node.js `v8.11.2 LTS` or higher.
 
 Install it globally:
 ```
@@ -120,7 +120,7 @@ npx chatito <pathToFileOrDirectory> --format=<format> --formatOptions=<formatOpt
 
 ### Notes to prevent overfitting
 
-Overfitting (https://en.wikipedia.org/wiki/Overfitting) is a problem that can be prevented if we use Chatito correctly. The idea behind this tool, is to have an intersection between data augmentation and having probabilistic description of possible sentences. It is not intended to generate deterministic datasets, you should avoid generating all possible combinations.
+[Overfitting](https://en.wikipedia.org/wiki/Overfitting) is a problem that can be prevented if we use Chatito correctly. The idea behind this tool, is to have an intersection between data augmentation and a probabilistic description of possible sentences combinations. It is not intended to generate deterministic datasets, you should avoid generating all possible combinations.
 
 ### Author and maintainer
 Rodrigo Pimentel
