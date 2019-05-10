@@ -33,22 +33,14 @@ const chatitoFilesFromDir = async (startPath: string, cb: (filename: string) => 
     }
 };
 
-// {
-//     "fromPath":"/Users/rodrigo/Trabajo/Chatito/pp/main.chatito",
-//     "importFile":"./dir/import.chatito",
-//     "filePath":"../../dir/import.chatito",
-//     "__dirname":"/Users/rodrigo/Trabajo/Chatito/src"
-// }
 const importer = (fromPath: string, importFile: string) => {
-    // wrong /Users/rodrigo/dir/import.chatito
     const filePath = path.resolve(path.dirname(fromPath), importFile);
     if (path.extname(filePath) !== '.chatito') {
         throw new Error('Only files with .chatito extension can be imported');
     }
     if (!fs.existsSync(filePath)) {
-        throw new Error(`Can't import ${filePath}`); // /Users/rodrigo/Trabajo/Chatito/nestedimport.chatito
+        throw new Error(`Can't import ${filePath}`);
     }
-    // const filePath = path.relative(fromPath, importFile);
     const dsl = fs.readFileSync(filePath, 'utf8');
     return { filePath, dsl };
 };

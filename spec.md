@@ -183,13 +183,13 @@ The way Chatito works, is like pulling samples from a cloud of possible combinat
 The sentence probability operator is defined by the `*[` symbols at the start of a sentence, following by a number, the probability of generating the sentence and `]`. The value inside the probability operator must be an integer between 1 and 100, and the sum of all probability operators inside an entity definition should never exceed 100.
 
 ```
-%[greet]('training': '2', 'testing': '2')
+%[greet]('training': '100', 'testing': '100')
     *[50] ~[phrase1]
     *[30] ~[phrase2] ~[phrase3?]
     ~[another phrase] ~[something] ~[something else]
 ```
 
-This way, it is possible to declare that from the first sentence we want 5 testing and 5 training examples (50%). The second sentence will generate 30% of the utterances. And the 20% remaining will come from the remaining possibilities of all sentences.
+This way, it is possible to declare that the first sentence will have 50% chances. The second sentence will generate 30% of the utterances. And the 20% remaining will come from the remaining possibilities of all sentences.
 
 NOTE: Be careful when using probability operator, because if the sentence reaches its max number of unique generated values, it will start producing duplicates and possibly slowing down the generator that may filter duplicates.
 
