@@ -107,7 +107,7 @@ const getVariationsFromEntity = async <T>(
         }
         // get the sum of all defined posibility operators inside the entity and validate it
         const totalMaxCountsToShareBetweenNullProbSent =
-            indexesOfSentencesWithNullProbability.map(i => maxCounts[i]).reduce((p, n) => (p || 0) + (n || 0)) || 0;
+            indexesOfSentencesWithNullProbability.map(i => maxCounts[i]).reduce((p, n) => (p || 0) + (n || 0), 0) || 0;
         // calculate the split of remaining probability for sentences that don't define them
         // const realProbabilities = maxCounts.map(m => (m * 100) / sumOfTotalMax);
         const probabilities = definedSentenceProbabilities.map((p, i) =>

@@ -942,3 +942,30 @@ describe('example that generates empty strings', () => {
         expect(error.message).toEqual(`Some sentence generated an empty string. Can't map empty to an intent.`);
     });
 });
+
+describe('example that only has one sentence with probs', () => {
+    const main = `
+%[findRestaurantsByCity]('training': '3')
+    *[20] ~[restaurants]
+
+~[restaurants]
+    restaurants
+    places to eat
+    where to eat
+
+`;
+    test('correctly works', async () => {
+        let error = null;
+        let dataset: ThenArg<ReturnType<typeof web.adapter>> | null = null;
+        try {
+            dataset = await web.adapter(main, null);
+        } catch (e) {
+            error = e;
+        }
+        expect(error).toBeNull();
+        expect(dataset).not.toBeNull();
+        expect(dataset!.training).not.toBeNull();
+        expect(dataset!.training.findRestaurantsByCity).not.toBeNull();
+        expect(dataset!.training.findRestaurantsByCity.length).toEqual(3);
+    });
+});
