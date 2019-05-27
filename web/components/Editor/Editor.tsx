@@ -316,13 +316,13 @@ export default class Editor extends React.Component<{}, IEditorState> {
     private saveToLocalStorage = (saveTabs, saveAdapterOptions, saveCurrentAdapter) => {
         if (window && localStorage) {
             if (saveTabs) {
-                localStorage.setItem('tabs', JSON.stringify(this.tabs));
+                localStorage.setItem('__tabs', JSON.stringify(this.tabs));
             }
             if (saveAdapterOptions) {
-                localStorage.setItem('adapterOptions', this.state.useCustomOptions ? JSON.stringify(this.state.adapterOptions) : '');
+                localStorage.setItem('__adapterOptions', this.state.useCustomOptions ? JSON.stringify(this.state.adapterOptions) : '');
             }
             if (saveCurrentAdapter) {
-                localStorage.setItem('currentAdapter', this.state.currentAdapter);
+                localStorage.setItem('__currentAdapter', this.state.currentAdapter);
             }
         }
     };
@@ -351,9 +351,9 @@ export default class Editor extends React.Component<{}, IEditorState> {
     private loadFromLocalStorage = (cb: () => void) => {
         if (window && localStorage) {
             const newState: any = {};
-            const localTabs = this.loadFromLocalIfPresent('tabs', true);
-            const localAdapterOptions = this.loadFromLocalIfPresent('adapterOptions', true);
-            const localCurrentAdapter = this.loadFromLocalIfPresent('currentAdapter', false);
+            const localTabs = this.loadFromLocalIfPresent('__tabs', true);
+            const localAdapterOptions = this.loadFromLocalIfPresent('__adapterOptions', true);
+            const localCurrentAdapter = this.loadFromLocalIfPresent('__currentAdapter', false);
             this.tabs = localTabs ? localTabs : tabs;
             if (localAdapterOptions) {
                 newState.adapterOptions = localAdapterOptions;

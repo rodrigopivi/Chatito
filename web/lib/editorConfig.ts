@@ -4,8 +4,12 @@ import * as webAdapter from '../../src/adapters/web';
 
 const findRestaurantsByCity = `import ./common.chatito
 
+# Ways to request a restaurant within a location (using probability operator)
+# NOTE: 60% of the examples should come from the first sentence, and 40 from the second
+
 %[findRestaurantsByCity]('training': '100', 'testing': '100')
-    ~[hi?] ~[please?] ~[find?] ~[restaurants] ~[located at] @[city] ~[city?] ~[thanks?]
+    *[60] ~[hi?] ~[please?] ~[find?] ~[restaurants] ~[located at] @[city] ~[city?] ~[thanks?]
+    *[40] ~[restaurants] ~[located at] @[city]
 
 @[city]
     ~[new york]
@@ -33,7 +37,7 @@ const affirmative = `// Ways to say yes
 import ./common.chatito
 
 %[affirmative]('training': '50', 'testing': '50')
-    ~[yes]
+    *[20] ~[yes]
     ~[yes] ~[please?]
     ~[yes] ~[yes?] ~[thanks?]
     ~[yes?] ~[that is good] ~[yes?]
@@ -66,7 +70,7 @@ const bye = `// Ways to say goodbye
 import ./common.chatito
 
 %[bye]('training': '50', 'testing': '50')
-    ~[bye]
+    *[10] ~[bye]
     ~[thanks?] ~[bye]
     ~[bye] ~[thanks?]
     ~[leaving]
@@ -99,7 +103,7 @@ const greet = `// Ways to say hello
 import ./common.chatito
 
 %[greet]('training': '50', 'testing': '50')
-    ~[hi]
+    *[10] ~[hi]
     ~[greetings]
     ~[hi] ~[greetings?]
     ~[hi] ~[whats up]
@@ -127,15 +131,15 @@ import ./common.chatito
     are you around?
 `;
 
-const negative = `// Ways to say no
+const negative = `/// Ways to say no
 
 import ./common.chatito
 
 %[negative]('training': '50', 'testing': '50')
-    ~[no]
+    *[20] ~[no]
     ~[no] ~[please?] ~[its not ok?]
     ~[please?] ~[no] ~[its not ok?]
-    ~[its not ok]
+    *[20] ~[its not ok]
 
 ~[no]
     no
