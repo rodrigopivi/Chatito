@@ -1,6 +1,6 @@
 {
   "name": "chatito",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "Generate training datasets for NLU chatbots using a simple DSL",
   "bin": {
     "chatito": "./dist/bin.js"
@@ -36,7 +36,10 @@
     "named entity recognition",
     "nlp",
     "natural language understanding",
-    "chatbot"
+    "chatbot",
+    "rasa nlu",
+    "luis ai",
+    "snips nlu"
   ],
   "author": {
     "name": "Rodrigo Pimentel",
