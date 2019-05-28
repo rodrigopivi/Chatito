@@ -71,7 +71,7 @@ export async function adapter(dsl: string, formatOptions?: any, importer?: gen.I
     await gen.datasetFromString(dsl, utteranceWriter, importer, currentPath);
     Object.keys(synonyms).forEach(k => {
         training.rasa_nlu_data.entity_synonyms.push({
-            synonyms: [...synonyms[k]],
+            synonyms: Array.from(synonyms[k]),
             value: k
         });
     });
