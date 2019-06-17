@@ -60,7 +60,7 @@ const chatitoFormatPostProcess = (data: ISentenceTokens[]) => {
 
 // recursive function that generates variations using a cache
 // that uses counts to avoid repetitions
-const getVariationsFromEntity = async <T>(
+export const getVariationsFromEntity = async <T>(
     ed: IChatitoEntityAST,
     entities: IEntities,
     optional: boolean,
@@ -77,6 +77,7 @@ const getVariationsFromEntity = async <T>(
         const maxCounts: number[] = []; // calcs the max possible utterancees for each sentence
         const definedSentenceProbabilities: Array<number | null> = []; // the posibility operators defined for sentences
         const indexesOfSentencesWithNullProbability: number[] = [];
+        const isEvenDistribution = !!(ed.args && ed.args.distribution && ed.args.distribution === 'even');
         let sumOfTotalProbabilitiesDefined = 0;
         for (const c of ed.inner) {
             // get counts for each of the sentences inside the entity
@@ -125,16 +126,32 @@ const getVariationsFromEntity = async <T>(
         let probabilities: number[];
         if (probabilityTypeDefined === '%') {
             // if probabilityTypeDefined is percentual, then calculate each sentence chances in percent
-            probabilities = definedSentenceProbabilities.map((p, i) =>
-                p === null
-                    ? (((maxCounts[i] * 100) / totalMaxCountsToShareBetweenNullProbSent) * (100 - sumOfTotalProbabilitiesDefined)) / 100
-                    : p
-            );
+            probabilities = definedSentenceProbabilities.map((p, i) => {
+                if (p !== null) {
+                    return p;
+                }
+                if (isEvenDistribution) {
+                    return (100 - sumOfTotalProbabilitiesDefined) / indexesOfSentencesWithNullProbability.length;
+                }
+                return (((maxCounts[i] * 100) / totalMaxCountsToShareBetweenNullProbSent) * (100 - sumOfTotalProbabilitiesDefined)) / 100;
+            });
         } else if (probabilityTypeDefined === 'w') {
             // if probabilityTypeDefined is weighted, then multiply the weight by max counts
-            probabilities = definedSentenceProbabilities.map((p, i) => (p === null ? maxCounts[i] : maxCounts[i] * p));
+            probabilities = definedSentenceProbabilities.map((p, i) => {
+                if (p !== null) {
+                    return maxCounts[i] * p;
+                }
+                if (isEvenDistribution) {
+                    return 1;
+                }
+                return maxCounts[i];
+            });
         } else {
-            probabilities = maxCounts;
+            if (isEvenDistribution) {
+                probabilities = Array(maxCounts.length).fill(1);
+            } else {
+                probabilities = maxCounts;
+            }
         }
         const currentEntityCache: IStatCache = { counts, maxCounts, optional, probabilities };
         cache.set(cacheKey, currentEntityCache);
@@ -222,12 +239,7 @@ export const getImports = (from: string, to: string, importer: IFileImporter) =>
     }
 };
 
-export const datasetFromAST = async (
-    initialAst: IChatitoEntityAST[],
-    writterFn: IUtteranceWriter,
-    importHandler?: IFileImporter,
-    currPath?: string
-) => {
+export const definitionsFromAST = (initialAst: IChatitoEntityAST[], importHandler?: IFileImporter, currPath?: string) => {
     const operatorDefinitions: IEntities = { Intent: {}, Slot: {}, Alias: {} };
     if (!initialAst || !initialAst.length) {
         return;
@@ -259,6 +271,19 @@ export const datasetFromAST = async (
         }
         entity[odKey] = od;
     });
+    return operatorDefinitions;
+};
+
+export const datasetFromAST = async (
+    initialAst: IChatitoEntityAST[],
+    writterFn: IUtteranceWriter,
+    importHandler?: IFileImporter,
+    currPath?: string
+) => {
+    const operatorDefinitions = definitionsFromAST(initialAst, importHandler, currPath);
+    if (!operatorDefinitions) {
+        return;
+    }
     const intentKeys = Object.keys(operatorDefinitions.Intent);
     if (!intentKeys || !intentKeys.length) {
         return;

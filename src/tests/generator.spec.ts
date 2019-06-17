@@ -2,7 +2,7 @@ import * as rasa from '../adapters/rasa';
 import * as snips from '../adapters/snips';
 import * as web from '../adapters/web';
 import * as chatito from '../main';
-import { ISentenceTokens, IUtteranceWriter } from '../types';
+import { IChatitoCache, ISentenceTokens, IUtteranceWriter } from '../types';
 
 type ThenArg<T> = T extends Promise<infer U> ? U : T;
 
@@ -157,7 +157,7 @@ describe('duplicate definition', () => {
 describe('missing intent definition', () => {
     const maxErrorExample = `
 @[aa]
-    a  
+    a
 @[bb]
     b
 `;
@@ -950,6 +950,88 @@ describe('example wih sentences defining probabilities nested', () => {
         expect(sentence2Count).toBeGreaterThan(2);
         expect(sentence3Count).toBeLessThan(5);
         expect(sentence4Count).toBeGreaterThan(1);
+    });
+});
+
+describe('examples with default and even distribution', () => {
+    const probsExample = `
+%[default]
+    ~[phrase1]
+    ~[phrase2] ~[phrase2?]
+    ~[phrase3] ~[phrase3?] ~[phrase3?]
+    ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?]
+
+%[defaultWihProb]
+    *[36%] ~[phrase1]
+    *[25%] ~[phrase2] ~[phrase2?]
+    ~[phrase3] ~[phrase3?] ~[phrase3?]
+    ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?]
+
+%[even]('distribution': 'even')
+    ~[phrase1]
+    ~[phrase2] ~[phrase2?]
+    ~[phrase3] ~[phrase3?] ~[phrase3?]
+    ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?]
+
+%[evenWithProb]('distribution': 'even')
+    *[36%] ~[phrase1]
+    *[25%] ~[phrase2] ~[phrase2?]
+    ~[phrase3] ~[phrase3?] ~[phrase3?]
+    ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?]
+
+~[phrase1]
+    p1-1
+    p1-2
+    p1-3
+    p1-4
+    p1-5
+
+~[phrase2]
+    p2-1
+    p2-2
+    p2-3
+    p2-4
+    p2-5
+
+~[phrase3]
+    p3-1
+    p3-2
+    p3-3
+    p3-4
+    p3-5
+
+~[phrase4]
+    p4-1
+    p4-2
+    p4-3
+    p4-4
+    p4-5
+`;
+    test('correctly calculates probabilties', async () => {
+        const ast = chatito.astFromString(probsExample);
+        const defs = chatito.definitionsFromAST(ast);
+        expect(defs).not.toBeUndefined();
+        const cache: IChatitoCache = new Map();
+
+        chatito.getVariationsFromEntity(defs!.Intent.default, defs!, false, cache);
+        let intentCache = cache.get('IntentDefinition-default');
+        expect(intentCache).not.toBeUndefined();
+        expect(cache.get('IntentDefinition-default')!.probabilities).toStrictEqual([5, 30, 180, 1080]);
+
+        chatito.getVariationsFromEntity(defs!.Intent.defaultWihProb, defs!, false, cache);
+        intentCache = cache.get('IntentDefinition-defaultWihProb');
+        expect(intentCache).not.toBeUndefined();
+        expect(cache.get('IntentDefinition-defaultWihProb')!.probabilities).toStrictEqual([36, 25, 5.571428571428572, 33.42857142857142]);
+
+        chatito.getVariationsFromEntity(defs!.Intent.even, defs!, false, cache);
+        intentCache = cache.get('IntentDefinition-even');
+        expect(intentCache).not.toBeUndefined();
+        expect(cache.get('IntentDefinition-even')!.probabilities).toStrictEqual([1, 1, 1, 1]);
+
+        chatito.getVariationsFromEntity(defs!.Intent.evenWithProb, defs!, false, cache);
+        intentCache = cache.get('IntentDefinition-evenWithProb');
+        expect(intentCache).not.toBeUndefined();
+        expect(cache.get('IntentDefinition-evenWithProb')!.probabilities).toStrictEqual([36, 25, 19.5, 19.5]);
     });
 });
 
