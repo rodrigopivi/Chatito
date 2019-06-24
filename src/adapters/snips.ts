@@ -101,8 +101,10 @@ export async function adapter(dsl: string, formatOptions?: any, importer?: gen.I
             if (!training.entities[slotKey].data) {
                 training.entities[slotKey].data = [];
             }
+            const slotSynonymsSet = synonymsForSlots[slotKey][synonymsValue];
+            const synonymsList = slotSynonymsSet.size ? Array.from(slotSynonymsSet) : [];
             (training.entities[slotKey].data as any[]).push({
-                synonyms: [...synonymsForSlots[slotKey][synonymsValue]],
+                synonyms: synonymsList,
                 value: synonymsValue
             });
         });

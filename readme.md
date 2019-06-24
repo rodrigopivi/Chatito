@@ -87,14 +87,10 @@ In the previous example, all `@[date]` values will be tagged with the `snips/dat
 
 Chatito supports Node.js `v8.11.2 LTS` or higher.
 
-Install it globally:
-```
-npm i chatito -g
-```
-Or locally:
+Install it with yarn or npm:
 ```
 npm i chatito --save
-````
+```
 
 Then create a definition file (e.g.: `trainClimateBot.chatito`) with your code.
 
@@ -121,6 +117,11 @@ npx chatito <pathToFileOrDirectory> --format=<format> --formatOptions=<formatOpt
 ### Notes to prevent overfitting
 
 [Overfitting](https://en.wikipedia.org/wiki/Overfitting) is a problem that can be prevented if we use Chatito correctly. The idea behind this tool, is to have an intersection between data augmentation and a probabilistic description of possible sentences combinations. It is not intended to generate deterministic datasets, you should avoid generating all possible combinations.
+
+### Visual Studio Code support
+
+There is a [syntax highlighting plugin](https://marketplace.visualstudio.com/items?itemName=nimfin.chatito) at the VS Code marketplace. Thanks to [Yuri Golobokov](https://github.com/nimf) for his [work on this](https://github.com/nimf/chatito-vscode).
+
 
 ### Author and maintainer
 Rodrigo Pimentel
