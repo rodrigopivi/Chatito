@@ -1036,10 +1036,10 @@ describe('example that generates empty strings', () => {
     });
 });
 
-describe('example that only has one sentence with probs', () => {
+describe('example that only has one sentence with float probs', () => {
     const main = `
 %[findRestaurantsByCity]('training': '3')
-    *[100%] ~[restaurants]
+    *[99.99%] ~[restaurants]
 
 ~[restaurants]
     restaurants

@@ -258,7 +258,7 @@ For `even` distribution using the previous example:
 
 #### 2.2.1 - Sentence probability operator
 
-The sentence probability operator is defined by the `*[` symbol at the start of a sentence following by the probability value and `]`. The probability value may be expressed in two ways, as a plain number (considered as weighted probabilty, e.g.: `1`) or as a percentage value (a number ending with `%`, e.g.: `33.3333%`), but once an entity defines a probabilty as either weight or percentage, then all the other sentences for that entity should use the same type. Inconsistencies declaring entity sentence probabilty values should be considered an input error and if the value is not a valid integer, float or percentual value, the input shouuld be considered as simple text and not as a sentence probability definition.
+The sentence probability operator is defined by the `*[` symbol at the start of a sentence following by the probability value and `]`. The probability value may be expressed in two ways, as a plain number (considered as weighted probabilty, e.g.: `1`) or as a percentage value (a number ending with `%`, e.g.: `33.3333%`), but once an entity defines a probabilty as either weight or percentage, then all the other sentences for that entity should use the same type. Inconsistencies declaring entity sentence probabilty values should be considered an input error and if the value is not a valid integer, float or percentual value, the input should be considered as simple text and not as a sentence probability definition.
  
 NOTE: If the probabilty value is a percentage type, then and the sum of all sentence probabilty operators declared inside the entity definition should never exceed 100.
 

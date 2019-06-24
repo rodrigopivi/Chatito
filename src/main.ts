@@ -100,9 +100,6 @@ const getVariationsFromEntity = async <T>(
                 }
                 const prob = parseFloat(isPercent ? p.slice(0, -1) : p);
                 if (isPercent) {
-                    if (!Number.isInteger(prob)) {
-                        throw new Error(`Probability "${p}" must be an integer or float number. At ${cacheKey}`);
-                    }
                     if (prob <= 0 || prob > 100) {
                         throw new Error(`Probability "${p}" must be greater than 0 up to 100. At ${cacheKey}`);
                     }
