@@ -424,7 +424,7 @@ describe('Example with probability opreator but non int or float value parses as
     });
 });
 
-describe('Example with probability opreator but no after space parses as text', () => {
+describe('Example with probability opreator but no after space parses correctly', () => {
     const slotExamplesWithWeirdKeywords = `
 %[greet]('training': '10', 'testing': '10')
     *[50]~[phrase1]

@@ -822,7 +822,7 @@ exports[`Example with multi intent CORRECT parser output 1`] = `
 ]"
 `;
 
-exports[`Example with probability opreator but no after space parses as text CORRECT parser output 1`] = `
+exports[`Example with probability opreator but no after space parses correctly CORRECT parser output 1`] = `
 "[
   {
     \\"type\\": \\"IntentDefinition\\",
