@@ -126,7 +126,7 @@ From the output perspective, a slot is the tag that is added the relevant words 
 ```
 
 Slot entities referenced within sentences, can have `?` symbol at the end of the reference name. (e.g.: @[name?]).
-In that context, the `?` symbol means that the slot combination is optional, and could be omitted at generation.
+In that context, the `?` symbol means that the slot combination is optional, and could be omitted at generation. The probabilities of being omitted are defined by the number of sentence definitions at the entity. If the entity defines only one sentence, then the probabilities of empty string will be 50%, if the sentences defines 2 sentences, the probabilities of being omitted are 33.3333%, and so on.
 
 Slots provide a particular property at their definitions called variations.
 
@@ -166,8 +166,7 @@ Alias are just variations of a word and does not generate any tag. By default if
     hey
 ```
 
-Same as with slots, alias references can contain a `?` symbol at the end of the reference name. (e.g.: ~[hi?]).
-In that context, the `?` symbol means that the alias combination is optional, and could be omitted at generation.
+Same as with slots, alias references can be ommited using a `?` symbol at the end of the reference name. (e.g.: ~[hi?]).
 
 When an alias is referenced inside a slot definition, and it is the only token of the slot sentence, by default the generator will tag the generated alias value as a `synonym` of the alias key name.
 
@@ -259,7 +258,7 @@ For `even` distribution using the previous example:
 
 #### 2.2.1 - Sentence probability operator
 
-The sentence probability operator is defined by the `*[` symbol at the start of a sentence following by the probability value and `]`. The probability value may be expressed in two ways, as a plain number (considered as weighted probabilty, e.g.: `1`) or as a percentage value (a number ending with `%`, e.g.: `33.3333%`), but once an entity defines a probabilty as either weight or percentage, then all the other sentences for that entity should use the same type. Inconsistencies declaring entity sentence probabilty values should be considered an input error.
+The sentence probability operator is defined by the `*[` symbol at the start of a sentence following by the probability value and `]`. The probability value may be expressed in two ways, as a plain number (considered as weighted probabilty, e.g.: `1`) or as a percentage value (a number ending with `%`, e.g.: `33.3333%`), but once an entity defines a probabilty as either weight or percentage, then all the other sentences for that entity should use the same type. Inconsistencies declaring entity sentence probabilty values should be considered an input error and if the value is not a valid integer, float or percentual value, the input shouuld be considered as simple text and not as a sentence probability definition.
  
 NOTE: If the probabilty value is a percentage type, then and the sum of all sentence probabilty operators declared inside the entity definition should never exceed 100.
 
@@ -281,7 +280,7 @@ The previous example, declares `20%` probabilties for the first sentence. This w
 | sentence 3 | 400              | 40%         | 35.5556% (400*80/900) |
 
 
-Here is the same example for probabilty value is a weight:
+When probabilty value is a weight with regular distribution, multiply that value with the maximum combinations for that sentence, if distribution is even, that value is the actual weighted probability. E.g.:
 
 ```
 %[intent with a maximum of 1k combinations]

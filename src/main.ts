@@ -70,6 +70,7 @@ const getVariationsFromEntity = async <T>(
     const variationKey = ed.variation ? `#${ed.variation}` : '';
     const cacheKey = `${ed.type}-${ed.key}${variationKey}`;
     let cacheStats = cache.get(cacheKey) as IStatCache;
+    let probabilityTypeDefined: 'w' | '%' | null = null;
     if (!cacheStats) {
         // if the entity is not cache, create an empty cache for it
         const counts: IChatitoCache[] = [];
@@ -89,18 +90,32 @@ const getVariationsFromEntity = async <T>(
                 indexesOfSentencesWithNullProbability.push(definedSentenceProbabilities.length);
                 definedSentenceProbabilities.push(null);
             } else {
-                const prob = parseInt(c.probability || '', 10);
-                if (!Number.isInteger(prob)) {
-                    throw new Error(`Probability "${c.probability}" must be an integer value. At ${cacheKey}`);
+                const p = c.probability || '';
+                const isPercent = p.slice(-1) === '%';
+                const setenceProbabilityType = isPercent ? '%' : 'w';
+                if (probabilityTypeDefined === null) {
+                    probabilityTypeDefined = setenceProbabilityType;
+                } else if (setenceProbabilityType !== probabilityTypeDefined) {
+                    throw new Error(`All probability definitions for "${cacheKey}" must be of the same type.`);
                 }
-                if (prob < 1 || prob > 100) {
-                    throw new Error(`Probability "${c.probability}" must be from 1 to 100. At ${cacheKey}`);
+                const prob = parseFloat(isPercent ? p.slice(0, -1) : p);
+                if (isPercent) {
+                    if (!Number.isInteger(prob)) {
+                        throw new Error(`Probability "${p}" must be an integer or float number. At ${cacheKey}`);
+                    }
+                    if (prob <= 0 || prob > 100) {
+                        throw new Error(`Probability "${p}" must be greater than 0 up to 100. At ${cacheKey}`);
+                    }
+                } else if (setenceProbabilityType === 'w') {
+                    if (prob <= 0) {
+                        throw new Error(`Probability weight "${p}" must be greater than 0. At ${cacheKey}`);
+                    }
                 }
                 sumOfTotalProbabilitiesDefined += prob;
                 definedSentenceProbabilities.push(prob);
             }
         }
-        if (sumOfTotalProbabilitiesDefined && sumOfTotalProbabilitiesDefined > 100) {
+        if (probabilityTypeDefined === '%' && sumOfTotalProbabilitiesDefined && sumOfTotalProbabilitiesDefined > 100) {
             throw new Error(
                 `The sum of sentence probabilities (${sumOfTotalProbabilitiesDefined}) for an entity can't be higher than 100%. At ${cacheKey}`
             );
@@ -110,11 +125,20 @@ const getVariationsFromEntity = async <T>(
             indexesOfSentencesWithNullProbability.map(i => maxCounts[i]).reduce((p, n) => (p || 0) + (n || 0), 0) || 0;
         // calculate the split of remaining probability for sentences that don't define them
         // const realProbabilities = maxCounts.map(m => (m * 100) / sumOfTotalMax);
-        const probabilities = definedSentenceProbabilities.map((p, i) =>
-            p === null
-                ? (((maxCounts[i] * 100) / totalMaxCountsToShareBetweenNullProbSent) * (100 - sumOfTotalProbabilitiesDefined)) / 100
-                : p
-        );
+        let probabilities: number[];
+        if (probabilityTypeDefined === '%') {
+            // if probabilityTypeDefined is percentual, then calculate each sentence chances in percent
+            probabilities = definedSentenceProbabilities.map((p, i) =>
+                p === null
+                    ? (((maxCounts[i] * 100) / totalMaxCountsToShareBetweenNullProbSent) * (100 - sumOfTotalProbabilitiesDefined)) / 100
+                    : p
+            );
+        } else if (probabilityTypeDefined === 'w') {
+            // if probabilityTypeDefined is weighted, then multiply the weight by max counts
+            probabilities = definedSentenceProbabilities.map((p, i) => (p === null ? maxCounts[i] : maxCounts[i] * p));
+        } else {
+            probabilities = maxCounts;
+        }
         const currentEntityCache: IStatCache = { counts, maxCounts, optional, probabilities };
         cache.set(cacheKey, currentEntityCache);
         cacheStats = cache.get(cacheKey) as IStatCache;
@@ -228,10 +252,9 @@ export const datasetFromAST = async (
             entity = operatorDefinitions.Slot;
         } else if (od.type === 'AliasDefinition') {
             entity = operatorDefinitions.Alias;
-        } else if (od.type === 'Comment' || od.type === 'ImportFile') {
-            return; // skip comments
         } else {
-            throw new Error(`Unknown definition definition for ${od.type}`);
+            // type is 'Comment' or 'ImportFile'
+            return; // skip comments
         }
         const odKey = od.variation ? `${od.key}#${od.variation}` : od.key;
         if (entity[odKey]) {

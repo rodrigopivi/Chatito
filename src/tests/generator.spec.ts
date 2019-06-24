@@ -653,11 +653,29 @@ describe('example with slots nest inside alias', () => {
     });
 });
 
-describe('example with wrong probability value', () => {
+describe('example with text similar to probability operator works as regular sentence text', () => {
+    const example = `
+%[greet]
+    *[treat as text] ~[phrase1]
+    *[20] ~[phrase2] ~[phrase2?]
+`;
+    test('correctly works', async () => {
+        let error = null;
+        let dataset: any;
+        try {
+            dataset = await web.adapter(example, null);
+        } catch (e) {
+            error = e;
+        }
+        expect(error).toBeNull();
+    });
+});
+
+describe('example with wrong probability number', () => {
     const badExample = `
 %[greet]
-    *[bad] ~[phrase1]
-    *[20] ~[phrase2] ~[phrase2?]
+    *[110%] ~[phrase1]
+    *[20%] ~[phrase2] ~[phrase2?]
 `;
     test('correctly fails', async () => {
         let error = null;
@@ -667,7 +685,8 @@ describe('example with wrong probability value', () => {
         } catch (e) {
             error = e;
         }
-        expect(error.toString()).toEqual(`Error: Probability "bad" must be an integer value. At IntentDefinition-greet`);
+        expect(error).not.toBeNull();
+        expect(error.toString()).toEqual('Error: Probability "110%" must be greater than 0 up to 100. At IntentDefinition-greet');
     });
 });
 
@@ -685,15 +704,15 @@ describe('example with wrong probability definition', () => {
         } catch (e) {
             error = e;
         }
-        expect(error.toString()).toEqual(`Error: Probability "0" must be from 1 to 100. At IntentDefinition-greet`);
+        expect(error.toString()).toEqual('Error: Probability weight "0" must be greater than 0. At IntentDefinition-greet');
     });
 });
 
 describe('example with more than 100% probability', () => {
     const badExample = `
 %[greet]
-    *[60] ~[phrase1]
-    *[70] ~[phrase2] ~[phrase2?]
+    *[60%] ~[phrase1]
+    *[70%] ~[phrase2] ~[phrase2?]
 `;
     test('correctly fails', async () => {
         let error = null;
@@ -709,12 +728,12 @@ describe('example with more than 100% probability', () => {
     });
 });
 
-describe('example wih sentences defining probabilities', () => {
+describe('example wih sentences defining percentual probabilities', () => {
     // NOTE: heree phrase1, can only generate 5 utterances
     const probsExample = `
 %[greet]('training': '10', 'testing': '10')
-    *[60] ~[phrase1]
-    *[20] ~[phrase2] ~[phrase2?]
+    *[60%] ~[phrase1]
+    *[20%] ~[phrase2] ~[phrase2?]
     ~[phrase3] ~[phrase3?] ~[phrase3?]
     ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?]
 
@@ -776,10 +795,84 @@ describe('example wih sentences defining probabilities', () => {
                 sentence4Count++;
             }
         });
-        expect(sentence1Count).toEqual(5);
+        expect(sentence1Count).toBeGreaterThanOrEqual(4);
         expect(sentence2Count).toBeGreaterThan(2);
-        expect(sentence3Count).toBeLessThan(5);
-        expect(sentence4Count).toBeGreaterThan(1);
+        expect(sentence3Count).toBeLessThan(6);
+        expect(sentence4Count).toBeGreaterThanOrEqual(1);
+    });
+});
+
+describe('example wih sentences defining weighted probabilities', () => {
+    // NOTE: heree phrase1, can only generate 5 utterances
+    const probsExample = `
+%[greet]('training': '50', 'testing': '50')
+    *[60] ~[phrase1] sentence final weight 300 (5*60) or 13.88888888888889%
+    *[20] ~[phrase2] ~[phrase2?] sentence final weight 600  (5*6*20) or 27.77777777777778%
+    ~[phrase3] ~[phrase3?] ~[phrase3?] sentence final weight 180 (5*6*6) pr 8.333333333333334%
+    ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?] sentence final weight 1080 (5*6*6*6) or 50%
+
+~[phrase1]
+    p1-1
+    p1-2
+    p1-3
+    p1-4
+    p1-5
+
+~[phrase2]
+    p2-1
+    p2-2
+    p2-3
+    p2-4
+    p2-5
+
+~[phrase3]
+    p3-1
+    p3-2
+    p3-3
+    p3-4
+    p3-5
+
+~[phrase4]
+    p4-1
+    p4-2
+    p4-3
+    p4-4
+    p4-5
+`;
+    test('correctly works', async () => {
+        let error = null;
+        let r: ThenArg<ReturnType<typeof web.adapter>> | null = null;
+        try {
+            r = await web.adapter(probsExample, null);
+        } catch (e) {
+            error = e;
+        }
+        expect(error).toBeNull();
+        expect(r).not.toBeNull();
+        const result = r!;
+        expect(result.training).not.toBeNull();
+        expect(result.testing).not.toBeNull();
+        const all = [...result.training.greet, ...result.testing.greet];
+        let sentence1Count = 0;
+        let sentence2Count = 0;
+        let sentence3Count = 0;
+        let sentence4Count = 0;
+        all.forEach(u => {
+            const t = u[0];
+            if (t.value.startsWith('p1-')) {
+                sentence1Count++;
+            } else if (t.value.startsWith('p2-')) {
+                sentence2Count++;
+            } else if (t.value.startsWith('p3-')) {
+                sentence3Count++;
+            } else if (t.value.startsWith('p4-')) {
+                sentence4Count++;
+            }
+        });
+        expect(sentence1Count).toBeGreaterThanOrEqual(4);
+        expect(sentence2Count).toBeGreaterThanOrEqual(15);
+        expect(sentence3Count).toBeGreaterThanOrEqual(2);
+        expect(sentence4Count).toBeGreaterThanOrEqual(30);
     });
 });
 
@@ -790,8 +883,8 @@ describe('example wih sentences defining probabilities nested', () => {
     ~[p1]
 
 ~[p1]
-    *[60] ~[phrase1]
-    *[20] ~[phrase2] ~[phrase2?]
+    *[60%] ~[phrase1]
+    *[20%] ~[phrase2] ~[phrase2?]
     ~[phrase3] ~[phrase3?] ~[phrase3?]
     ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?]
 
@@ -946,7 +1039,7 @@ describe('example that generates empty strings', () => {
 describe('example that only has one sentence with probs', () => {
     const main = `
 %[findRestaurantsByCity]('training': '3')
-    *[20] ~[restaurants]
+    *[100%] ~[restaurants]
 
 ~[restaurants]
     restaurants
@@ -967,5 +1060,44 @@ describe('example that only has one sentence with probs', () => {
         expect(dataset!.training).not.toBeNull();
         expect(dataset!.training.findRestaurantsByCity).not.toBeNull();
         expect(dataset!.training.findRestaurantsByCity.length).toEqual(3);
+    });
+});
+
+describe('example with invalid slot definition', () => {
+    const ex = `
+%[greet]
+    ~[phrase2] @[phrase2?]
+`;
+    test('correctly fails', async () => {
+        let error = null;
+        let dataset: ThenArg<ReturnType<typeof web.adapter>> | null = null;
+        try {
+            dataset = await web.adapter(ex, null);
+        } catch (e) {
+            error = e;
+        }
+        expect(error).not.toBeNull();
+        expect(dataset).toBeNull();
+        expect(error.message).toContain('Slot not defined: phrase2');
+    });
+});
+
+describe('example with two types of probability operator', () => {
+    const ex = `
+%[greet]
+    *[30%] ~[phrase2]
+    *[4] ~[phrase2] ~[phrase2]
+`;
+    test('correctly fails', async () => {
+        let error = null;
+        let dataset: ThenArg<ReturnType<typeof web.adapter>> | null = null;
+        try {
+            dataset = await web.adapter(ex, null);
+        } catch (e) {
+            error = e;
+        }
+        expect(error).not.toBeNull();
+        expect(dataset).toBeNull();
+        expect(error.message).toContain('All probability definitions for "IntentDefinition-greet" must be of the same type.');
     });
 });
