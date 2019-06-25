@@ -5,6 +5,7 @@ import * as luis from './adapters/luis';
 import * as rasa from './adapters/rasa';
 import * as snips from './adapters/snips';
 import * as web from './adapters/web';
+import { config, VALID_DISTRIBUTIONS } from './main';
 import * as utils from './utils';
 
 // tslint:disable-next-line:no-var-requires
@@ -89,7 +90,7 @@ const adapterAccumulator = (format: 'default' | 'rasa' | 'snips' | 'luis', forma
         console.error('Invalid chatito file.');
         process.exit(1);
     }
-    const configFile = argv._[0];
+    const dslFile = argv._[0];
     const format = (argv.format || 'default').toLowerCase();
     if (['default', 'rasa', 'snips', 'luis'].indexOf(format) === -1) {
         // tslint:disable-next-line:no-console
@@ -97,13 +98,16 @@ const adapterAccumulator = (format: 'default' | 'rasa' | 'snips' | 'luis', forma
         process.exit(1);
     }
     const outputPath = argv.outputPath || process.cwd();
+    if (argv.defaultDistribution && argv.defaultDistribution in VALID_DISTRIBUTIONS) {
+        config.defaultDistribution = argv.defaultDistribution;
+    }
     try {
         // parse the formatOptions argument
         let formatOptions = null;
         if (argv.formatOptions) {
             formatOptions = JSON.parse(fs.readFileSync(path.resolve(argv.formatOptions), 'utf8'));
         }
-        const dslFilePath = getFileWithPath(configFile);
+        const dslFilePath = getFileWithPath(dslFile);
         const isDirectory = fs.existsSync(dslFilePath) && fs.lstatSync(dslFilePath).isDirectory();
         const accumulator = adapterAccumulator(format, formatOptions);
         if (isDirectory) {

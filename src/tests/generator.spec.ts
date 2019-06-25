@@ -953,7 +953,7 @@ describe('example wih sentences defining probabilities nested', () => {
     });
 });
 
-describe('examples with default and even distribution', () => {
+describe('regular and even distribution with different probabilities', () => {
     const probsExample = `
 %[default]
     ~[phrase1]
@@ -961,9 +961,15 @@ describe('examples with default and even distribution', () => {
     ~[phrase3] ~[phrase3?] ~[phrase3?]
     ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?]
 
-%[defaultWihProb]
+%[defaultWithPercProb]
     *[36%] ~[phrase1]
     *[25%] ~[phrase2] ~[phrase2?]
+    ~[phrase3] ~[phrase3?] ~[phrase3?]
+    ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?]
+
+%[defaultWithWeightProb]
+    *[36] ~[phrase1]
+    *[25] ~[phrase2] ~[phrase2?]
     ~[phrase3] ~[phrase3?] ~[phrase3?]
     ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?]
 
@@ -973,9 +979,33 @@ describe('examples with default and even distribution', () => {
     ~[phrase3] ~[phrase3?] ~[phrase3?]
     ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?]
 
-%[evenWithProb]('distribution': 'even')
+%[evenWithPercProb]('distribution': 'even')
     *[36%] ~[phrase1]
     *[25%] ~[phrase2] ~[phrase2?]
+    ~[phrase3] ~[phrase3?] ~[phrase3?]
+    ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?]
+
+%[evenWithWeightProb]('distribution': 'even')
+    *[36] ~[phrase1]
+    *[25] ~[phrase2] ~[phrase2?]
+    ~[phrase3] ~[phrase3?] ~[phrase3?]
+    ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?]
+
+%[regular]('distribution': 'regular')
+    ~[phrase1]
+    ~[phrase2] ~[phrase2?]
+    ~[phrase3] ~[phrase3?] ~[phrase3?]
+    ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?]
+
+%[regularWithPercProb]('distribution': 'regular')
+    *[36%] ~[phrase1]
+    *[25%] ~[phrase2] ~[phrase2?]
+    ~[phrase3] ~[phrase3?] ~[phrase3?]
+    ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?]
+
+%[regularWithWeightProb]('distribution': 'regular')
+    *[36] ~[phrase1]
+    *[25] ~[phrase2] ~[phrase2?]
     ~[phrase3] ~[phrase3?] ~[phrase3?]
     ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?]
 
@@ -1007,31 +1037,173 @@ describe('examples with default and even distribution', () => {
     p4-4
     p4-5
 `;
-    test('correctly calculates probabilties', async () => {
+    const regularProbs = [5, 30, 180, 1080];
+    const regularPercProbs = [36, 25, 5.571428571428572, 33.42857142857142];
+    const regularWeightProbs = [5 * 36, 30 * 25, 180, 1080];
+    const evenProbs = [1, 1, 1, 1];
+    const evenPercProbs = [36, 25, 19.5, 19.5];
+    const evenWeightProbs = [36, 25, 1, 1];
+
+    describe('correctly calculates probabilties when default distribution is regular', () => {
         const ast = chatito.astFromString(probsExample);
         const defs = chatito.definitionsFromAST(ast);
         expect(defs).not.toBeUndefined();
-        const cache: IChatitoCache = new Map();
 
-        chatito.getVariationsFromEntity(defs!.Intent.default, defs!, false, cache);
-        let intentCache = cache.get('IntentDefinition-default');
-        expect(intentCache).not.toBeUndefined();
-        expect(cache.get('IntentDefinition-default')!.probabilities).toStrictEqual([5, 30, 180, 1080]);
+        test('default distribution, no probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.default, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-default');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-default')!.probabilities).toStrictEqual(regularProbs);
+        });
 
-        chatito.getVariationsFromEntity(defs!.Intent.defaultWihProb, defs!, false, cache);
-        intentCache = cache.get('IntentDefinition-defaultWihProb');
-        expect(intentCache).not.toBeUndefined();
-        expect(cache.get('IntentDefinition-defaultWihProb')!.probabilities).toStrictEqual([36, 25, 5.571428571428572, 33.42857142857142]);
+        test('default distribution, percentage probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.defaultWithPercProb, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-defaultWithPercProb');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-defaultWithPercProb')!.probabilities).toStrictEqual(regularPercProbs);
+        });
 
-        chatito.getVariationsFromEntity(defs!.Intent.even, defs!, false, cache);
-        intentCache = cache.get('IntentDefinition-even');
-        expect(intentCache).not.toBeUndefined();
-        expect(cache.get('IntentDefinition-even')!.probabilities).toStrictEqual([1, 1, 1, 1]);
+        test('default distribution, weighted probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.defaultWithWeightProb, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-defaultWithWeightProb');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-defaultWithWeightProb')!.probabilities).toStrictEqual(regularWeightProbs);
+        });
 
-        chatito.getVariationsFromEntity(defs!.Intent.evenWithProb, defs!, false, cache);
-        intentCache = cache.get('IntentDefinition-evenWithProb');
-        expect(intentCache).not.toBeUndefined();
-        expect(cache.get('IntentDefinition-evenWithProb')!.probabilities).toStrictEqual([36, 25, 19.5, 19.5]);
+        test('even distribution, no probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.even, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-even');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-even')!.probabilities).toStrictEqual(evenProbs);
+        });
+
+        test('even distribution, percentage probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.evenWithPercProb, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-evenWithPercProb');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-evenWithPercProb')!.probabilities).toStrictEqual(evenPercProbs);
+        });
+
+        test('even distribution, weighted probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.evenWithWeightProb, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-evenWithWeightProb');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-evenWithWeightProb')!.probabilities).toStrictEqual(evenWeightProbs);
+        });
+
+        test('regular distribution, no probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.regular, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-regular');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-regular')!.probabilities).toStrictEqual(regularProbs);
+        });
+
+        test('regular distribution, percentage probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.regularWithPercProb, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-regularWithPercProb');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-regularWithPercProb')!.probabilities).toStrictEqual(regularPercProbs);
+        });
+
+        test('regular distribution, weighted probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.regularWithWeightProb, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-regularWithWeightProb');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-regularWithWeightProb')!.probabilities).toStrictEqual(regularWeightProbs);
+        });
+    });
+
+    describe('correctly calculates probabilties when default distribution is even', () => {
+        const ast = chatito.astFromString(probsExample);
+        const defs = chatito.definitionsFromAST(ast);
+        expect(defs).not.toBeUndefined();
+        beforeAll(() => {
+            chatito.config.defaultDistribution = 'even';
+        });
+        afterAll(() => {
+            chatito.config.defaultDistribution = 'regular';
+        });
+
+        test('default distribution, no probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.default, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-default');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-default')!.probabilities).toStrictEqual(evenProbs);
+        });
+
+        test('default distribution, percentage probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.defaultWithPercProb, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-defaultWithPercProb');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-defaultWithPercProb')!.probabilities).toStrictEqual(evenPercProbs);
+        });
+
+        test('default distribution, weighted probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.defaultWithWeightProb, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-defaultWithWeightProb');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-defaultWithWeightProb')!.probabilities).toStrictEqual(evenWeightProbs);
+        });
+
+        test('even distribution, no probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.even, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-even');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-even')!.probabilities).toStrictEqual(evenProbs);
+        });
+
+        test('even distribution, percentage probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.evenWithPercProb, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-evenWithPercProb');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-evenWithPercProb')!.probabilities).toStrictEqual(evenPercProbs);
+        });
+
+        test('even distribution, weighted probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.evenWithWeightProb, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-evenWithWeightProb');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-evenWithWeightProb')!.probabilities).toStrictEqual(evenWeightProbs);
+        });
+
+        test('regular distribution, no probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.regular, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-regular');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-regular')!.probabilities).toStrictEqual(regularProbs);
+        });
+
+        test('regular distribution, percentage probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.regularWithPercProb, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-regularWithPercProb');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-regularWithPercProb')!.probabilities).toStrictEqual(regularPercProbs);
+        });
+
+        test('regular distribution, weighted probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.regularWithWeightProb, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-regularWithWeightProb');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-regularWithWeightProb')!.probabilities).toStrictEqual(regularWeightProbs);
+        });
     });
 });
 

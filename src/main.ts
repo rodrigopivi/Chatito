@@ -11,6 +11,18 @@ import {
 } from './types';
 import * as utils from './utils';
 
+export const VALID_DISTRIBUTIONS = ['regular', 'even'] as const;
+
+export interface IConfigOptions {
+    defaultDistribution?: typeof VALID_DISTRIBUTIONS[number];
+}
+
+type Configuration = Required<IConfigOptions>;
+
+export const config: Configuration = {
+    defaultDistribution: 'regular'
+};
+
 // tslint:disable-next-line:no-var-requires
 const chatito = require('../parser/chatito') as IChatitoParser;
 const chance = new Chance();
@@ -89,7 +101,7 @@ const calcSentencesProbabilities = (
         // if probabilityTypeDefined is weighted, then multiply the weight by max counts
         probabilities = definedSentenceProbabilities.map((p, i) => {
             if (p !== null) {
-                return maxCounts[i] * p;
+                return isEvenDistribution ? p : maxCounts[i] * p;
             }
             if (isEvenDistribution) {
                 return 1;
@@ -118,7 +130,10 @@ export const getVariationsFromEntity = async <T>(
         const maxCounts: number[] = []; // calcs the max possible utterancees for each sentence
         let probabilityTypeDefined: 'w' | '%' | null = null;
         const definedSentenceProbabilities: Array<number | null> = []; // the posibility operators defined for sentences
-        const isEvenDistribution = !!(ed.args && ed.args.distribution && ed.args.distribution === 'even');
+        let isEvenDistribution = config.defaultDistribution === 'even';
+        if (ed.args && ed.args.distribution) {
+            isEvenDistribution = ed.args.distribution === 'even';
+        }
         let sumOfTotalProbabilitiesDefined = 0;
         for (const c of ed.inner) {
             // get counts for each of the sentences inside the entity
