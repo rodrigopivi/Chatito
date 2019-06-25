@@ -11,6 +11,18 @@ import {
 } from './types';
 import * as utils from './utils';
 
+export const VALID_DISTRIBUTIONS = ['regular', 'even'] as const;
+
+export interface IConfigOptions {
+    defaultDistribution?: typeof VALID_DISTRIBUTIONS[number];
+}
+
+type Configuration = Required<IConfigOptions>;
+
+export const config: Configuration = {
+    defaultDistribution: 'regular'
+};
+
 // tslint:disable-next-line:no-var-requires
 const chatito = require('../parser/chatito') as IChatitoParser;
 const chance = new Chance();
@@ -58,9 +70,51 @@ const chatitoFormatPostProcess = (data: ISentenceTokens[]) => {
     return arr;
 };
 
+const calcSentencesProbabilities = (
+    isPercentageProbability: boolean,
+    isEvenDistribution: boolean,
+    definedSentenceProbabilities: Array<number | null>,
+    sumOfTotalProbabilitiesDefined: number,
+    maxCounts: number[]
+) => {
+    let sentencesWithNullProbabilityCount = 0;
+    let totalMaxCountsToShareBetweenNullProbs = 0;
+    definedSentenceProbabilities.forEach((prob, i) => {
+        if (prob === null) {
+            sentencesWithNullProbabilityCount += 1;
+            totalMaxCountsToShareBetweenNullProbs += maxCounts[i];
+        }
+    });
+    let probabilities: number[];
+    if (isPercentageProbability) {
+        // if defined probabilities is percentual, then calculate each sentence chances in percent
+        probabilities = definedSentenceProbabilities.map((p, i) => {
+            if (p !== null) {
+                return p;
+            }
+            if (isEvenDistribution) {
+                return (100 - sumOfTotalProbabilitiesDefined) / sentencesWithNullProbabilityCount;
+            }
+            return (((maxCounts[i] * 100) / totalMaxCountsToShareBetweenNullProbs) * (100 - sumOfTotalProbabilitiesDefined)) / 100;
+        });
+    } else {
+        // if probabilityTypeDefined is weighted, then multiply the weight by max counts
+        probabilities = definedSentenceProbabilities.map((p, i) => {
+            if (p !== null) {
+                return isEvenDistribution ? p : maxCounts[i] * p;
+            }
+            if (isEvenDistribution) {
+                return 1;
+            }
+            return maxCounts[i];
+        });
+    }
+    return probabilities;
+};
+
 // recursive function that generates variations using a cache
 // that uses counts to avoid repetitions
-const getVariationsFromEntity = async <T>(
+export const getVariationsFromEntity = async <T>(
     ed: IChatitoEntityAST,
     entities: IEntities,
     optional: boolean,
@@ -70,13 +124,16 @@ const getVariationsFromEntity = async <T>(
     const variationKey = ed.variation ? `#${ed.variation}` : '';
     const cacheKey = `${ed.type}-${ed.key}${variationKey}`;
     let cacheStats = cache.get(cacheKey) as IStatCache;
-    let probabilityTypeDefined: 'w' | '%' | null = null;
     if (!cacheStats) {
         // if the entity is not cache, create an empty cache for it
         const counts: IChatitoCache[] = [];
         const maxCounts: number[] = []; // calcs the max possible utterancees for each sentence
+        let probabilityTypeDefined: 'w' | '%' | null = null;
         const definedSentenceProbabilities: Array<number | null> = []; // the posibility operators defined for sentences
-        const indexesOfSentencesWithNullProbability: number[] = [];
+        let isEvenDistribution = config.defaultDistribution === 'even';
+        if (ed.args && ed.args.distribution) {
+            isEvenDistribution = ed.args.distribution === 'even';
+        }
         let sumOfTotalProbabilitiesDefined = 0;
         for (const c of ed.inner) {
             // get counts for each of the sentences inside the entity
@@ -87,7 +144,6 @@ const getVariationsFromEntity = async <T>(
             }
             maxCounts.push(mxc);
             if (c.probability === null) {
-                indexesOfSentencesWithNullProbability.push(definedSentenceProbabilities.length);
                 definedSentenceProbabilities.push(null);
             } else {
                 const p = c.probability || '';
@@ -117,25 +173,14 @@ const getVariationsFromEntity = async <T>(
                 `The sum of sentence probabilities (${sumOfTotalProbabilitiesDefined}) for an entity can't be higher than 100%. At ${cacheKey}`
             );
         }
-        // get the sum of all defined posibility operators inside the entity and validate it
-        const totalMaxCountsToShareBetweenNullProbSent =
-            indexesOfSentencesWithNullProbability.map(i => maxCounts[i]).reduce((p, n) => (p || 0) + (n || 0), 0) || 0;
-        // calculate the split of remaining probability for sentences that don't define them
-        // const realProbabilities = maxCounts.map(m => (m * 100) / sumOfTotalMax);
-        let probabilities: number[];
-        if (probabilityTypeDefined === '%') {
-            // if probabilityTypeDefined is percentual, then calculate each sentence chances in percent
-            probabilities = definedSentenceProbabilities.map((p, i) =>
-                p === null
-                    ? (((maxCounts[i] * 100) / totalMaxCountsToShareBetweenNullProbSent) * (100 - sumOfTotalProbabilitiesDefined)) / 100
-                    : p
-            );
-        } else if (probabilityTypeDefined === 'w') {
-            // if probabilityTypeDefined is weighted, then multiply the weight by max counts
-            probabilities = definedSentenceProbabilities.map((p, i) => (p === null ? maxCounts[i] : maxCounts[i] * p));
-        } else {
-            probabilities = maxCounts;
-        }
+        const isPercentageProbability = probabilityTypeDefined === '%';
+        const probabilities = calcSentencesProbabilities(
+            isPercentageProbability,
+            isEvenDistribution,
+            definedSentenceProbabilities,
+            sumOfTotalProbabilitiesDefined,
+            maxCounts
+        );
         const currentEntityCache: IStatCache = { counts, maxCounts, optional, probabilities };
         cache.set(cacheKey, currentEntityCache);
         cacheStats = cache.get(cacheKey) as IStatCache;
@@ -222,12 +267,7 @@ export const getImports = (from: string, to: string, importer: IFileImporter) =>
     }
 };
 
-export const datasetFromAST = async (
-    initialAst: IChatitoEntityAST[],
-    writterFn: IUtteranceWriter,
-    importHandler?: IFileImporter,
-    currPath?: string
-) => {
+export const definitionsFromAST = (initialAst: IChatitoEntityAST[], importHandler?: IFileImporter, currPath?: string) => {
     const operatorDefinitions: IEntities = { Intent: {}, Slot: {}, Alias: {} };
     if (!initialAst || !initialAst.length) {
         return;
@@ -259,6 +299,19 @@ export const datasetFromAST = async (
         }
         entity[odKey] = od;
     });
+    return operatorDefinitions;
+};
+
+export const datasetFromAST = async (
+    initialAst: IChatitoEntityAST[],
+    writterFn: IUtteranceWriter,
+    importHandler?: IFileImporter,
+    currPath?: string
+) => {
+    const operatorDefinitions = definitionsFromAST(initialAst, importHandler, currPath);
+    if (!operatorDefinitions) {
+        return;
+    }
     const intentKeys = Object.keys(operatorDefinitions.Intent);
     if (!intentKeys || !intentKeys.length) {
         return;
