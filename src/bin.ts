@@ -139,9 +139,10 @@ const adapterAccumulator = (format: IValidFormat, outputPath: string, formatOpti
         process.exit(1);
     }
     const outputPath = argv.outputPath || process.cwd();
-    if (argv.defaultDistribution && argv.defaultDistribution in VALID_DISTRIBUTIONS) {
+    if (argv.defaultDistribution && VALID_DISTRIBUTIONS.indexOf(argv.defaultDistribution) !== -1) {
         config.defaultDistribution = argv.defaultDistribution;
     }
+    logger.log(`NOTE: Using ${config.defaultDistribution} as default frequency distribution.`);
     try {
         // parse the formatOptions argument
         let formatOptions = null;

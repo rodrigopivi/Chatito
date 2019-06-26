@@ -210,7 +210,7 @@ The way Chatito works, is like pulling samples from a cloud of possible combinat
 
 #### 2.2.1 - Frequency distribution strategies
 
-When generating samples for an entity, the generator will randomly pick a sentence model using one of the two frecuency distribution strategies available: `regular` or `even`.
+When generating samples for an entity, the generator will randomly pick a sentence model using one of the two frequency distribution strategies available: `regular` or `even`.
 
 For a regular distribution strategy, each sentence probabilities are defined by their maximum possible combinations, in other words, a sentence that can produce more combinations will have more probabilities. For even distribution strategy, sentence probabilities are the same.
 

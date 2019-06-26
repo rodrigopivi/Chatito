@@ -211,6 +211,16 @@ export const chatitoPrism = {
             inside: { slotArguments: /((\(.+\))?)$/ }
         }
     ],
+    aliasDefinition: [
+        {
+            pattern: /^~\[[^\]]+\]((\(.+\))?)/,
+            inside: { aliasArguments: /((\(.+\))?)$/ }
+        },
+        {
+            pattern: /((\n|\r\n)+)~\[[^\]]+\]((\(.+\))?)/,
+            inside: { aliasArguments: /((\(.+\))?)$/ }
+        }
+    ],
     probability: { pattern: /(\n|\r\n)\s\s\s\s\*\[[^\]]+\]/, greedy: true },
     slot: { pattern: /\@\[[^\]]+(\?)?\]/, greedy: true },
     alias: { pattern: /~\[[^\]]+(\?)?\]/, greedy: true },

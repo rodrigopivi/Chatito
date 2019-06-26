@@ -72,6 +72,9 @@ export const CodeStyles = styled('div')`
     .token.slotDefinition {
         color: #ffaf56;
     }
+    .token.aliasDefinition {
+        color: #a0e7fb;
+    }
     .token.probability {
         color: #00F0B5;
     }
@@ -89,6 +92,9 @@ export const CodeStyles = styled('div')`
     }
     .token.slotArguments {
         color: #7a9d98;
+    }
+    .token.aliasArguments {
+        color: #80c7db;
     }
 `;
 

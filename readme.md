@@ -113,7 +113,7 @@ The generated dataset should be available next to your definition file.
 
 Here is the full npm generator options:
 ```
-npx chatito <pathToFileOrDirectory> --format=<format> --formatOptions=<formatOptions> --outputPath=<outputPath> --trainingFileName=<trainingFileName> --testingFileName=<testingFileName>
+npx chatito <pathToFileOrDirectory> --format=<format> --formatOptions=<formatOptions> --outputPath=<outputPath> --trainingFileName=<trainingFileName> --testingFileName=<testingFileName> --defaultDistribution=<defaultDistribution>
 ```
 
  - `<pathToFileOrDirectory>` path to a `.chatito` file or a directory that contains chatito files. If it is a directory, will search recursively for all `*.chatito` files inside and use them to generate the dataset. e.g.: `lightsChange.chatito` or `./chatitoFilesFolder`
@@ -122,6 +122,7 @@ npx chatito <pathToFileOrDirectory> --format=<format> --formatOptions=<formatOpt
  - `<outputPath>` Optional. The directory where to save the generated datasets. Uses the current directory as default.
 - `<trainingFileName>` Optional. The name of the generated training dataset file. Do not forget to add a .json extension at the end. Uses `<format>`_dataset_training.json as default file name.
 - `<testingFileName>` Optional. The name of the generated testing dataset file. Do not forget to add a .json extension at the end. Uses `<format>`_dataset_testing.json as default file name.
+- `<defaultDistribution>` Optional. The default frequency distribution if not defined at the entity level. Defaults to `regular` and can be set to `even`.
 
 ### Notes to prevent overfitting
 

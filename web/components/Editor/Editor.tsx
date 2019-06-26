@@ -28,7 +28,7 @@ interface IEditorState {
     adapterOptions: any;
     currentAdapter: 'default' | 'rasa' | 'snips' | 'luis';
     useCustomOptions: boolean;
-    frecuencyDistribution: 'regular' | 'even';
+    frequencyDistribution: 'regular' | 'even';
 }
 
 type IDataset = webAdapter.IDefaultDataset | snipsAdapter.ISnipsDataset | rasaAdapter.IRasaDataset | luisAdapter.ILuisDataset;
@@ -53,7 +53,7 @@ export default class Editor extends React.Component<{}, IEditorState> {
         adapterOptions: null,
         currentAdapter: 'default',
         useCustomOptions: false,
-        frecuencyDistribution: 'regular'
+        frequencyDistribution: 'regular'
     };
     private tabsContainer = React.createRef() as React.RefObject<HTMLDivElement>;
     private codeflask = null;
@@ -172,7 +172,7 @@ export default class Editor extends React.Component<{}, IEditorState> {
                                 id="distributionSelect"
                                 name="distributionSelect"
                                 onChange={this.onDistributionChange}
-                                value={this.state.frecuencyDistribution}
+                                value={this.state.frequencyDistribution}
                             >
                                 <option value="regular">Regular</option>
                                 <option value="even">Even</option>
@@ -296,7 +296,7 @@ export default class Editor extends React.Component<{}, IEditorState> {
     private onDistributionChange = e => {
         this.setState(
             {
-                frecuencyDistribution: e.target.value === 'even' ? 'even' : 'regular',
+                frequencyDistribution: e.target.value === 'even' ? 'even' : 'regular',
                 dataset: null
             },
             () => this.saveToLocalStorage(false, true, true)
@@ -354,7 +354,7 @@ export default class Editor extends React.Component<{}, IEditorState> {
             }
             if (saveAdapterOptions) {
                 localStorage.setItem('___adapterOptions', this.state.useCustomOptions ? JSON.stringify(this.state.adapterOptions) : '');
-                localStorage.setItem('___defaultDistribution', this.state.frecuencyDistribution);
+                localStorage.setItem('___defaultDistribution', this.state.frequencyDistribution);
             }
             if (saveCurrentAdapter) {
                 localStorage.setItem('___currentAdapter', this.state.currentAdapter);
@@ -398,7 +398,7 @@ export default class Editor extends React.Component<{}, IEditorState> {
                 newState.currentAdapter = localCurrentAdapter;
             }
             if (localDefaultDistribution) {
-                newState.frecuencyDistribution = localDefaultDistribution;
+                newState.frequencyDistribution = localDefaultDistribution;
             }
             this.setState(newState, cb);
         } else {
@@ -493,7 +493,7 @@ export default class Editor extends React.Component<{}, IEditorState> {
         if (!adapter) {
             return;
         }
-        chatito.config.defaultDistribution = this.state.frecuencyDistribution;
+        chatito.config.defaultDistribution = this.state.frequencyDistribution;
         for (const [i, tab] of this.tabs.entries()) {
             try {
                 if (dataset === null && this.state.useCustomOptions && this.state.adapterOptions) {
