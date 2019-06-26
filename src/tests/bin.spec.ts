@@ -361,7 +361,7 @@ test('test npm command line generator for flair medium example', () => {
     expect(fs.existsSync(generatedClassificationTrainingFile)).toBeTruthy();
     const dataset = fs.readFileSync(generatedClassificationTrainingFile, 'utf8');
     expect(dataset).not.toBeNull();
-    expect(dataset.length).toBeGreaterThan(50);
+    expect(dataset.length).toBeGreaterThan(10);
     fs.unlinkSync(generatedClassificationTrainingFile);
     expect(fs.existsSync(generatedClassificationTrainingFile)).toBeFalsy();
 
@@ -369,7 +369,7 @@ test('test npm command line generator for flair medium example', () => {
     expect(fs.existsSync(generatedClassificationTestingFile)).toBeTruthy();
     const testingDataset = fs.readFileSync(generatedClassificationTestingFile, 'utf8');
     expect(testingDataset).not.toBeNull();
-    expect(testingDataset.length).toBeGreaterThan(50);
+    expect(testingDataset.length).toBeGreaterThan(10);
     fs.unlinkSync(generatedClassificationTestingFile);
     expect(fs.existsSync(generatedClassificationTestingFile)).toBeFalsy();
 
@@ -377,7 +377,7 @@ test('test npm command line generator for flair medium example', () => {
     expect(fs.existsSync(generatedNERTrainingFile)).toBeTruthy();
     const nerDataset = fs.readFileSync(generatedNERTrainingFile, 'utf8');
     expect(nerDataset).not.toBeNull();
-    expect(nerDataset.length).toBeGreaterThan(50);
+    expect(nerDataset.length).toBeGreaterThan(10);
     fs.unlinkSync(generatedNERTrainingFile);
     expect(fs.existsSync(generatedNERTrainingFile)).toBeFalsy();
 
@@ -385,7 +385,7 @@ test('test npm command line generator for flair medium example', () => {
     expect(fs.existsSync(generatedNERTestingFile)).toBeTruthy();
     const testingNerDataset = fs.readFileSync(generatedNERTestingFile, 'utf8');
     expect(testingNerDataset).not.toBeNull();
-    expect(testingNerDataset.length).toBeGreaterThan(50);
+    expect(testingNerDataset.length).toBeGreaterThan(10);
     fs.unlinkSync(generatedNERTestingFile);
     expect(fs.existsSync(generatedNERTestingFile)).toBeFalsy();
 });
