@@ -30,7 +30,7 @@ For the full language specification and documentation, please refer to the [DSL 
 ### Adapters
 The language is independent from the generated output format and because each model can receive different parameters and settings, this are the currently implemented data formats, if your provider is not listed, at the Tools and resources section there is more information on how to support more formats.
 
-NOTE: Samples may not not shuffled between intents for easier review.
+NOTE: Samples are not shuffled between intents for easier review and because some adapters stream samples directly to the file.
 
 #### Default format
 Use the default format if you plan to train a custom model or if you are writing a custom adapter. This is the most flexible format because you can annotate `Slots` and `Intents` with custom entity arguments, and they all will be present at the generated output, so for example, you could also include dialog/response generation logic with the DSL. E.g.:
