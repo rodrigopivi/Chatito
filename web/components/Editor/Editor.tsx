@@ -10,6 +10,8 @@ import { chatitoPrism, rasaDefaultOptions, snipsDefaultOptions, tabs } from '../
 import { debounce } from '../../lib/utils';
 import * as es from './editorStyles';
 
+const logger = console;
+
 const adapters = {
     default: webAdapter,
     rasa: rasaAdapter,
@@ -26,6 +28,7 @@ interface IEditorState {
     adapterOptions: any;
     currentAdapter: 'default' | 'rasa' | 'snips' | 'luis';
     useCustomOptions: boolean;
+    frecuencyDistribution: 'regular' | 'even';
 }
 
 type IDataset = webAdapter.IDefaultDataset | snipsAdapter.ISnipsDataset | rasaAdapter.IRasaDataset | luisAdapter.ILuisDataset;
@@ -49,7 +52,8 @@ export default class Editor extends React.Component<{}, IEditorState> {
         dataset: null,
         adapterOptions: null,
         currentAdapter: 'default',
-        useCustomOptions: false
+        useCustomOptions: false,
+        frecuencyDistribution: 'regular'
     };
     private tabsContainer = React.createRef() as React.RefObject<HTMLDivElement>;
     private codeflask = null;
@@ -161,6 +165,20 @@ export default class Editor extends React.Component<{}, IEditorState> {
                             </select>
                         </es.SelectWrapper>
                     </es.DrawerFormField>
+                    <es.DrawerFormField style={{ borderRight: '1px solid #ccc' }}>
+                        <label htmlFor="distributionSelect">Default distribution: </label>
+                        <es.SelectWrapper>
+                            <select
+                                id="distributionSelect"
+                                name="distributionSelect"
+                                onChange={this.onDistributionChange}
+                                value={this.state.frecuencyDistribution}
+                            >
+                                <option value="regular">Regular</option>
+                                <option value="even">Even</option>
+                            </select>
+                        </es.SelectWrapper>
+                    </es.DrawerFormField>
                     <es.DrawerFormField>
                         <es.CheckboxWrapper>
                             <label>
@@ -173,6 +191,12 @@ export default class Editor extends React.Component<{}, IEditorState> {
                             </label>
                         </es.CheckboxWrapper>
                     </es.DrawerFormField>
+                </div>
+                <div style={{ textAlign: 'center', fontSize: 13, maxWidth: '80%', margin: '1rem auto' }}>
+                    * NLP providers like DialogFlow, Wit.ai and Watson can be used with a conversion tool. Read the&nbsp;
+                    <a href="https://github.com/rodrigopivi/Chatito#tools-and-resources" target="_blank">
+                        resources section
+                    </a>
                 </div>
                 {this.renderEditAdapterOptions()}
                 <div style={{ padding: 20, textAlign: 'center' }}>
@@ -269,6 +293,16 @@ export default class Editor extends React.Component<{}, IEditorState> {
         });
     };
 
+    private onDistributionChange = e => {
+        this.setState(
+            {
+                frecuencyDistribution: e.target.value === 'even' ? 'even' : 'regular',
+                dataset: null
+            },
+            () => this.saveToLocalStorage(false, true, true)
+        );
+    };
+
     private onEditAdapterOptions = changes => {
         if (changes && changes.updated_src) {
             this.setState({ adapterOptions: changes.updated_src }, () => {
@@ -316,13 +350,14 @@ export default class Editor extends React.Component<{}, IEditorState> {
     private saveToLocalStorage = (saveTabs, saveAdapterOptions, saveCurrentAdapter) => {
         if (window && localStorage) {
             if (saveTabs) {
-                localStorage.setItem('__tabs', JSON.stringify(this.tabs));
+                localStorage.setItem('___tabs', JSON.stringify(this.tabs));
             }
             if (saveAdapterOptions) {
-                localStorage.setItem('__adapterOptions', this.state.useCustomOptions ? JSON.stringify(this.state.adapterOptions) : '');
+                localStorage.setItem('___adapterOptions', this.state.useCustomOptions ? JSON.stringify(this.state.adapterOptions) : '');
+                localStorage.setItem('___defaultDistribution', this.state.frecuencyDistribution);
             }
             if (saveCurrentAdapter) {
-                localStorage.setItem('__currentAdapter', this.state.currentAdapter);
+                localStorage.setItem('___currentAdapter', this.state.currentAdapter);
             }
         }
     };
@@ -342,8 +377,7 @@ export default class Editor extends React.Component<{}, IEditorState> {
                     }
                 }
             } catch (e) {
-                // tslint:disable-next-line:no-console
-                console.error(e);
+                logger.error(e);
             }
         }
     };
@@ -351,9 +385,10 @@ export default class Editor extends React.Component<{}, IEditorState> {
     private loadFromLocalStorage = (cb: () => void) => {
         if (window && localStorage) {
             const newState: any = {};
-            const localTabs = this.loadFromLocalIfPresent('__tabs', true);
-            const localAdapterOptions = this.loadFromLocalIfPresent('__adapterOptions', true);
-            const localCurrentAdapter = this.loadFromLocalIfPresent('__currentAdapter', false);
+            const localTabs = this.loadFromLocalIfPresent('___tabs', true);
+            const localAdapterOptions = this.loadFromLocalIfPresent('___adapterOptions', true);
+            const localCurrentAdapter = this.loadFromLocalIfPresent('___currentAdapter', false);
+            const localDefaultDistribution: 'regular' | 'even' | undefined = this.loadFromLocalIfPresent('___defaultDistribution', false);
             this.tabs = localTabs ? localTabs : tabs;
             if (localAdapterOptions) {
                 newState.adapterOptions = localAdapterOptions;
@@ -361,6 +396,9 @@ export default class Editor extends React.Component<{}, IEditorState> {
             }
             if (localCurrentAdapter) {
                 newState.currentAdapter = localCurrentAdapter;
+            }
+            if (localDefaultDistribution) {
+                newState.frecuencyDistribution = localDefaultDistribution;
             }
             this.setState(newState, cb);
         } else {
@@ -455,6 +493,7 @@ export default class Editor extends React.Component<{}, IEditorState> {
         if (!adapter) {
             return;
         }
+        chatito.config.defaultDistribution = this.state.frecuencyDistribution;
         for (const [i, tab] of this.tabs.entries()) {
             try {
                 if (dataset === null && this.state.useCustomOptions && this.state.adapterOptions) {
@@ -468,7 +507,7 @@ export default class Editor extends React.Component<{}, IEditorState> {
                     this.changeTab(i, () =>
                         this.setState({ error: e.message }, () => {
                             if (window && window.alert) {
-                                console.log(e);
+                                logger.log(e);
                                 window.alert(`Please fix error: ${e.message}`);
                             }
                         })

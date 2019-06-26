@@ -348,7 +348,7 @@ describe('Example with comments spec', () => {
     });
 });
 
-describe('Example with probability opreator', () => {
+describe('Example with probability weighted opreator', () => {
     const slotExamplesWithWeirdKeywords = `
 %[greet]('training': '10', 'testing': '10')
     *[50] ~[phrase1]
@@ -374,7 +374,33 @@ describe('Example with probability opreator', () => {
     });
 });
 
-describe('Example with probability opreator but non int value parses as text', () => {
+describe('Example with probability percentual opreator', () => {
+    const slotExamplesWithWeirdKeywords = `
+%[greet]('training': '10', 'testing': '10')
+    *[50%] ~[phrase1]
+    *[30%] ~[phrase2] ~[phrase3?]
+    ~[another phrase] ~[something] ~[something else?]
+`;
+    test('CORRECT parser output', () => {
+        let error: any = null;
+        let result = null;
+        try {
+            result = chatitoParser.parse(slotExamplesWithWeirdKeywords);
+        } catch (e) {
+            error = { error: e };
+            if (e.location) {
+                error.location = {
+                    line: e.location.start.line,
+                    column: e.location.start.column
+                };
+            }
+        }
+        expect(error).toBeNull();
+        expect(JSON.stringify(result, null, 2)).toMatchSnapshot();
+    });
+});
+
+describe('Example with probability opreator but non int or float value parses as text', () => {
     const slotExamplesWithWeirdKeywords = `
 %[greet]('training': '10', 'testing': '10')
     *[5c0] ~[phrase1]
@@ -398,7 +424,7 @@ describe('Example with probability opreator but non int value parses as text', (
     });
 });
 
-describe('Example with probability opreator but no aftre spacee parses as text', () => {
+describe('Example with probability opreator but no after space parses correctly', () => {
     const slotExamplesWithWeirdKeywords = `
 %[greet]('training': '10', 'testing': '10')
     *[50]~[phrase1]
@@ -457,6 +483,35 @@ import ../some/file.chatito
 
 %[greet]
     hey yo!
+`;
+    test('CORRECT parser output', () => {
+        let error: any = null;
+        let result = null;
+        try {
+            result = chatitoParser.parse(slotExamplesWithWeirdKeywords);
+        } catch (e) {
+            error = { error: e };
+            if (e.location) {
+                error.location = {
+                    line: e.location.start.line,
+                    column: e.location.start.column
+                };
+            }
+        }
+        expect(error).toBeNull();
+        expect(JSON.stringify(result, null, 2)).toMatchSnapshot();
+    });
+});
+
+describe('Example with alias arguments', () => {
+    const slotExamplesWithWeirdKeywords = `
+%[g]('training': '2', 'testing': '1')
+    ~[g]
+
+~[g]('arg': 'val')
+    g1
+    g2
+    g3
 `;
     test('CORRECT parser output', () => {
         let error: any = null;

@@ -11,6 +11,20 @@ import {
 } from './types';
 import * as utils from './utils';
 
+const logger = console;
+
+export const VALID_DISTRIBUTIONS = ['regular', 'even'] as const;
+
+export interface IConfigOptions {
+    defaultDistribution?: typeof VALID_DISTRIBUTIONS[number];
+}
+
+type Configuration = Required<IConfigOptions>;
+
+export const config: Configuration = {
+    defaultDistribution: 'regular'
+};
+
 // tslint:disable-next-line:no-var-requires
 const chatito = require('../parser/chatito') as IChatitoParser;
 const chance = new Chance();
@@ -58,9 +72,51 @@ const chatitoFormatPostProcess = (data: ISentenceTokens[]) => {
     return arr;
 };
 
+const calcSentencesProbabilities = (
+    isPercentageProbability: boolean,
+    isEvenDistribution: boolean,
+    definedSentenceProbabilities: Array<number | null>,
+    sumOfTotalProbabilitiesDefined: number,
+    maxCounts: number[]
+) => {
+    let sentencesWithNullProbabilityCount = 0;
+    let totalMaxCountsToShareBetweenNullProbs = 0;
+    definedSentenceProbabilities.forEach((prob, i) => {
+        if (prob === null) {
+            sentencesWithNullProbabilityCount += 1;
+            totalMaxCountsToShareBetweenNullProbs += maxCounts[i];
+        }
+    });
+    let probabilities: number[];
+    if (isPercentageProbability) {
+        // if defined probabilities is percentual, then calculate each sentence chances in percent
+        probabilities = definedSentenceProbabilities.map((p, i) => {
+            if (p !== null) {
+                return p;
+            }
+            if (isEvenDistribution) {
+                return (100 - sumOfTotalProbabilitiesDefined) / sentencesWithNullProbabilityCount;
+            }
+            return (((maxCounts[i] * 100) / totalMaxCountsToShareBetweenNullProbs) * (100 - sumOfTotalProbabilitiesDefined)) / 100;
+        });
+    } else {
+        // if probabilityTypeDefined is weighted, then multiply the weight by max counts
+        probabilities = definedSentenceProbabilities.map((p, i) => {
+            if (p !== null) {
+                return isEvenDistribution ? p : maxCounts[i] * p;
+            }
+            if (isEvenDistribution) {
+                return 1;
+            }
+            return maxCounts[i];
+        });
+    }
+    return probabilities;
+};
+
 // recursive function that generates variations using a cache
 // that uses counts to avoid repetitions
-const getVariationsFromEntity = async <T>(
+export const getVariationsFromEntity = async <T>(
     ed: IChatitoEntityAST,
     entities: IEntities,
     optional: boolean,
@@ -74,8 +130,12 @@ const getVariationsFromEntity = async <T>(
         // if the entity is not cache, create an empty cache for it
         const counts: IChatitoCache[] = [];
         const maxCounts: number[] = []; // calcs the max possible utterancees for each sentence
+        let probabilityTypeDefined: 'w' | '%' | null = null;
         const definedSentenceProbabilities: Array<number | null> = []; // the posibility operators defined for sentences
-        const indexesOfSentencesWithNullProbability: number[] = [];
+        let isEvenDistribution = config.defaultDistribution === 'even';
+        if (ed.args && ed.args.distribution) {
+            isEvenDistribution = ed.args.distribution === 'even';
+        }
         let sumOfTotalProbabilitiesDefined = 0;
         for (const c of ed.inner) {
             // get counts for each of the sentences inside the entity
@@ -86,34 +146,42 @@ const getVariationsFromEntity = async <T>(
             }
             maxCounts.push(mxc);
             if (c.probability === null) {
-                indexesOfSentencesWithNullProbability.push(definedSentenceProbabilities.length);
                 definedSentenceProbabilities.push(null);
             } else {
-                const prob = parseInt(c.probability || '', 10);
-                if (!Number.isInteger(prob)) {
-                    throw new Error(`Probability "${c.probability}" must be an integer value. At ${cacheKey}`);
+                const p = c.probability || '';
+                const isPercent = p.slice(-1) === '%';
+                const setenceProbabilityType = isPercent ? '%' : 'w';
+                if (probabilityTypeDefined === null) {
+                    probabilityTypeDefined = setenceProbabilityType;
+                } else if (setenceProbabilityType !== probabilityTypeDefined) {
+                    throw new Error(`All probability definitions for "${cacheKey}" must be of the same type.`);
                 }
-                if (prob < 1 || prob > 100) {
-                    throw new Error(`Probability "${c.probability}" must be from 1 to 100. At ${cacheKey}`);
+                const prob = parseFloat(isPercent ? p.slice(0, -1) : p);
+                if (isPercent) {
+                    if (prob <= 0 || prob > 100) {
+                        throw new Error(`Probability "${p}" must be greater than 0 up to 100. At ${cacheKey}`);
+                    }
+                } else if (setenceProbabilityType === 'w') {
+                    if (prob <= 0) {
+                        throw new Error(`Probability weight "${p}" must be greater than 0. At ${cacheKey}`);
+                    }
                 }
                 sumOfTotalProbabilitiesDefined += prob;
                 definedSentenceProbabilities.push(prob);
             }
         }
-        if (sumOfTotalProbabilitiesDefined && sumOfTotalProbabilitiesDefined > 100) {
+        if (probabilityTypeDefined === '%' && sumOfTotalProbabilitiesDefined && sumOfTotalProbabilitiesDefined > 100) {
             throw new Error(
                 `The sum of sentence probabilities (${sumOfTotalProbabilitiesDefined}) for an entity can't be higher than 100%. At ${cacheKey}`
             );
         }
-        // get the sum of all defined posibility operators inside the entity and validate it
-        const totalMaxCountsToShareBetweenNullProbSent =
-            indexesOfSentencesWithNullProbability.map(i => maxCounts[i]).reduce((p, n) => (p || 0) + (n || 0), 0) || 0;
-        // calculate the split of remaining probability for sentences that don't define them
-        // const realProbabilities = maxCounts.map(m => (m * 100) / sumOfTotalMax);
-        const probabilities = definedSentenceProbabilities.map((p, i) =>
-            p === null
-                ? (((maxCounts[i] * 100) / totalMaxCountsToShareBetweenNullProbSent) * (100 - sumOfTotalProbabilitiesDefined)) / 100
-                : p
+        const isPercentageProbability = probabilityTypeDefined === '%';
+        const probabilities = calcSentencesProbabilities(
+            isPercentageProbability,
+            isEvenDistribution,
+            definedSentenceProbabilities,
+            sumOfTotalProbabilitiesDefined,
+            maxCounts
         );
         const currentEntityCache: IStatCache = { counts, maxCounts, optional, probabilities };
         cache.set(cacheKey, currentEntityCache);
@@ -132,7 +200,7 @@ const getVariationsFromEntity = async <T>(
     let accumulator: ISentenceTokens[] = [];
     // For slots where a sentence is composed of only one alias, we add the synonym tag,
     // to denote that the generated alias is a synonym of its alias name
-    const slotSynonyms = ed.type === 'SlotDefinition' && sentence.length === 1 && sentence[0].type === 'Alias';
+    const isSlotDefSentenceWithOnlyOneAlias = ed.type === 'SlotDefinition' && sentence.length === 1 && sentence[0].type === 'Alias';
     for (const t of sentence) {
         // slots and alias entities generate the sentences recursively
         const slotsInSentenceKeys: Set<string> = new Set([]);
@@ -145,7 +213,8 @@ const getVariationsFromEntity = async <T>(
             if (sentenceVariation.length) {
                 const returnSentenceTokens = chatitoFormatPostProcess(sentenceVariation);
                 for (const returnToken of returnSentenceTokens) {
-                    if (slotSynonyms) {
+                    const ettArgs = def[innerEntityKey].args;
+                    if (isSlotDefSentenceWithOnlyOneAlias && ettArgs && ettArgs.synonym === 'true') {
                         returnToken.synonym = t.value;
                     }
                     if (t.type === 'Slot') {
@@ -201,12 +270,7 @@ export const getImports = (from: string, to: string, importer: IFileImporter) =>
     }
 };
 
-export const datasetFromAST = async (
-    initialAst: IChatitoEntityAST[],
-    writterFn: IUtteranceWriter,
-    importHandler?: IFileImporter,
-    currPath?: string
-) => {
+export const definitionsFromAST = (initialAst: IChatitoEntityAST[], importHandler?: IFileImporter, currPath?: string) => {
     const operatorDefinitions: IEntities = { Intent: {}, Slot: {}, Alias: {} };
     if (!initialAst || !initialAst.length) {
         return;
@@ -228,10 +292,9 @@ export const datasetFromAST = async (
             entity = operatorDefinitions.Slot;
         } else if (od.type === 'AliasDefinition') {
             entity = operatorDefinitions.Alias;
-        } else if (od.type === 'Comment' || od.type === 'ImportFile') {
-            return; // skip comments
         } else {
-            throw new Error(`Unknown definition definition for ${od.type}`);
+            // type is 'Comment' or 'ImportFile'
+            return; // skip comments
         }
         const odKey = od.variation ? `${od.key}#${od.variation}` : od.key;
         if (entity[odKey]) {
@@ -239,6 +302,19 @@ export const datasetFromAST = async (
         }
         entity[odKey] = od;
     });
+    return operatorDefinitions;
+};
+
+export const datasetFromAST = async (
+    initialAst: IChatitoEntityAST[],
+    writterFn: IUtteranceWriter,
+    importHandler?: IFileImporter,
+    currPath?: string
+) => {
+    const operatorDefinitions = definitionsFromAST(initialAst, importHandler, currPath);
+    if (!operatorDefinitions) {
+        return;
+    }
     const intentKeys = Object.keys(operatorDefinitions.Intent);
     if (!intentKeys || !intentKeys.length) {
         return;
@@ -266,9 +342,12 @@ export const datasetFromAST = async (
                     }
                 }
             }
-            const intentMax = trainingN + testingN;
+            let intentMax = trainingN + testingN;
             if (intentMax > maxIntentExamples) {
-                throw new Error(`Can't generate ${intentMax} examples. Max possible examples is ${maxIntentExamples}`);
+                intentMax = maxIntentExamples;
+                logger.warn(
+                    `Can't generate ${intentMax} examples. Using the maximum possible combinations: ${maxIntentExamples}. NOTE: Using the maximum leads to overfitting.`
+                );
             } else if (intentMax < maxIntentExamples) {
                 maxIntentExamples = intentMax;
             }
@@ -305,15 +384,19 @@ export const datasetFromAST = async (
             } else {
                 duplicatesCounter++;
                 // note: trick to make all combinations for small datasets, but avoid them for large ones
+                const smallDupesLimit = 10000;
                 const maxDupes = maxPossibleCombinations * maxPossibleCombinations;
-                const maxDupesLimit = Math.floor(maxPossibleCombinations / 2);
-                if (duplicatesCounter > (maxPossibleCombinations > 10000 ? maxDupesLimit : maxDupes)) {
+                const maxDupesLimit = Math.floor(maxDupes / 2);
+                const isBigDataset = maxPossibleCombinations > smallDupesLimit;
+                if (
+                    (isBigDataset && duplicatesCounter > maxDupesLimit) ||
+                    (!isBigDataset && duplicatesCounter > maxDupes * maxPossibleCombinations)
+                ) {
                     // prevent cases where duplicates are part of the entity definitions
                     let m = `Too many duplicates while generating dataset! Looks like we have probably reached `;
                     m += `the maximun ammount of possible unique generated examples. `;
                     m += `The generator has stopped at ${maxEx - maxIntentExamples} examples for intent ${intentKey}.`;
-                    // tslint:disable-next-line:no-console
-                    console.warn(m);
+                    logger.warn(m);
                     maxIntentExamples = 0;
                 }
             }

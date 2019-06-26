@@ -207,7 +207,8 @@ exports[`Example for weird variations CORRECT parser output 1`] = `
         ],
         \\"probability\\": null
       }
-    ]
+    ],
+    \\"args\\": null
   },
   {
     \\"type\\": \\"AliasDefinition\\",
@@ -243,7 +244,8 @@ exports[`Example for weird variations CORRECT parser output 1`] = `
         ],
         \\"probability\\": null
       }
-    ]
+    ],
+    \\"args\\": null
   }
 ]"
 `;
@@ -398,6 +400,91 @@ exports[`Example variation spec CORRECT parser output 1`] = `
       }
     ],
     \\"variation\\": \\"relative_time\\"
+  }
+]"
+`;
+
+exports[`Example with alias arguments CORRECT parser output 1`] = `
+"[
+  {
+    \\"type\\": \\"IntentDefinition\\",
+    \\"key\\": \\"g\\",
+    \\"args\\": {
+      \\"training\\": \\"2\\",
+      \\"testing\\": \\"1\\"
+    },
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 1,
+        \\"line\\": 2,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 38,
+        \\"line\\": 2,
+        \\"column\\": 38
+      }
+    },
+    \\"inner\\": [
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"g\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": false
+          }
+        ],
+        \\"probability\\": null
+      }
+    ]
+  },
+  {
+    \\"type\\": \\"AliasDefinition\\",
+    \\"key\\": \\"g\\",
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 49,
+        \\"line\\": 5,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 67,
+        \\"line\\": 5,
+        \\"column\\": 19
+      }
+    },
+    \\"inner\\": [
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"g1\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"g2\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"g3\\",
+            \\"type\\": \\"Text\\"
+          }
+        ],
+        \\"probability\\": null
+      }
+    ],
+    \\"args\\": {
+      \\"arg\\": \\"val\\"
+    }
   }
 ]"
 `;
@@ -735,7 +822,177 @@ exports[`Example with multi intent CORRECT parser output 1`] = `
 ]"
 `;
 
-exports[`Example with probability opreator CORRECT parser output 1`] = `
+exports[`Example with probability opreator but no after space parses correctly CORRECT parser output 1`] = `
+"[
+  {
+    \\"type\\": \\"IntentDefinition\\",
+    \\"key\\": \\"greet\\",
+    \\"args\\": {
+      \\"training\\": \\"10\\",
+      \\"testing\\": \\"10\\"
+    },
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 1,
+        \\"line\\": 2,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 44,
+        \\"line\\": 2,
+        \\"column\\": 44
+      }
+    },
+    \\"inner\\": [
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"phrase1\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": false
+          }
+        ],
+        \\"probability\\": \\"50\\"
+      }
+    ]
+  }
+]"
+`;
+
+exports[`Example with probability opreator but non int or float value parses as text CORRECT parser output 1`] = `
+"[
+  {
+    \\"type\\": \\"IntentDefinition\\",
+    \\"key\\": \\"greet\\",
+    \\"args\\": {
+      \\"training\\": \\"10\\",
+      \\"testing\\": \\"10\\"
+    },
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 1,
+        \\"line\\": 2,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 44,
+        \\"line\\": 2,
+        \\"column\\": 44
+      }
+    },
+    \\"inner\\": [
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"*[5c0] \\",
+            \\"type\\": \\"Text\\"
+          },
+          {
+            \\"value\\": \\"phrase1\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": false
+          }
+        ],
+        \\"probability\\": null
+      }
+    ]
+  }
+]"
+`;
+
+exports[`Example with probability percentual opreator CORRECT parser output 1`] = `
+"[
+  {
+    \\"type\\": \\"IntentDefinition\\",
+    \\"key\\": \\"greet\\",
+    \\"args\\": {
+      \\"training\\": \\"10\\",
+      \\"testing\\": \\"10\\"
+    },
+    \\"location\\": {
+      \\"start\\": {
+        \\"offset\\": 1,
+        \\"line\\": 2,
+        \\"column\\": 1
+      },
+      \\"end\\": {
+        \\"offset\\": 44,
+        \\"line\\": 2,
+        \\"column\\": 44
+      }
+    },
+    \\"inner\\": [
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\" \\",
+            \\"type\\": \\"Text\\"
+          },
+          {
+            \\"value\\": \\"phrase1\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": false
+          }
+        ],
+        \\"probability\\": \\"50%\\"
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\" \\",
+            \\"type\\": \\"Text\\"
+          },
+          {
+            \\"value\\": \\"phrase2\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": false
+          },
+          {
+            \\"value\\": \\" \\",
+            \\"type\\": \\"Text\\"
+          },
+          {
+            \\"value\\": \\"phrase3\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": true
+          }
+        ],
+        \\"probability\\": \\"30%\\"
+      },
+      {
+        \\"sentence\\": [
+          {
+            \\"value\\": \\"another phrase\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": false
+          },
+          {
+            \\"value\\": \\" \\",
+            \\"type\\": \\"Text\\"
+          },
+          {
+            \\"value\\": \\"something\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": false
+          },
+          {
+            \\"value\\": \\" \\",
+            \\"type\\": \\"Text\\"
+          },
+          {
+            \\"value\\": \\"something else\\",
+            \\"type\\": \\"Alias\\",
+            \\"opt\\": true
+          }
+        ],
+        \\"probability\\": null
+      }
+    ]
+  }
+]"
+`;
+
+exports[`Example with probability weighted opreator CORRECT parser output 1`] = `
 "[
   {
     \\"type\\": \\"IntentDefinition\\",
@@ -821,84 +1078,6 @@ exports[`Example with probability opreator CORRECT parser output 1`] = `
           }
         ],
         \\"probability\\": null
-      }
-    ]
-  }
-]"
-`;
-
-exports[`Example with probability opreator but no aftre spacee parses as text CORRECT parser output 1`] = `
-"[
-  {
-    \\"type\\": \\"IntentDefinition\\",
-    \\"key\\": \\"greet\\",
-    \\"args\\": {
-      \\"training\\": \\"10\\",
-      \\"testing\\": \\"10\\"
-    },
-    \\"location\\": {
-      \\"start\\": {
-        \\"offset\\": 1,
-        \\"line\\": 2,
-        \\"column\\": 1
-      },
-      \\"end\\": {
-        \\"offset\\": 44,
-        \\"line\\": 2,
-        \\"column\\": 44
-      }
-    },
-    \\"inner\\": [
-      {
-        \\"sentence\\": [
-          {
-            \\"value\\": \\"phrase1\\",
-            \\"type\\": \\"Alias\\",
-            \\"opt\\": false
-          }
-        ],
-        \\"probability\\": \\"50\\"
-      }
-    ]
-  }
-]"
-`;
-
-exports[`Example with probability opreator but non int value parses as text CORRECT parser output 1`] = `
-"[
-  {
-    \\"type\\": \\"IntentDefinition\\",
-    \\"key\\": \\"greet\\",
-    \\"args\\": {
-      \\"training\\": \\"10\\",
-      \\"testing\\": \\"10\\"
-    },
-    \\"location\\": {
-      \\"start\\": {
-        \\"offset\\": 1,
-        \\"line\\": 2,
-        \\"column\\": 1
-      },
-      \\"end\\": {
-        \\"offset\\": 44,
-        \\"line\\": 2,
-        \\"column\\": 44
-      }
-    },
-    \\"inner\\": [
-      {
-        \\"sentence\\": [
-          {
-            \\"value\\": \\" \\",
-            \\"type\\": \\"Text\\"
-          },
-          {
-            \\"value\\": \\"phrase1\\",
-            \\"type\\": \\"Alias\\",
-            \\"opt\\": false
-          }
-        ],
-        \\"probability\\": \\"5c0\\"
       }
     ]
   }
@@ -1023,7 +1202,8 @@ exports[`Simple example correct PEGJS output 1`] = `
         ],
         \\"probability\\": null
       }
-    ]
+    ],
+    \\"args\\": null
   },
   {
     \\"type\\": \\"SlotDefinition\\",
@@ -1097,7 +1277,8 @@ exports[`Simple example correct PEGJS output 1`] = `
         ],
         \\"probability\\": null
       }
-    ]
+    ],
+    \\"args\\": null
   }
 ]"
 `;
@@ -1300,7 +1481,8 @@ exports[`Simple examples with max training and testing CORRECT parser output for
         ],
         \\"probability\\": null
       }
-    ]
+    ],
+    \\"args\\": null
   },
   {
     \\"type\\": \\"SlotDefinition\\",
@@ -1374,7 +1556,8 @@ exports[`Simple examples with max training and testing CORRECT parser output for
         ],
         \\"probability\\": null
       }
-    ]
+    ],
+    \\"args\\": null
   }
 ]"
 `;
@@ -1478,7 +1661,8 @@ exports[`Simple examples with max training and testing CORRECT parser output for
         ],
         \\"probability\\": null
       }
-    ]
+    ],
+    \\"args\\": null
   },
   {
     \\"type\\": \\"SlotDefinition\\",
@@ -1552,7 +1736,8 @@ exports[`Simple examples with max training and testing CORRECT parser output for
         ],
         \\"probability\\": null
       }
-    ]
+    ],
+    \\"args\\": null
   }
 ]"
 `;
@@ -1655,7 +1840,8 @@ exports[`Simple examples with max training and testing CORRECT parser output spe
         ],
         \\"probability\\": null
       }
-    ]
+    ],
+    \\"args\\": null
   },
   {
     \\"type\\": \\"SlotDefinition\\",
@@ -1729,7 +1915,8 @@ exports[`Simple examples with max training and testing CORRECT parser output spe
         ],
         \\"probability\\": null
       }
-    ]
+    ],
+    \\"args\\": null
   }
 ]"
 `;

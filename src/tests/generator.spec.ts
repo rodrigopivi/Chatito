@@ -1,8 +1,10 @@
+import * as flair from '../adapters/flair';
+import * as luis from '../adapters/luis';
 import * as rasa from '../adapters/rasa';
 import * as snips from '../adapters/snips';
 import * as web from '../adapters/web';
 import * as chatito from '../main';
-import { ISentenceTokens, IUtteranceWriter } from '../types';
+import { IChatitoCache, ISentenceTokens, IUtteranceWriter } from '../types';
 
 type ThenArg<T> = T extends Promise<infer U> ? U : T;
 
@@ -60,7 +62,7 @@ describe('example with undefined aliases and comment', () => {
 
 describe('example with max training defined higher than the maximum posibilities', () => {
     const maxErrorExample = `
-%[max_error]('training': '100')
+%[max]('training': '100')
     something
 `;
     test('errors as expected', async () => {
@@ -77,7 +79,8 @@ describe('example with max training defined higher than the maximum posibilities
         } catch (e) {
             error = e;
         }
-        expect(error.toString()).toEqual("Error: Can't generate 100 examples. Max possible examples is 1");
+        expect(error).toBeNull();
+        expect(dataset.max.length).toEqual(1);
     });
 });
 
@@ -157,7 +160,7 @@ describe('duplicate definition', () => {
 describe('missing intent definition', () => {
     const maxErrorExample = `
 @[aa]
-    a  
+    a
 @[bb]
     b
 `;
@@ -388,6 +391,20 @@ describe('example with slot variations', () => {
         expect(result.testing).not.toBeNull();
         expect(result.training.example_with_variations.length).toEqual(example1Sentences.length);
     });
+    test('correctly generates using luis adapter', async () => {
+        let error = null;
+        let result: ThenArg<ReturnType<typeof luis.adapter>> | null = null;
+        try {
+            result = await luis.adapter(example1, null);
+        } catch (e) {
+            error = e;
+        }
+        expect(error).toBeNull();
+        expect(result).not.toBeNull();
+        expect(result!.training).not.toBeNull();
+        expect(result!.testing).not.toBeNull();
+        expect(result!.training!.data!.length).toEqual(example1Sentences.length);
+    });
 });
 
 describe('example with custom spaces and symbols with aliases and slots', () => {
@@ -488,8 +505,8 @@ describe('rasa example with synonyms', () => {
 @[slot]
     ~[aliases]
     ~[aliases] not synonym
-    ~[valid alias]
-~[aliases]
+    ~[not valid alias]
+~[aliases]('synonym': 'true')
     alias
     alias2
     another alias
@@ -506,9 +523,9 @@ describe('rasa example with synonyms', () => {
         expect(dataset).not.toBeNull();
         expect(dataset.training).not.toBeUndefined();
         expect(dataset.testing).not.toBeUndefined();
-        expect(dataset.training.rasa_nlu_data.entity_synonyms.length).toBe(2);
+        expect(dataset.training.rasa_nlu_data.entity_synonyms.length).toBe(1);
         expect(dataset.training.rasa_nlu_data.entity_synonyms.find((t: any) => t.value === 'aliases').synonyms.length).toBe(3);
-        expect(dataset.training.rasa_nlu_data.entity_synonyms.find((t: any) => t.value === 'valid alias').synonyms.length).toBe(0);
+        expect(dataset.training.rasa_nlu_data.entity_synonyms.find((t: any) => t.value === 'not valid alias')).toBeUndefined();
         expect(dataset.training.rasa_nlu_data.common_examples.length).toBe(7);
     });
 });
@@ -523,7 +540,7 @@ describe('example with synonyms and arguments', () => {
 @[slot]
     ~[aliases]
     ~[aliases] not synonym
-~[aliases]
+~[aliases]('synonym': 'true')
     alias
     alias2
     another alias
@@ -653,11 +670,29 @@ describe('example with slots nest inside alias', () => {
     });
 });
 
-describe('example with wrong probability value', () => {
+describe('example with text similar to probability operator works as regular sentence text', () => {
+    const example = `
+%[greet]
+    *[treat as text] ~[phrase1]
+    *[20] ~[phrase2] ~[phrase2?]
+`;
+    test('correctly works', async () => {
+        let error = null;
+        let dataset: any;
+        try {
+            dataset = await web.adapter(example, null);
+        } catch (e) {
+            error = e;
+        }
+        expect(error).toBeNull();
+    });
+});
+
+describe('example with wrong probability number', () => {
     const badExample = `
 %[greet]
-    *[bad] ~[phrase1]
-    *[20] ~[phrase2] ~[phrase2?]
+    *[110%] ~[phrase1]
+    *[20%] ~[phrase2] ~[phrase2?]
 `;
     test('correctly fails', async () => {
         let error = null;
@@ -667,7 +702,8 @@ describe('example with wrong probability value', () => {
         } catch (e) {
             error = e;
         }
-        expect(error.toString()).toEqual(`Error: Probability "bad" must be an integer value. At IntentDefinition-greet`);
+        expect(error).not.toBeNull();
+        expect(error.toString()).toEqual('Error: Probability "110%" must be greater than 0 up to 100. At IntentDefinition-greet');
     });
 });
 
@@ -685,15 +721,15 @@ describe('example with wrong probability definition', () => {
         } catch (e) {
             error = e;
         }
-        expect(error.toString()).toEqual(`Error: Probability "0" must be from 1 to 100. At IntentDefinition-greet`);
+        expect(error.toString()).toEqual('Error: Probability weight "0" must be greater than 0. At IntentDefinition-greet');
     });
 });
 
 describe('example with more than 100% probability', () => {
     const badExample = `
 %[greet]
-    *[60] ~[phrase1]
-    *[70] ~[phrase2] ~[phrase2?]
+    *[60%] ~[phrase1]
+    *[70%] ~[phrase2] ~[phrase2?]
 `;
     test('correctly fails', async () => {
         let error = null;
@@ -709,12 +745,163 @@ describe('example with more than 100% probability', () => {
     });
 });
 
-describe('example wih sentences defining probabilities', () => {
+describe('example wih sentences defining percentual probabilities', () => {
     // NOTE: heree phrase1, can only generate 5 utterances
     const probsExample = `
 %[greet]('training': '10', 'testing': '10')
-    *[60] ~[phrase1]
-    *[20] ~[phrase2] ~[phrase2?]
+    *[60%] ~[phrase1]
+    *[20%] ~[phrase2] ~[phrase2?]
+    ~[phrase3] ~[phrase3?] ~[phrase3?]
+    ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?]
+
+~[phrase1]
+    p1-1
+    p1-2
+    p1-3
+    p1-4
+    p1-5
+
+~[phrase2]
+    p2-1
+    p2-2
+    p2-3
+    p2-4
+    p2-5
+
+~[phrase3]
+    p3-1
+    p3-2
+    p3-3
+    p3-4
+    p3-5
+
+~[phrase4]
+    p4-1
+    p4-2
+    p4-3
+    p4-4
+    p4-5
+`;
+    test('correctly works', async () => {
+        let error = null;
+        let r: ThenArg<ReturnType<typeof web.adapter>> | null = null;
+        try {
+            r = await web.adapter(probsExample, null);
+        } catch (e) {
+            error = e;
+        }
+        expect(error).toBeNull();
+        expect(r).not.toBeNull();
+        const result = r!;
+        expect(result.training).not.toBeNull();
+        expect(result.testing).not.toBeNull();
+        const all = [...result.training.greet, ...result.testing.greet];
+        let sentence1Count = 0;
+        let sentence2Count = 0;
+        let sentence3Count = 0;
+        let sentence4Count = 0;
+        all.forEach(u => {
+            const t = u[0];
+            if (t.value.startsWith('p1-')) {
+                sentence1Count++;
+            } else if (t.value.startsWith('p2-')) {
+                sentence2Count++;
+            } else if (t.value.startsWith('p3-')) {
+                sentence3Count++;
+            } else if (t.value.startsWith('p4-')) {
+                sentence4Count++;
+            }
+        });
+        expect(sentence1Count).toBeGreaterThanOrEqual(4);
+        expect(sentence2Count).toBeGreaterThan(2);
+        expect(sentence3Count).toBeLessThan(6);
+        expect(sentence4Count).toBeGreaterThanOrEqual(1);
+    });
+});
+
+describe('example wih sentences defining weighted probabilities', () => {
+    // NOTE: heree phrase1, can only generate 5 utterances
+    const probsExample = `
+%[greet]('training': '50', 'testing': '50')
+    *[60] ~[phrase1] sentence final weight 300 (5*60) or 13.88888888888889%
+    *[20] ~[phrase2] ~[phrase2?] sentence final weight 600  (5*6*20) or 27.77777777777778%
+    ~[phrase3] ~[phrase3?] ~[phrase3?] sentence final weight 180 (5*6*6) pr 8.333333333333334%
+    ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?] sentence final weight 1080 (5*6*6*6) or 50%
+
+~[phrase1]
+    p1-1
+    p1-2
+    p1-3
+    p1-4
+    p1-5
+
+~[phrase2]
+    p2-1
+    p2-2
+    p2-3
+    p2-4
+    p2-5
+
+~[phrase3]
+    p3-1
+    p3-2
+    p3-3
+    p3-4
+    p3-5
+
+~[phrase4]
+    p4-1
+    p4-2
+    p4-3
+    p4-4
+    p4-5
+`;
+    test('correctly works', async () => {
+        let error = null;
+        let r: ThenArg<ReturnType<typeof web.adapter>> | null = null;
+        try {
+            r = await web.adapter(probsExample, null);
+        } catch (e) {
+            error = e;
+        }
+        expect(error).toBeNull();
+        expect(r).not.toBeNull();
+        const result = r!;
+        expect(result.training).not.toBeNull();
+        expect(result.testing).not.toBeNull();
+        const all = [...result.training.greet, ...result.testing.greet];
+        let sentence1Count = 0;
+        let sentence2Count = 0;
+        let sentence3Count = 0;
+        let sentence4Count = 0;
+        all.forEach(u => {
+            const t = u[0];
+            if (t.value.startsWith('p1-')) {
+                sentence1Count++;
+            } else if (t.value.startsWith('p2-')) {
+                sentence2Count++;
+            } else if (t.value.startsWith('p3-')) {
+                sentence3Count++;
+            } else if (t.value.startsWith('p4-')) {
+                sentence4Count++;
+            }
+        });
+        expect(sentence1Count).toBeGreaterThanOrEqual(4);
+        expect(sentence2Count).toBeGreaterThanOrEqual(15);
+        expect(sentence3Count).toBeGreaterThanOrEqual(2);
+        expect(sentence4Count).toBeGreaterThanOrEqual(30);
+    });
+});
+
+describe('example wih sentences defining probabilities nested', () => {
+    // NOTE: heree phrase1, can only generate 5 utterances
+    const probsExample = `
+%[greet]('training': '10', 'testing': '10')
+    ~[p1]
+
+~[p1]
+    *[60%] ~[phrase1]
+    *[20%] ~[phrase2] ~[phrase2?]
     ~[phrase3] ~[phrase3?] ~[phrase3?]
     ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?]
 
@@ -783,15 +970,59 @@ describe('example wih sentences defining probabilities', () => {
     });
 });
 
-describe('example wih sentences defining probabilities nested', () => {
-    // NOTE: heree phrase1, can only generate 5 utterances
+describe('regular and even distribution with different probabilities', () => {
     const probsExample = `
-%[greet]('training': '10', 'testing': '10')
-    ~[p1]
+%[default]
+    ~[phrase1]
+    ~[phrase2] ~[phrase2?]
+    ~[phrase3] ~[phrase3?] ~[phrase3?]
+    ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?]
 
-~[p1]
-    *[60] ~[phrase1]
-    *[20] ~[phrase2] ~[phrase2?]
+%[defaultWithPercProb]
+    *[36%] ~[phrase1]
+    *[25%] ~[phrase2] ~[phrase2?]
+    ~[phrase3] ~[phrase3?] ~[phrase3?]
+    ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?]
+
+%[defaultWithWeightProb]
+    *[36] ~[phrase1]
+    *[25] ~[phrase2] ~[phrase2?]
+    ~[phrase3] ~[phrase3?] ~[phrase3?]
+    ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?]
+
+%[even]('distribution': 'even')
+    ~[phrase1]
+    ~[phrase2] ~[phrase2?]
+    ~[phrase3] ~[phrase3?] ~[phrase3?]
+    ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?]
+
+%[evenWithPercProb]('distribution': 'even')
+    *[36%] ~[phrase1]
+    *[25%] ~[phrase2] ~[phrase2?]
+    ~[phrase3] ~[phrase3?] ~[phrase3?]
+    ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?]
+
+%[evenWithWeightProb]('distribution': 'even')
+    *[36] ~[phrase1]
+    *[25] ~[phrase2] ~[phrase2?]
+    ~[phrase3] ~[phrase3?] ~[phrase3?]
+    ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?]
+
+%[regular]('distribution': 'regular')
+    ~[phrase1]
+    ~[phrase2] ~[phrase2?]
+    ~[phrase3] ~[phrase3?] ~[phrase3?]
+    ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?]
+
+%[regularWithPercProb]('distribution': 'regular')
+    *[36%] ~[phrase1]
+    *[25%] ~[phrase2] ~[phrase2?]
+    ~[phrase3] ~[phrase3?] ~[phrase3?]
+    ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?]
+
+%[regularWithWeightProb]('distribution': 'regular')
+    *[36] ~[phrase1]
+    *[25] ~[phrase2] ~[phrase2?]
     ~[phrase3] ~[phrase3?] ~[phrase3?]
     ~[phrase4] ~[phrase4?] ~[phrase4?] ~[phrase4?]
 
@@ -823,40 +1054,173 @@ describe('example wih sentences defining probabilities nested', () => {
     p4-4
     p4-5
 `;
-    test('correctly works', async () => {
-        let error = null;
-        let r: ThenArg<ReturnType<typeof web.adapter>> | null = null;
-        try {
-            r = await web.adapter(probsExample, null);
-        } catch (e) {
-            error = e;
-        }
-        expect(error).toBeNull();
-        expect(r).not.toBeNull();
-        const result = r!;
-        expect(result.training).not.toBeNull();
-        expect(result.testing).not.toBeNull();
-        const all = [...result.training.greet, ...result.testing.greet];
-        let sentence1Count = 0;
-        let sentence2Count = 0;
-        let sentence3Count = 0;
-        let sentence4Count = 0;
-        all.forEach(u => {
-            const t = u[0];
-            if (t.value.startsWith('p1-')) {
-                sentence1Count++;
-            } else if (t.value.startsWith('p2-')) {
-                sentence2Count++;
-            } else if (t.value.startsWith('p3-')) {
-                sentence3Count++;
-            } else if (t.value.startsWith('p4-')) {
-                sentence4Count++;
-            }
+    const regularProbs = [5, 30, 180, 1080];
+    const regularPercProbs = [36, 25, 5.571428571428572, 33.42857142857142];
+    const regularWeightProbs = [5 * 36, 30 * 25, 180, 1080];
+    const evenProbs = [1, 1, 1, 1];
+    const evenPercProbs = [36, 25, 19.5, 19.5];
+    const evenWeightProbs = [36, 25, 1, 1];
+
+    describe('correctly calculates probabilties when default distribution is regular', () => {
+        const ast = chatito.astFromString(probsExample);
+        const defs = chatito.definitionsFromAST(ast);
+        expect(defs).not.toBeUndefined();
+
+        test('default distribution, no probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.default, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-default');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-default')!.probabilities).toStrictEqual(regularProbs);
         });
-        expect(sentence1Count).toEqual(5);
-        expect(sentence2Count).toBeGreaterThan(2);
-        expect(sentence3Count).toBeLessThan(5);
-        expect(sentence4Count).toBeGreaterThan(1);
+
+        test('default distribution, percentage probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.defaultWithPercProb, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-defaultWithPercProb');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-defaultWithPercProb')!.probabilities).toStrictEqual(regularPercProbs);
+        });
+
+        test('default distribution, weighted probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.defaultWithWeightProb, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-defaultWithWeightProb');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-defaultWithWeightProb')!.probabilities).toStrictEqual(regularWeightProbs);
+        });
+
+        test('even distribution, no probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.even, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-even');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-even')!.probabilities).toStrictEqual(evenProbs);
+        });
+
+        test('even distribution, percentage probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.evenWithPercProb, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-evenWithPercProb');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-evenWithPercProb')!.probabilities).toStrictEqual(evenPercProbs);
+        });
+
+        test('even distribution, weighted probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.evenWithWeightProb, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-evenWithWeightProb');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-evenWithWeightProb')!.probabilities).toStrictEqual(evenWeightProbs);
+        });
+
+        test('regular distribution, no probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.regular, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-regular');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-regular')!.probabilities).toStrictEqual(regularProbs);
+        });
+
+        test('regular distribution, percentage probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.regularWithPercProb, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-regularWithPercProb');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-regularWithPercProb')!.probabilities).toStrictEqual(regularPercProbs);
+        });
+
+        test('regular distribution, weighted probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.regularWithWeightProb, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-regularWithWeightProb');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-regularWithWeightProb')!.probabilities).toStrictEqual(regularWeightProbs);
+        });
+    });
+
+    describe('correctly calculates probabilties when default distribution is even', () => {
+        const ast = chatito.astFromString(probsExample);
+        const defs = chatito.definitionsFromAST(ast);
+        expect(defs).not.toBeUndefined();
+        beforeAll(() => {
+            chatito.config.defaultDistribution = 'even';
+        });
+        afterAll(() => {
+            chatito.config.defaultDistribution = 'regular';
+        });
+
+        test('default distribution, no probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.default, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-default');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-default')!.probabilities).toStrictEqual(evenProbs);
+        });
+
+        test('default distribution, percentage probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.defaultWithPercProb, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-defaultWithPercProb');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-defaultWithPercProb')!.probabilities).toStrictEqual(evenPercProbs);
+        });
+
+        test('default distribution, weighted probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.defaultWithWeightProb, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-defaultWithWeightProb');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-defaultWithWeightProb')!.probabilities).toStrictEqual(evenWeightProbs);
+        });
+
+        test('even distribution, no probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.even, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-even');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-even')!.probabilities).toStrictEqual(evenProbs);
+        });
+
+        test('even distribution, percentage probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.evenWithPercProb, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-evenWithPercProb');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-evenWithPercProb')!.probabilities).toStrictEqual(evenPercProbs);
+        });
+
+        test('even distribution, weighted probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.evenWithWeightProb, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-evenWithWeightProb');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-evenWithWeightProb')!.probabilities).toStrictEqual(evenWeightProbs);
+        });
+
+        test('regular distribution, no probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.regular, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-regular');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-regular')!.probabilities).toStrictEqual(regularProbs);
+        });
+
+        test('regular distribution, percentage probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.regularWithPercProb, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-regularWithPercProb');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-regularWithPercProb')!.probabilities).toStrictEqual(regularPercProbs);
+        });
+
+        test('regular distribution, weighted probabilities', () => {
+            const cache: IChatitoCache = new Map();
+            chatito.getVariationsFromEntity(defs!.Intent.regularWithWeightProb, defs!, false, cache);
+            const intentCache = cache.get('IntentDefinition-regularWithWeightProb');
+            expect(intentCache).not.toBeUndefined();
+            expect(cache.get('IntentDefinition-regularWithWeightProb')!.probabilities).toStrictEqual(regularWeightProbs);
+        });
     });
 });
 
@@ -943,10 +1307,10 @@ describe('example that generates empty strings', () => {
     });
 });
 
-describe('example that only has one sentence with probs', () => {
+describe('example that only has one sentence with float probs', () => {
     const main = `
 %[findRestaurantsByCity]('training': '3')
-    *[20] ~[restaurants]
+    *[99.99%] ~[restaurants]
 
 ~[restaurants]
     restaurants
@@ -967,5 +1331,44 @@ describe('example that only has one sentence with probs', () => {
         expect(dataset!.training).not.toBeNull();
         expect(dataset!.training.findRestaurantsByCity).not.toBeNull();
         expect(dataset!.training.findRestaurantsByCity.length).toEqual(3);
+    });
+});
+
+describe('example with invalid slot definition', () => {
+    const ex = `
+%[greet]
+    ~[phrase2] @[phrase2?]
+`;
+    test('correctly fails', async () => {
+        let error = null;
+        let dataset: ThenArg<ReturnType<typeof web.adapter>> | null = null;
+        try {
+            dataset = await web.adapter(ex, null);
+        } catch (e) {
+            error = e;
+        }
+        expect(error).not.toBeNull();
+        expect(dataset).toBeNull();
+        expect(error.message).toContain('Slot not defined: phrase2');
+    });
+});
+
+describe('example with two types of probability operator', () => {
+    const ex = `
+%[greet]
+    *[30%] ~[phrase2]
+    *[4] ~[phrase2] ~[phrase2]
+`;
+    test('correctly fails', async () => {
+        let error = null;
+        let dataset: ThenArg<ReturnType<typeof web.adapter>> | null = null;
+        try {
+            dataset = await web.adapter(ex, null);
+        } catch (e) {
+            error = e;
+        }
+        expect(error).not.toBeNull();
+        expect(dataset).toBeNull();
+        expect(error.message).toContain('All probability definitions for "IntentDefinition-greet" must be of the same type.');
     });
 });

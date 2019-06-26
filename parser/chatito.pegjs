@@ -4,7 +4,7 @@ Start = (ImportFile/TopLevelStatement/CommentLine)+
 TopLevelStatement = od:(IntentDefinition/SlotDefinition/AliasDefinition) { return od; }
 
 // ============= Probability operator =============
-ProbabilityOperatorDefinition = "*[" probability:BasicKeywordLiteral "]" { return probability; }
+ProbabilityOperatorDefinition = "*[" probability:Number percent:"%"? "]" { return `${probability}${percent || ''}`; }
 // ============= Entities =============
 EntityOpt = "?"
 EntityBody = "[" value:EntityKeywordLiteral "]" { return value }
@@ -45,11 +45,12 @@ SlotDefinition = EOL? o:EntitySlotDefinition EOL
     { return { type: o.type, key: o.value, args: o.args, location: o.location, inner: s, variation: o.variation } }
 
 // Alias
-EntityAliasDefinition = "~" value:EntityBody { return { value: value, type: "AliasDefinition", location: location() } }
+EntityAliasDefinition = "~" value:EntityBody args:EntityArguments?
+    { return { value: value, type: "AliasDefinition", location: location(), args: args } }
 OptionalAlias = "~" op:EntityOptionalBody { return { value: op.value, type: "Alias", opt: op.opt } }
 AliasDefinition = EOL? o:EntityAliasDefinition EOL
     Indent s:IntentAndSlotInnerStatements Dedent
-    { return { type: o.type, key: o.value, location: o.location, inner: s } }
+    { return { type: o.type, key: o.value, location: o.location, inner: s, args: o.args } }
 
 // ============= Identation =============
 Samedent "correct indentation" = s:" "* &{ return s.length === level * STEP; }
@@ -69,7 +70,15 @@ BasicKeywordLiteral "entity name" = v:(t:((!"\r\n")(!"\n")(!"]") .) { return t.j
 EntityKeywordLiteral "entity name" = v:(t:((!"\r\n")(!"\n")(!"]")(!"?") .) { return t.join(""); })+ { return v.join(""); }
 SlotKeywordLiteral "entity name" = v:(t:((!"\r\n")(!"\n")(!"#")(!"]")(!"?") .) { return t.join(""); })+ { return v.join(""); }
 
-Integer "integer" = [0-9]+ { return parseInt(text(), 10); }
+// Number
+Number "number" = int frac? { return parseFloat(text()); }
+DecimalPoint = "."
+Digit1_9 = [1-9]
+Digit0_9  = [0-9]
+frac = DecimalPoint Digit0_9+
+int = zero / (Digit1_9 Digit0_9*)
+zero = "0"
+
 EOS "end of sentence" = EOL / EOF
 EOL "end of line "= (EOLNonWindows/EOLWindows)+
 EOLNonWindows "non windows end of line" = "\n"

@@ -60,7 +60,7 @@ non printable characters, this are the requirements of document source text and 
 - Comments: Lines of text starting with '//' or '#' (no spaces before)
 - Imports: Lines of text starting with 'import' keyword followed by a relative filepath
 - Entity arguments: Optional key-values that can be declared at intents and slot definitions
-- Probability operator: an optional keyword declared at the start of sentences to control the probabilities.
+- Probability operator: an optional keyword declared at the start of sentences to control the odds.
 
 ### 2.1 - Entities
 Entities are the way to define keywords that wrap sentence variations and attach some properties to them.
@@ -126,7 +126,7 @@ From the output perspective, a slot is the tag that is added the relevant words 
 ```
 
 Slot entities referenced within sentences, can have `?` symbol at the end of the reference name. (e.g.: @[name?]).
-In that context, the `?` symbol means that the slot combination is optional, and could be omitted at generation.
+In that context, the `?` symbol means that the slot combination is optional, and could be omitted at generation. The probabilities of being omitted are defined by the number of sentence definitions at the entity. If the entity defines only one sentence, then the probabilities of empty string will be 50%, if the sentences defines 2 sentences, the probabilities of being omitted are 33.3333%, and so on.
 
 Slots provide a particular property at their definitions called variations.
 
@@ -166,8 +166,7 @@ Alias are just variations of a word and does not generate any tag. By default if
     hey
 ```
 
-Same as with slots, alias references can contain a `?` symbol at the end of the reference name. (e.g.: ~[hi?]).
-In that context, the `?` symbol means that the alias combination is optional, and could be omitted at generation.
+Same as with slots, alias references can be ommited using a `?` symbol at the end of the reference name. (e.g.: ~[hi?]).
 
 When an alias is referenced inside a slot definition, and it is the only token of the slot sentence, by default the generator will tag the generated alias value as a `synonym` of the alias key name.
 
@@ -176,24 +175,7 @@ Alias definitions are not allowed to declare entity arguments.
 Nesting entities: Sentences defined inside aliases can reference slots and other aliases but preventing recursive loops.
 
 
-### 2.2 - Sentence probability operator
-
-The way Chatito works, is like pulling samples from a cloud of possible combinations, but once the sentences definitions start getting more complex, the max possible combination possibilities increments exponentially, causing a problem where the generator will most likely pick sentences that have more possible combinations, and omit some sentences that may be more important at the dataset. To have some control of the generator principle, you can use the probability operator.
-
-The sentence probability operator is defined by the `*[` symbols at the start of a sentence, following by a number, the probability of generating the sentence and `]`. The value inside the probability operator must be an integer between 1 and 100, and the sum of all probability operators inside an entity definition should never exceed 100.
-
-```
-%[greet]('training': '100', 'testing': '100')
-    *[50] ~[phrase1]
-    *[30] ~[phrase2] ~[phrase3?]
-    ~[another phrase] ~[something] ~[something else]
-```
-
-This way, it is possible to declare that the first sentence will have 50% chances. The second sentence will generate 30% of the utterances. And the 20% remaining will come from the remaining possibilities of all sentences.
-
-NOTE: Be careful when using probability operator, because if the sentence reaches its max number of unique generated values, it will start producing duplicates and possibly slowing down the generator that may filter duplicates.
-
-### 2.3 - Importing chatito files
+### 2.2 - Importing chatito files
 
 To allow reusing entity declarations. It is possible to import another chatito file using the import keyword. Importing another chatito file only allows using the slots and aliases defined there, if the imported file defines intents, they will be ignored since intents are generation entry points.
 
@@ -221,11 +203,110 @@ The text next to the import statement should be a relative path from the main fi
 
 Note: Chatito will throw an exception if two imports define the same entity.
 
+
+### 2.2 - Controlling probabilities
+
+The way Chatito works, is like pulling samples from a cloud of possible combinations and avoiding duplicates. Once the sentences definitions gain complexity, the max possible combinations increments exponentially, causing a problem where the generator will most likely pick sentences that have more possible combinations, and omit some sentences that may be more important at the dataset. To overcome this problem, semantics for controlling the data generation probabilities are provided.
+
+#### 2.2.1 - Frequency distribution strategies
+
+When generating samples for an entity, the generator will randomly pick a sentence model using one of the two frecuency distribution strategies available: `regular` or `even`.
+
+For a regular distribution strategy, each sentence probabilities are defined by their maximum possible combinations, in other words, a sentence that can produce more combinations will have more probabilities. For even distribution strategy, sentence probabilities are the same.
+
+The distribution strategy can be declared as an argument at the entity level. If not declared, the generator should use the default strategy configured (at the IDE or CLI level), if there is no default definition, then `regular` should be the default.
+
+Lets look at an example, here, all the alias entities are defined at `./aliases.chatito`, and are named by the maximum possible combinations each provide:
+
+```
+import ./aliases.chatito
+
+%[intent with a maximum of 1k combinations]('distribution': 'regular')
+    first sentence equals ~[100 maximum combinations]
+    second sentence equals ~[50 maximum combinations] multiplied by ~[10 maximum combinations]
+    third sentence equals ~[400 maximum combinations]
+```
+
+Since the intent declares a `regular` distribution, this would be the odds:
+
+|            | Max combinations | Weight | Probability % |
+|------------|------------------|--------|---------------|
+| sentence 1 | 100              | 100    | 10%           |
+| sentence 2 | 500              | 500    | 50%           |
+| sentence 3 | 400              | 400    | 40%           |
+
+
+Now the code to get an `even` distribution:
+
+```
+import ./aliases.chatito
+
+%[intent with a maximum of 1k combinations]('distribution': 'even')
+    first sentence equals ~[100 maximum combinations]
+    second sentence equals ~[50 maximum combinations] multiplied by ~[10 maximum combinations]
+    third sentence equals ~[400 maximum combinations]
+```
+
+For `even` distribution using the previous example:
+
+|            | Max combinations | Weight | Probability % |
+|------------|------------------|--------|---------------|
+| sentence 1 | 100              | 1      | 33.3333%      |
+| sentence 2 | 500              | 1      | 33.3333%      |
+| sentence 3 | 400              | 1      | 33.3333%      |
+
+
+#### 2.2.1 - Sentence probability operator
+
+The sentence probability operator is defined by the `*[` symbol at the start of a sentence following by the probability value and `]`. The probability value may be expressed in two ways, as a plain number (considered as weighted probabilty, e.g.: `1`) or as a percentage value (a number ending with `%`, e.g.: `33.3333%`), but once an entity defines a probabilty as either weight or percentage, then all the other sentences for that entity should use the same type. Inconsistencies declaring entity sentence probabilty values should be considered an input error and if the value is not a valid integer, float or percentual value, the input should be considered as simple text and not as a sentence probability definition.
+ 
+NOTE: If the probabilty value is a percentage type, then and the sum of all sentence probabilty operators declared inside the entity definition should never exceed 100.
+
+Lets continue with some examples:
+
+```
+%[intent with a maximum of 1k combinations]
+    *[20%] first sentence ~[100 maximum combinations]
+    second sentence ~[50 maximum combinations] multiplied by ~[10 maximum combinations]
+    third sentence ~[400 maximum combinations]
+```
+
+The previous example, declares `20%` probabilties for the first sentence. This would be odds table for the two strategy distributions:
+
+|            | Max combinations | % with even | % with regular        |
+|------------|------------------|-------------|-----------------------|
+| sentence 1 | 100              | 20%         | 20%                   |
+| sentence 2 | 500              | 40%         | 44.4444% (500*80/900) |
+| sentence 3 | 400              | 40%         | 35.5556% (400*80/900) |
+
+
+When probabilty value is a weight with regular distribution, multiply that value with the maximum combinations for that sentence, if distribution is even, that value is the actual weighted probability. E.g.:
+
+```
+%[intent with a maximum of 1k combinations]
+    *[2] first sentence ~[100 maximum combinations]
+    second sentence ~[50 maximum combinations] multiplied by ~[10 maximum combinations]
+    third sentence ~[400 maximum combinations]
+```
+
+And the odds table:
+
+|            | Max combinations | even weight | even % | regular weight | regular % |
+|------------|------------------|-------------|--------|----------------|-----------|
+| sentence 1 | 100              | 2           | 50%    | 200            | 18.1818%  |
+| sentence 2 | 500              | 1           | 25%    | 500            | 45.4545%  |
+| sentence 3 | 400              | 1           | 25%    | 400            | 36.3636%  |
+
+
+NOTE: Be careful when using probabilty operator, because if the sentence reaches its max number of unique generated values, it will start producing duplicates and slowing down the generator that filters duplicates.
+
 ## 3 - Data Generation
 
-The entry points for the data generation are the intent definitions, for each intent definition:
+The entry points for the data generation are the intent definitions, for each intent definition available:
 - If the intent does not specify the 'training' or 'testing' arguments, generate all possible unique combinations and add them to the training dataset.
-- Respect the probabilities opreator declarations
-- Generate unique combinations for the training dataset until the 'training' argument number is reached, then until 'testing' argument number is reached for the testing dataset.
 
-Recursive loop references should be prevented.
+- Respect probabilty operator declarations and distribution strategy.
+
+- Generate unique combinations for the training and testing dataset until the provided sum of both argument numbers are reached.
+
+- Recursive loop references should be prevented.
