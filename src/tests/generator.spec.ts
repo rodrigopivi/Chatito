@@ -1,3 +1,5 @@
+import * as flair from '../adapters/flair';
+import * as luis from '../adapters/luis';
 import * as rasa from '../adapters/rasa';
 import * as snips from '../adapters/snips';
 import * as web from '../adapters/web';
@@ -60,7 +62,7 @@ describe('example with undefined aliases and comment', () => {
 
 describe('example with max training defined higher than the maximum posibilities', () => {
     const maxErrorExample = `
-%[max_error]('training': '100')
+%[max]('training': '100')
     something
 `;
     test('errors as expected', async () => {
@@ -77,7 +79,8 @@ describe('example with max training defined higher than the maximum posibilities
         } catch (e) {
             error = e;
         }
-        expect(error.toString()).toEqual("Error: Can't generate 100 examples. Max possible examples is 1");
+        expect(error).toBeNull();
+        expect(dataset.max.length).toEqual(1);
     });
 });
 
@@ -388,6 +391,20 @@ describe('example with slot variations', () => {
         expect(result.testing).not.toBeNull();
         expect(result.training.example_with_variations.length).toEqual(example1Sentences.length);
     });
+    test('correctly generates using luis adapter', async () => {
+        let error = null;
+        let result: ThenArg<ReturnType<typeof luis.adapter>> | null = null;
+        try {
+            result = await luis.adapter(example1, null);
+        } catch (e) {
+            error = e;
+        }
+        expect(error).toBeNull();
+        expect(result).not.toBeNull();
+        expect(result!.training).not.toBeNull();
+        expect(result!.testing).not.toBeNull();
+        expect(result!.training!.data!.length).toEqual(example1Sentences.length);
+    });
 });
 
 describe('example with custom spaces and symbols with aliases and slots', () => {
@@ -488,8 +505,8 @@ describe('rasa example with synonyms', () => {
 @[slot]
     ~[aliases]
     ~[aliases] not synonym
-    ~[valid alias]
-~[aliases]
+    ~[not valid alias]
+~[aliases]('synonym': 'true')
     alias
     alias2
     another alias
@@ -506,9 +523,9 @@ describe('rasa example with synonyms', () => {
         expect(dataset).not.toBeNull();
         expect(dataset.training).not.toBeUndefined();
         expect(dataset.testing).not.toBeUndefined();
-        expect(dataset.training.rasa_nlu_data.entity_synonyms.length).toBe(2);
+        expect(dataset.training.rasa_nlu_data.entity_synonyms.length).toBe(1);
         expect(dataset.training.rasa_nlu_data.entity_synonyms.find((t: any) => t.value === 'aliases').synonyms.length).toBe(3);
-        expect(dataset.training.rasa_nlu_data.entity_synonyms.find((t: any) => t.value === 'valid alias').synonyms.length).toBe(0);
+        expect(dataset.training.rasa_nlu_data.entity_synonyms.find((t: any) => t.value === 'not valid alias')).toBeUndefined();
         expect(dataset.training.rasa_nlu_data.common_examples.length).toBe(7);
     });
 });
@@ -523,7 +540,7 @@ describe('example with synonyms and arguments', () => {
 @[slot]
     ~[aliases]
     ~[aliases] not synonym
-~[aliases]
+~[aliases]('synonym': 'true')
     alias
     alias2
     another alias

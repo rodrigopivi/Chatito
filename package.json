@@ -1,6 +1,6 @@
 {
   "name": "chatito",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "description": "Generate training datasets for NLU chatbots using a simple DSL",
   "bin": {
     "chatito": "./dist/bin.js"
@@ -49,7 +49,8 @@
   "homepage": "https://github.com/rodrigopivi/Chatito",
   "dependencies": {
     "chance": "1.0.18",
-    "minimist": "1.2.0"
+    "minimist": "1.2.0",
+    "wink-tokenizer": "5.2.1"
   },
   "jest": {
     "transform": {
@@ -82,6 +83,7 @@
     "@types/react-dom": "16.8.4",
     "@types/react-helmet": "5.0.8",
     "@types/react-router-dom": "4.3.3",
+    "@types/wink-tokenizer": "4.0.0",
     "babel-loader": "8.0.5",
     "babel-plugin-import": "1.11.0",
     "babel-plugin-styled-components": "1.10.0",

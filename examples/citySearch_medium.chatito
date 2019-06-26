@@ -31,15 +31,15 @@
     places to eat
     where to eat
 
-~[newYork]
+~[newYork]('synonym': 'true')
     new york ~[city?]
     ny ~[city?]
 
-~[sanFrancisco]
+~[sanFrancisco]('synonym': 'true')
     san francisco
     san francisco city
 
-~[atlanta]
+~[atlanta]('synonym': 'true')
     atlanta
     atlanta city
 

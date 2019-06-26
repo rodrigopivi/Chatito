@@ -11,6 +11,8 @@ import {
 } from './types';
 import * as utils from './utils';
 
+const logger = console;
+
 export const VALID_DISTRIBUTIONS = ['regular', 'even'] as const;
 
 export interface IConfigOptions {
@@ -198,7 +200,7 @@ export const getVariationsFromEntity = async <T>(
     let accumulator: ISentenceTokens[] = [];
     // For slots where a sentence is composed of only one alias, we add the synonym tag,
     // to denote that the generated alias is a synonym of its alias name
-    const slotSynonyms = ed.type === 'SlotDefinition' && sentence.length === 1 && sentence[0].type === 'Alias';
+    const isSlotDefSentenceWithOnlyOneAlias = ed.type === 'SlotDefinition' && sentence.length === 1 && sentence[0].type === 'Alias';
     for (const t of sentence) {
         // slots and alias entities generate the sentences recursively
         const slotsInSentenceKeys: Set<string> = new Set([]);
@@ -211,7 +213,8 @@ export const getVariationsFromEntity = async <T>(
             if (sentenceVariation.length) {
                 const returnSentenceTokens = chatitoFormatPostProcess(sentenceVariation);
                 for (const returnToken of returnSentenceTokens) {
-                    if (slotSynonyms) {
+                    const ettArgs = def[innerEntityKey].args;
+                    if (isSlotDefSentenceWithOnlyOneAlias && ettArgs && ettArgs.synonym === 'true') {
                         returnToken.synonym = t.value;
                     }
                     if (t.type === 'Slot') {
@@ -339,9 +342,12 @@ export const datasetFromAST = async (
                     }
                 }
             }
-            const intentMax = trainingN + testingN;
+            let intentMax = trainingN + testingN;
             if (intentMax > maxIntentExamples) {
-                throw new Error(`Can't generate ${intentMax} examples. Max possible examples is ${maxIntentExamples}`);
+                intentMax = maxIntentExamples;
+                logger.warn(
+                    `Can't generate ${intentMax} examples. Using the maximum possible combinations: ${maxIntentExamples}. NOTE: Using the maximum leads to overfitting.`
+                );
             } else if (intentMax < maxIntentExamples) {
                 maxIntentExamples = intentMax;
             }
@@ -378,15 +384,19 @@ export const datasetFromAST = async (
             } else {
                 duplicatesCounter++;
                 // note: trick to make all combinations for small datasets, but avoid them for large ones
+                const smallDupesLimit = 10000;
                 const maxDupes = maxPossibleCombinations * maxPossibleCombinations;
-                const maxDupesLimit = Math.floor(maxPossibleCombinations / 2);
-                if (duplicatesCounter > (maxPossibleCombinations > 10000 ? maxDupesLimit : maxDupes)) {
+                const maxDupesLimit = Math.floor(maxDupes / 2);
+                const isBigDataset = maxPossibleCombinations > smallDupesLimit;
+                if (
+                    (isBigDataset && duplicatesCounter > maxDupesLimit) ||
+                    (!isBigDataset && duplicatesCounter > maxDupes * maxPossibleCombinations)
+                ) {
                     // prevent cases where duplicates are part of the entity definitions
                     let m = `Too many duplicates while generating dataset! Looks like we have probably reached `;
                     m += `the maximun ammount of possible unique generated examples. `;
                     m += `The generator has stopped at ${maxEx - maxIntentExamples} examples for intent ${intentKey}.`;
-                    // tslint:disable-next-line:no-console
-                    console.warn(m);
+                    logger.warn(m);
                     maxIntentExamples = 0;
                 }
             }

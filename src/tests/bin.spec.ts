@@ -335,3 +335,57 @@ test('test npm command line generator for imports example', () => {
     fs.unlinkSync(generatedTrainingFile);
     fs.rmdirSync(generatedDir);
 });
+
+test('test npm command line generator for flair medium example', () => {
+    const d = __dirname;
+    const generatedClassificationTrainingFile = path.resolve(`${d}/../../examples/classification_flair_dataset_training.txt`);
+    const generatedClassificationTestingFile = path.resolve(`${d}/../../examples/classification_flair_dataset_testing.txt`);
+    const generatedNERTrainingFile = path.resolve(`${d}/../../examples/ner_flair_dataset_training.txt`);
+    const generatedNERTestingFile = path.resolve(`${d}/../../examples/ner_flair_dataset_testing.txt`);
+    const npmBin = path.resolve(`${d}/../bin.ts`);
+    const grammarFile = path.resolve(`${d}/../../examples/citySearch_medium.chatito`);
+    if (fs.existsSync(generatedClassificationTrainingFile)) {
+        fs.unlinkSync(generatedClassificationTrainingFile);
+    }
+    if (fs.existsSync(generatedClassificationTestingFile)) {
+        fs.unlinkSync(generatedClassificationTestingFile);
+    }
+    if (fs.existsSync(generatedNERTrainingFile)) {
+        fs.unlinkSync(generatedNERTrainingFile);
+    }
+    if (fs.existsSync(generatedNERTestingFile)) {
+        fs.unlinkSync(generatedNERTestingFile);
+    }
+    const child = cp.execSync(`node -r ts-node/register ${npmBin} ${grammarFile} --format=flair --outputPath=${d}/../../examples`);
+    // generatedClassificationTrainingFile
+    expect(fs.existsSync(generatedClassificationTrainingFile)).toBeTruthy();
+    const dataset = fs.readFileSync(generatedClassificationTrainingFile, 'utf8');
+    expect(dataset).not.toBeNull();
+    expect(dataset.length).toBeGreaterThan(100);
+    fs.unlinkSync(generatedClassificationTrainingFile);
+    expect(fs.existsSync(generatedClassificationTrainingFile)).toBeFalsy();
+
+    // generatedClassificationTestingFile
+    expect(fs.existsSync(generatedClassificationTestingFile)).toBeTruthy();
+    const testingDataset = fs.readFileSync(generatedClassificationTestingFile, 'utf8');
+    expect(testingDataset).not.toBeNull();
+    expect(testingDataset.length).toBeGreaterThan(100);
+    fs.unlinkSync(generatedClassificationTestingFile);
+    expect(fs.existsSync(generatedClassificationTestingFile)).toBeFalsy();
+
+    // generatedNERTrainingFile
+    expect(fs.existsSync(generatedNERTrainingFile)).toBeTruthy();
+    const nerDataset = fs.readFileSync(generatedNERTrainingFile, 'utf8');
+    expect(nerDataset).not.toBeNull();
+    expect(nerDataset.length).toBeGreaterThan(100);
+    fs.unlinkSync(generatedNERTrainingFile);
+    expect(fs.existsSync(generatedNERTrainingFile)).toBeFalsy();
+
+    // generatedNERTestingFile
+    expect(fs.existsSync(generatedNERTestingFile)).toBeTruthy();
+    const testingNerDataset = fs.readFileSync(generatedNERTestingFile, 'utf8');
+    expect(testingNerDataset).not.toBeNull();
+    expect(testingNerDataset.length).toBeGreaterThan(100);
+    fs.unlinkSync(generatedNERTestingFile);
+    expect(fs.existsSync(generatedNERTestingFile)).toBeFalsy();
+});
