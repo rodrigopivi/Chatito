@@ -65,7 +65,16 @@ describe('example with max training defined higher than the maximum posibilities
 %[max]('training': '100')
     something
 `;
-    test('errors as expected', async () => {
+    let consoleOutput: string[] = [];
+    const mockedWarn = (output: string) => consoleOutput.push(output);
+    beforeEach(() => {
+        consoleOutput = [];
+        console.warn = mockedWarn;
+    });
+    const originalWarn = console.warn;
+    afterEach(() => (console.warn = originalWarn));
+
+    test('warns and produces 1 example', async () => {
         let error = null;
         const dataset: { [key: string]: ISentenceTokens[][] } = {};
         const writer: IUtteranceWriter = (u, k, n) => {
@@ -81,6 +90,9 @@ describe('example with max training defined higher than the maximum posibilities
         }
         expect(error).toBeNull();
         expect(dataset.max.length).toEqual(1);
+        expect(consoleOutput).toStrictEqual([
+            "Can't generate 100 examples. Using the maximum possible combinations: 1. NOTE: Using the maximum leads to overfitting."
+        ]);
     });
 });
 
@@ -617,7 +629,7 @@ describe('example with alias referencing itself', () => {
         } catch (e) {
             error = e;
         }
-        expect(error.toString()).toEqual("Error: Invalid nesting of entity: 'aliases' inside entity 'aliases'. Infinite loop prevented.");
+        expect(error.toString()).toEqual('Error: You have a circular nesting: ~[aliases] -> ~[aliases]. Infinite loop prevented.');
     });
 });
 
@@ -640,7 +652,7 @@ describe('example with slots nest inside slots', () => {
         } catch (e) {
             error = e;
         }
-        expect(error.toString()).toEqual("Error: Invalid nesting of slot: 'slot2' inside 'aliases'. An slot can't reference other slot.");
+        expect(error.toString()).toEqual('Error: You have nested slots: @[slot] -> ~[aliases] -> @[slot2]. A slot can\'t reference other slot.');
     });
 });
 
@@ -690,7 +702,7 @@ describe('example with text similar to probability operator works as regular sen
 
 describe('example with wrong probability number', () => {
     const badExample = `
-%[greet]
+%[greet]('training': '1')
     *[110%] ~[phrase1]
     *[20%] ~[phrase2] ~[phrase2?]
 `;
@@ -709,7 +721,7 @@ describe('example with wrong probability number', () => {
 
 describe('example with wrong probability definition', () => {
     const badExample = `
-%[greet]
+%[greet]('training': '1')
     *[0] ~[phrase1]
     *[0] ~[phrase2] ~[phrase2?]
 `;
@@ -727,7 +739,7 @@ describe('example with wrong probability definition', () => {
 
 describe('example with more than 100% probability', () => {
     const badExample = `
-%[greet]
+%[greet]('training': '1')
     *[60%] ~[phrase1]
     *[70%] ~[phrase2] ~[phrase2?]
 `;
@@ -1355,7 +1367,7 @@ describe('example with invalid slot definition', () => {
 
 describe('example with two types of probability operator', () => {
     const ex = `
-%[greet]
+%[greet]('training': '1')
     *[30%] ~[phrase2]
     *[4] ~[phrase2] ~[phrase2]
 `;
@@ -1370,5 +1382,165 @@ describe('example with two types of probability operator', () => {
         expect(error).not.toBeNull();
         expect(dataset).toBeNull();
         expect(error.message).toContain('All probability definitions for "IntentDefinition-greet" must be of the same type.');
+    });
+});
+
+describe('generating all the examples', () => {
+    const allExample = `
+%[intent]
+    ~[1-3]
+    ~[nested]
+
+~[1-3]
+    1
+    2
+    3
+
+@[4-5]
+    4
+    5
+
+~[nested]
+    @[4-5] ~[1-3?]
+`;
+
+    const expectedAllExamples = [
+        [{ value: '1', type: 'Text' }],
+        [{ value: '2', type: 'Text' }],
+        [{ value: '3', type: 'Text' }],
+        [{ value: '4', type: 'Slot', slot: '4-5' }],
+        [{ value: '5', type: 'Slot', slot: '4-5' }],
+        [{ value: '4', type: 'Slot', slot: '4-5' }, { type: 'Text', value: ' 1' }],
+        [{ value: '5', type: 'Slot', slot: '4-5' }, { type: 'Text', value: ' 1' }],
+        [{ value: '4', type: 'Slot', slot: '4-5' }, { type: 'Text', value: ' 2' }],
+        [{ value: '5', type: 'Slot', slot: '4-5' }, { type: 'Text', value: ' 2' }],
+        [{ value: '4', type: 'Slot', slot: '4-5' }, { type: 'Text', value: ' 3' }],
+        [{ value: '5', type: 'Slot', slot: '4-5' }, { type: 'Text', value: ' 3' }]
+    ];
+
+    test('correctly generates all examles for an intent', () => {
+        const ast = chatito.astFromString(allExample);
+        const defs = chatito.definitionsFromAST(ast);
+        expect(defs).not.toBeUndefined();
+
+        const allExamples = [...chatito.allExamplesGenerator(defs!, defs!.Intent.intent)];
+        expect(allExamples).toStrictEqual(expectedAllExamples);
+    });
+
+    test('correctly generates all examles for a slot', () => {
+        const ast = chatito.astFromString(allExample);
+        const defs = chatito.definitionsFromAST(ast);
+        expect(defs).not.toBeUndefined();
+
+        const allExamples = [...chatito.allExamplesGenerator(defs!, defs!.Slot['4-5'])];
+        expect(allExamples).toStrictEqual([[{ value: '4', type: 'Text' }], [{ value: '5', type: 'Text' }]]);
+    });
+
+    test('correctly picks examle by number', () => {
+        const ast = chatito.astFromString(allExample);
+        const defs = chatito.definitionsFromAST(ast);
+        expect(defs).not.toBeUndefined();
+
+        const sixthOfIntent = chatito.getExampleByNumber(defs!, defs!.Intent.intent, 5);
+        expect(sixthOfIntent).toStrictEqual([{ value: '4', type: 'Slot', slot: '4-5' }, { type: 'Text', value: ' 1' }]);
+
+        const thirdOfFirstAlias = chatito.getExampleByNumber(defs!, defs!.Alias['1-3'], 2);
+        expect(thirdOfFirstAlias).toStrictEqual([{ value: '3', type: 'Text' }]);
+
+        const secondOfFirstSlot = chatito.getExampleByNumber(defs!, defs!.Slot['4-5'], 1);
+        expect(secondOfFirstSlot).toStrictEqual([{ value: '5', type: 'Text' }]);
+
+        const fourthOfSecondAlias = chatito.getExampleByNumber(defs!, defs!.Alias.nested, 3);
+        expect(fourthOfSecondAlias).toStrictEqual([{ value: '5', type: 'Slot', slot: '4-5' }, { type: 'Text', value: ' 1' }]);
+    });
+});
+
+describe('example when training + testing === max combinations', () => {
+    const ex = `
+%[greet]('training': '6', 'testing': '4')
+    ~[phrase1]
+    ~[phrase2]
+
+~[phrase1]
+    1
+    2
+    3
+    4
+    5
+
+~[phrase2]
+    6
+    7
+    8
+    9
+    10
+`;
+
+    test('generates requested amount of examples', async () => {
+        let error = null;
+        let dataset: ThenArg<ReturnType<typeof web.adapter>> | null = null;
+        try {
+            dataset = await web.adapter(ex, null);
+        } catch (e) {
+            error = e;
+        }
+        expect(error).toBeNull();
+        expect(dataset).not.toBeNull();
+        expect(dataset!.training).not.toBeNull();
+        expect(dataset!.training.greet).not.toBeNull();
+        expect(dataset!.training.greet.length).toEqual(6);
+        expect(dataset!.testing).not.toBeNull();
+        expect(dataset!.testing.greet).not.toBeNull();
+        expect(dataset!.testing.greet.length).toEqual(4);
+    });
+});
+
+describe('when duplicates does not allow to produce requested number of examples', () => {
+    const ex = `
+%[greet]('training': '9')
+    ~[phrase1]
+    ~[phrase2]
+
+~[phrase1]
+    1
+    2
+    3
+    4
+    5
+
+~[phrase2]
+    2
+    3
+    4
+    5
+    6
+`;
+    let consoleOutput: string[] = [];
+    const mockedWarn = (output: string) => consoleOutput.push(output);
+    beforeEach(() => {
+        consoleOutput = [];
+        console.warn = mockedWarn;
+    });
+    const originalWarn = console.warn;
+    afterEach(() => (console.warn = originalWarn));
+
+    test('warns and produces 6 examples', async () => {
+        let error = null;
+        let dataset: ThenArg<ReturnType<typeof web.adapter>> | null = null;
+        try {
+            dataset = await web.adapter(ex, null);
+        } catch (e) {
+            error = e;
+        }
+        expect(error).toBeNull();
+        expect(dataset).not.toBeNull();
+        expect(dataset!.training).not.toBeNull();
+        expect(dataset!.training.greet).not.toBeNull();
+        expect(dataset!.training.greet.length).toEqual(6);
+        expect(consoleOutput).toStrictEqual([
+            'Too many duplicates while generating dataset! Looks like we have probably reached ' +
+                'the maximum ammount of possible unique generated examples. The generator has stopped ' +
+                'at 6 examples for intent greet.'
+        ]);
     });
 });
