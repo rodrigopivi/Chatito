@@ -22,6 +22,7 @@ export interface ISentenceTokens {
 export interface ISingleSentence {
     sentence: ISentenceTokens[];
     probability: null | string;
+    cardinality?: number;
 }
 
 export interface IChatitoEntityAST {
@@ -32,6 +33,7 @@ export interface IChatitoEntityAST {
     location?: IASTLocation;
     variation?: string | null;
     args?: { [key: string]: string };
+    cardinality?: number;
 }
 
 export interface IChatitoParser {
@@ -47,7 +49,7 @@ export interface IEntities {
 }
 
 export interface IStatCache {
-    optional: boolean;
+    // optional: boolean;
     // optionalCounts: number;
     // totalCounts: number[];
     counts: IChatitoCache[];

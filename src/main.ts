@@ -29,6 +29,12 @@ export const config: Configuration = {
 const chatito = require('../parser/chatito') as IChatitoParser;
 const chance = new Chance();
 
+/**
+ * Returns the entity key for the Alias/Slot that `token` refers to
+ * @param token Sentence's token
+ */
+const getEntityKey = (token: ISentenceTokens) => (token.variation ? `${token.value}#${token.variation}` : token.value);
+
 const chatitoFormatPostProcess = (data: ISentenceTokens[]) => {
     const arr = data.reduce(
         (accumulator: ISentenceTokens[], next: ISentenceTokens, i, arrShadow) => {
@@ -129,7 +135,7 @@ export const getVariationsFromEntity = async <T>(
     if (!cacheStats) {
         // if the entity is not cache, create an empty cache for it
         const counts: IChatitoCache[] = [];
-        const maxCounts: number[] = []; // calcs the max possible utterancees for each sentence
+        const maxCounts: number[] = ed.inner.map(s => s.cardinality!);
         let probabilityTypeDefined: 'w' | '%' | null = null;
         const definedSentenceProbabilities: Array<number | null> = []; // the posibility operators defined for sentences
         let isEvenDistribution = config.defaultDistribution === 'even';
@@ -140,11 +146,6 @@ export const getVariationsFromEntity = async <T>(
         for (const c of ed.inner) {
             // get counts for each of the sentences inside the entity
             counts.push(new Map());
-            let mxc = utils.maxSentencesForSentence(entities)(c);
-            if (optional) {
-                mxc++;
-            }
-            maxCounts.push(mxc);
             if (c.probability === null) {
                 definedSentenceProbabilities.push(null);
             } else {
@@ -183,14 +184,14 @@ export const getVariationsFromEntity = async <T>(
             sumOfTotalProbabilitiesDefined,
             maxCounts
         );
-        const currentEntityCache: IStatCache = { counts, maxCounts, optional, probabilities };
+        const currentEntityCache: IStatCache = { counts, maxCounts, probabilities };
         cache.set(cacheKey, currentEntityCache);
         cacheStats = cache.get(cacheKey) as IStatCache;
     }
     // NOTE: if an entity has 5 sentences we add one (the optional empty sentence) and get that probability
     const optionalProb = 100 / (cacheStats.probabilities.length + 1);
     let sentenceIndex = chance.weighted(Array.from(cacheStats.probabilities.keys()), cacheStats.probabilities);
-    if (cacheStats.optional && chance.bool({ likelihood: optionalProb })) {
+    if (optional && chance.bool({ likelihood: optionalProb })) {
         sentenceIndex = -1;
     }
     if (sentenceIndex === -1) {
@@ -206,7 +207,7 @@ export const getVariationsFromEntity = async <T>(
         const slotsInSentenceKeys: Set<string> = new Set([]);
         if (t.type === 'Slot' || t.type === 'Alias') {
             const def = entities[t.type];
-            const innerEntityKey = t.variation ? `${t.value}#${t.variation}` : t.value;
+            const innerEntityKey = getEntityKey(t);
             const currentCache = slotsInSentenceKeys.has(innerEntityKey) ? cacheStats.counts[sentenceIndex] : new Map();
             slotsInSentenceKeys.add(innerEntityKey);
             const sentenceVariation = await getVariationsFromEntity(def[innerEntityKey], entities, !!t.opt, currentCache);
@@ -233,6 +234,314 @@ export const getVariationsFromEntity = async <T>(
         }
     }
     return accumulator;
+};
+
+/**
+ * Picks the `combinationNumber`th example amongst all possible `entity` examples.
+ *
+ * @param defs All entities definitions
+ * @param entity Entity to get the example from
+ * @param combinationNumber The number of the example
+ */
+export const getExampleByNumber = (defs: IEntities, entity: IChatitoEntityAST, combinationNumber: number): ISentenceTokens[] => {
+    let lookupNumber = combinationNumber;
+    const sentence = entity.inner.find(s => {
+        if (lookupNumber < s.cardinality!) {
+            return true;
+        }
+        lookupNumber -= s.cardinality!;
+        return false;
+    });
+    if (!sentence) {
+        return [];
+    }
+    let prevCardinality = 1;
+    let prevRemaining = 0;
+    const isSlotDefSentenceWithOnlyOneAlias =
+        entity.type === 'SlotDefinition' && sentence.sentence.length === 1 && sentence.sentence[0].type === 'Alias';
+    const resultTokens = sentence.sentence.reduce(
+        (example, token) => {
+            if (token.type === 'Text') {
+                return example.concat([token]);
+            }
+            if (token.type === 'Slot' || token.type === 'Alias') {
+                let cardinality = token.opt ? 1 : 0;
+                const innerEntity = token.type === 'Alias' ? defs.Alias : defs.Slot;
+                const entityKey = getEntityKey(token);
+                cardinality += innerEntity[entityKey].cardinality!;
+                lookupNumber = (lookupNumber - prevRemaining) / prevCardinality;
+                prevRemaining = lookupNumber % cardinality;
+                prevCardinality = cardinality;
+                if (prevRemaining === 0 && token.opt) {
+                    return example;
+                }
+                const innerNumber = token.opt ? prevRemaining - 1 : prevRemaining;
+                let tokens = getExampleByNumber(defs, innerEntity[entityKey], innerNumber);
+                tokens = chatitoFormatPostProcess(tokens).map(t => {
+                    const ettArgs = innerEntity[entityKey].args;
+                    if (isSlotDefSentenceWithOnlyOneAlias && ettArgs && ettArgs.synonym === 'true') {
+                        t.synonym = token.value;
+                    }
+                    if (token.type === 'Slot') {
+                        if (innerEntity[entityKey].args) {
+                            t.args = innerEntity[entityKey].args;
+                        }
+                        t.value = t.value.trim();
+                        t.type = token.type;
+                        t.slot = token.value;
+                    }
+                    return t;
+                });
+                return example.concat(tokens);
+            }
+            throw Error(`Unknown token type: ${token.type}`);
+        },
+        [] as ISentenceTokens[]
+    );
+    return chatitoFormatPostProcess(resultTokens);
+};
+
+/**
+ * Returns a generator providing every possible combination of entity's examples
+ * including duplicates.
+ *
+ * @param defs All entities definitions
+ * @param entity Entity to get all examples for
+ */
+export function* allExamplesGenerator(defs: IEntities, entity: IChatitoEntityAST) {
+    for (let i = 0; i < entity.cardinality!; i++) {
+        yield getExampleByNumber(defs, entity, i);
+    }
+}
+
+/**
+ * Calculates the cardinality of the `sentence`.
+ * All the entities used in the sentence must already have their cardinalities
+ * calculated.
+ *
+ * @param defs All entities definitions
+ * @param sentence Sentence tokens
+ */
+const getCardinality = (defs: IEntities, sentence: ISentenceTokens[]) => {
+    return sentence.reduce((acc, token) => {
+        if (token.type === 'Text') {
+            return acc;
+        }
+        const entity = token.type === 'Alias' ? defs.Alias : defs.Slot;
+        const entityKey = getEntityKey(token);
+
+        let tokenCardinality = entity[entityKey].cardinality!;
+        if (token.opt) {
+            tokenCardinality += 1;
+        }
+        return acc * tokenCardinality;
+    }, 1);
+};
+
+/**
+ * Calculates the cardinality of the `entity`.
+ * All the entities used in the entity must already have their cardinalities
+ * calculated.
+ *
+ * @param defs All entities definitions
+ * @param entity Entity to calc cardinality for
+ */
+const calcCardinality = (defs: IEntities, entity: IChatitoEntityAST) => {
+    entity.inner.forEach(sentence => {
+        const cardinality = getCardinality(defs, sentence.sentence);
+        sentence.cardinality = cardinality;
+    });
+    entity.cardinality = entity.inner.reduce((acc, sentence) => acc + sentence.cardinality!, 0);
+};
+
+/**
+ * Returns human readable string representing an entity.
+ * Returns the same string for entity definition and it's use in a token.
+ *
+ * @param item Token or Entity definition
+ */
+const getRefKey = (item: IChatitoEntityAST | ISentenceTokens) => {
+    const type = item.type.replace('Definition', '');
+    const key = 'key' in item ? item.key : getEntityKey(item);
+    switch (type) {
+        case 'Intent':
+            return `%[${key}]`;
+        case 'Alias':
+            return `~[${key}]`;
+        case 'Slot':
+            return `@[${key}]`;
+
+        default:
+            return `(${key})`;
+    }
+};
+
+/**
+ * Returns true if the `entity` has any entity with cardinality not yet being
+ * calculated.
+ * Also populates `refs` map.
+ *
+ * @param defs All entities definitions
+ * @param entity An Entity
+ * @param refs A map of entities references
+ */
+const hasTokenWithoutCardinality = (defs: IEntities, entity: IChatitoEntityAST, refs: { [key: string]: Set<string> }) => {
+    const parentKey = getRefKey(entity);
+    return entity.inner.some(sentence =>
+        sentence.sentence.some(token => {
+            if (token.type === 'Text') {
+                return false;
+            }
+            const entityKey = getEntityKey(token);
+            const refKey = getRefKey(token);
+            if (refKey in refs) {
+                refs[refKey].add(parentKey);
+            } else {
+                refs[refKey] = new Set([parentKey]);
+            }
+            if (!defs[token.type][entityKey]) {
+                throw new Error(`${token.type} not defined: ${entityKey}`);
+            }
+            return defs[token.type][entityKey].cardinality === undefined;
+        })
+    );
+};
+
+/**
+ * Throws an error showing loop path if there is any in entities references (`refs`)
+ * starting with `path` path.
+ *
+ * @param path Current path
+ * @param refs Entities references map
+ */
+const checkLoopIn = (path: string[], refs: { [key: string]: Set<string> }) => {
+    const last = path[path.length - 1];
+    if (refs[last]) {
+        for (const parent of refs[last]) {
+            if (parent === path[0]) {
+                const loop = path.concat([parent]).reverse();
+                throw new Error(`You have a circular nesting: ${loop.join(' -> ')}. Infinite loop prevented.`);
+            } else {
+                checkLoopIn(path.concat([parent]), refs);
+            }
+        }
+    }
+};
+
+/**
+ * Throws an error showing loop path if there is any in entities references (`refs`)
+ *
+ * @param refs Entities references map
+ */
+const checkLoop = (refs: { [key: string]: Set<string> }) => {
+    for (const key of Object.keys(refs)) {
+        const path = [key];
+        checkLoopIn(path, refs);
+    }
+};
+
+/**
+ * Throws an error showing slots nesting path if there is any
+ * in the entitiesreferences (`refs`) starting with `path` path.
+ *
+ * @param path Current path
+ * @param refs Entities references map
+ */
+const findNestedSlots = (path: string[], refs: { [key: string]: Set<string> }) => {
+    const last = path[path.length - 1];
+    if (refs[last]) {
+        for (const parent of refs[last]) {
+            const firstIndex = path.findIndex(item => item.startsWith('@'));
+            if (firstIndex !== -1 && parent.startsWith('@')) {
+                const slotsPath = path
+                    .slice(firstIndex)
+                    .reverse()
+                    .join(' -> ');
+                throw new Error(`You have nested slots: ${parent} -> ${slotsPath}. A slot can't reference other slot.`);
+            } else {
+                findNestedSlots(path.concat([parent]), refs);
+            }
+        }
+    }
+};
+
+/**
+ * Throws an error showing slots nesting path if there is any
+ * in the entitiesreferences (`refs`).
+ *
+ * @param refs Entities references map
+ */
+const checkNestedSlots = (refs: { [key: string]: Set<string> }) => {
+    for (const key of Object.keys(refs)) {
+        const path = [key];
+        findNestedSlots(path, refs);
+    }
+};
+
+/**
+ * Calculates cardinalities for all entities.
+ * Also checks for nested slots.
+ *
+ * @param defs All entities definitions
+ */
+const preCalcCardinality = (defs: IEntities) => {
+    // cycle through uncalculated:
+    const uncalced = {
+        Intent: [] as string[],
+        Alias: [] as string[],
+        Slot: [] as string[]
+    };
+    const refs: { [key: string]: Set<string> } = {};
+    let totalUncalced = 0;
+    let lastUncalced = -1;
+    do {
+        totalUncalced = 0;
+        for (const type of Object.keys(uncalced) as Array<keyof typeof uncalced>) {
+            uncalced[type] = Object.keys(defs[type]).filter(key => defs[type][key].cardinality === undefined);
+            uncalced[type].forEach(key => {
+                if (!hasTokenWithoutCardinality(defs, defs[type][key], refs)) {
+                    calcCardinality(defs, defs[type][key]);
+                } else {
+                    totalUncalced += 1;
+                }
+            });
+        }
+        if (lastUncalced === totalUncalced) {
+            checkLoop(refs);
+        }
+        lastUncalced = totalUncalced;
+    } while (totalUncalced > 0);
+    checkNestedSlots(refs);
+};
+
+/**
+ * Adds missing alias definitions.
+ * When alias is used in sentence tokens but not defined.
+ *
+ * @param defs All entities definitions
+ */
+const addMissingAliases = (defs: IEntities) => {
+    const aliases = new Set<string>();
+    for (const entities of [defs.Alias, defs.Slot, defs.Intent]) {
+        for (const key of Object.keys(entities)) {
+            entities[key].inner.forEach(sentence => {
+                sentence.sentence.forEach(token => {
+                    if (token.type === 'Alias') {
+                        aliases.add(token.value);
+                    }
+                });
+            });
+        }
+    }
+    for (const alias of aliases) {
+        if (!defs.Alias[alias]) {
+            defs.Alias[alias] = {
+                inner: [{ sentence: [{ value: alias, type: 'Text' }], probability: null }],
+                key: alias,
+                type: 'AliasDefinition'
+            };
+        }
+    }
 };
 
 export type IFileImporter = (
@@ -302,6 +611,8 @@ export const definitionsFromAST = (initialAst: IChatitoEntityAST[], importHandle
         }
         entity[odKey] = od;
     });
+    addMissingAliases(operatorDefinitions);
+    preCalcCardinality(operatorDefinitions);
     return operatorDefinitions;
 };
 
@@ -321,7 +632,7 @@ export const datasetFromAST = async (
     }
     for (const intentKey of intentKeys) {
         // and for all tokens inside the sentence
-        const maxPossibleCombinations = utils.maxSentencesForEntity(operatorDefinitions.Intent[intentKey], operatorDefinitions);
+        const maxPossibleCombinations = operatorDefinitions.Intent[intentKey].cardinality!;
         let maxIntentExamples = maxPossibleCombinations; // counter that will change
         const entityArgs = operatorDefinitions.Intent[intentKey].args;
         // by default if no training or testing arguments are declared, all go to training
@@ -344,10 +655,12 @@ export const datasetFromAST = async (
             }
             let intentMax = trainingN + testingN;
             if (intentMax > maxIntentExamples) {
-                intentMax = maxIntentExamples;
                 logger.warn(
-                    `Can't generate ${intentMax} examples. Using the maximum possible combinations: ${maxIntentExamples}. NOTE: Using the maximum leads to overfitting.`
+                    `Can't generate ${intentMax} examples. ` +
+                        `Using the maximum possible combinations: ${maxIntentExamples}. ` +
+                        'NOTE: Using the maximum leads to overfitting.'
                 );
+                intentMax = maxIntentExamples;
             } else if (intentMax < maxIntentExamples) {
                 maxIntentExamples = intentMax;
             }
@@ -355,6 +668,29 @@ export const datasetFromAST = async (
         const maxEx = maxIntentExamples;
         const globalCache: IChatitoCache = new Map();
         const collitionsCache: { [id: string]: boolean } = {};
+        if (maxIntentExamples >= maxPossibleCombinations) {
+            for (const utterance of allExamplesGenerator(operatorDefinitions, operatorDefinitions.Intent[intentKey])) {
+                const utteranceString = utterance.reduce((p, n) => p + n.value, '');
+                if (!collitionsCache[utteranceString]) {
+                    collitionsCache[utteranceString] = true;
+                    const completedTraining = generatedTrainingExamplesCount >= trainingN;
+                    const completedTesting = generatedTestingExamplesCount >= testingN;
+                    let isTrainingExample = !completedTraining;
+                    if (!completedTraining && !completedTesting) {
+                        const trainingLeft = trainingN - generatedTrainingExamplesCount;
+                        const testingLeft = testingN - generatedTestingExamplesCount;
+                        isTrainingExample = Math.random() < trainingLeft / (trainingLeft + testingLeft);
+                    }
+                    writterFn(utterance, intentKey, isTrainingExample);
+                    if (isTrainingExample) {
+                        generatedTrainingExamplesCount++;
+                    } else {
+                        generatedTestingExamplesCount++;
+                    }
+                }
+            }
+            continue;
+        }
         let duplicatesCounter = 0;
         while (maxIntentExamples) {
             const intentSentence = await getVariationsFromEntity(
@@ -394,7 +730,7 @@ export const datasetFromAST = async (
                 ) {
                     // prevent cases where duplicates are part of the entity definitions
                     let m = `Too many duplicates while generating dataset! Looks like we have probably reached `;
-                    m += `the maximun ammount of possible unique generated examples. `;
+                    m += `the maximum ammount of possible unique generated examples. `;
                     m += `The generator has stopped at ${maxEx - maxIntentExamples} examples for intent ${intentKey}.`;
                     logger.warn(m);
                     maxIntentExamples = 0;
