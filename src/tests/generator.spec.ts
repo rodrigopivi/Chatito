@@ -67,12 +67,14 @@ describe('example with max training defined higher than the maximum posibilities
 `;
     let consoleOutput: string[] = [];
     const mockedWarn = (output: string) => consoleOutput.push(output);
+    // tslint:disable: no-console
     beforeEach(() => {
         consoleOutput = [];
         console.warn = mockedWarn;
     });
     const originalWarn = console.warn;
     afterEach(() => (console.warn = originalWarn));
+    // tslint:enable: no-console
 
     test('warns and produces 1 example', async () => {
         let error = null;
@@ -652,7 +654,9 @@ describe('example with slots nest inside slots', () => {
         } catch (e) {
             error = e;
         }
-        expect(error.toString()).toEqual('Error: You have nested slots: @[slot] -> ~[aliases] -> @[slot2]. A slot can\'t reference other slot.');
+        expect(error.toString()).toEqual(
+            "Error: You have nested slots: @[slot] -> ~[aliases] -> @[slot2]. A slot can't reference other slot."
+        );
     });
 });
 
@@ -825,7 +829,7 @@ describe('example wih sentences defining percentual probabilities', () => {
             }
         });
         expect(sentence1Count).toBeGreaterThanOrEqual(4);
-        expect(sentence2Count).toBeGreaterThan(2);
+        expect(sentence2Count).toBeGreaterThanOrEqual(2);
         expect(sentence3Count).toBeLessThan(6);
         expect(sentence4Count).toBeGreaterThanOrEqual(1);
     });
@@ -1452,6 +1456,9 @@ describe('generating all the examples', () => {
 
         const fourthOfSecondAlias = chatito.getExampleByNumber(defs!, defs!.Alias.nested, 3);
         expect(fourthOfSecondAlias).toStrictEqual([{ value: '5', type: 'Slot', slot: '4-5' }, { type: 'Text', value: ' 1' }]);
+
+        const exceedsLimit = chatito.getExampleByNumber(defs!, defs!.Alias.nested, 100);
+        expect(exceedsLimit).toStrictEqual([]);
     });
 });
 
@@ -1519,11 +1526,12 @@ describe('when duplicates does not allow to produce requested number of examples
     const mockedWarn = (output: string) => consoleOutput.push(output);
     beforeEach(() => {
         consoleOutput = [];
+        // tslint:disable: no-console
         console.warn = mockedWarn;
     });
     const originalWarn = console.warn;
     afterEach(() => (console.warn = originalWarn));
-
+    // tslint:enable: no-console
     test('warns and produces 6 examples', async () => {
         let error = null;
         let dataset: ThenArg<ReturnType<typeof web.adapter>> | null = null;
@@ -1543,4 +1551,116 @@ describe('when duplicates does not allow to produce requested number of examples
                 'at 6 examples for intent greet.'
         ]);
     });
+});
+
+test('correctly generates all possible combinations using custom nested import', async () => {
+    let error = null;
+    const dataset: { [key: string]: ISentenceTokens[][] } = {};
+    const writer: IUtteranceWriter = (u, k, n) => {
+        if (!dataset[k]) {
+            dataset[k] = [];
+        }
+        dataset[k].push(u);
+    };
+    const example1 = `
+import ./imp1.chatito
+
+%[intent]
+    s1 ~[imp1?]
+    s2 ~[imp1?]
+`;
+    const imp1 = `
+import ./imp2.chatito
+
+~[imp1]
+    imp1-1 ~[imp2?]
+    imp1-2 ~[imp2?]
+`;
+    const imp2 = `
+~[imp2]
+    imp2-1
+    imp2-2
+`;
+    const importFile = (startPath: string, endPath: string) => {
+        const dsl = endPath === './imp1.chatito' ? imp1 : imp2;
+        return { filePath: '', dsl };
+    };
+    try {
+        await chatito.datasetFromString(example1, writer, importFile, '');
+    } catch (e) {
+        error = e;
+    }
+    expect(error).toBeNull();
+    expect(dataset).not.toBeNull();
+    expect(dataset.intent).not.toBeNull();
+    expect(dataset.intent.length).toEqual(14);
+});
+
+test('example importing malformed dsl', async () => {
+    let error = null;
+    const dataset: { [key: string]: ISentenceTokens[][] } = {};
+    const writer: IUtteranceWriter = (u, k, n) => {
+        if (!dataset[k]) {
+            dataset[k] = [];
+        }
+        dataset[k].push(u);
+    };
+    const example1 = `
+import ./imp1.chatito
+%[intent]
+    s1 ~[imp1?]
+    s2 ~[imp1?]
+`;
+    const imp1 = `
+bad[imp1]
+    imp1-1
+    imp1-2
+`;
+    const importFile = () => ({ filePath: '', dsl: imp1 });
+    try {
+        await chatito.datasetFromString(example1, writer, importFile, '');
+    } catch (e) {
+        error = e;
+    }
+    expect(error).not.toBeNull();
+    expect(error.toString()).toContain('Failed importing ./imp1.chatito.');
+});
+
+test('example with slot with alias and custom tagging', async () => {
+    let error = null;
+    const dataset: { [key: string]: ISentenceTokens[][] } = {};
+    const writer: IUtteranceWriter = (u, k, n) => {
+        if (!dataset[k]) {
+            dataset[k] = [];
+        }
+        dataset[k].push(u);
+    };
+    const example1 = `
+%[findByCityAndCategory]('training': '5')
+    ~[nearby] @[city]
+~[ny]('synonym': 'true')
+    ny
+    new york
+~[sf]('synonym': 'true')
+    sf
+    san francisco
+~[atl]('synonym': 'true')
+    atl
+    atlanta
+@[city]('entity': 'location')
+    ~[ny]
+    ~[sf]
+    ~[atl]
+~[nearby]
+    nearby
+`;
+    try {
+        await chatito.datasetFromString(example1, writer);
+    } catch (e) {
+        error = e;
+    }
+    expect(error).toBeNull();
+    expect(dataset).not.toBeNull();
+    expect(dataset.findByCityAndCategory).not.toBeNull();
+    expect(dataset.findByCityAndCategory.length).toEqual(5);
 });

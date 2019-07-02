@@ -61,7 +61,7 @@ export const CodeStyles = styled('div')`
         }
     }
     .token.imports {
-        color: #F7717D;
+        color: #f7717d;
     }
     .token.comments {
         color: #999;
@@ -76,7 +76,7 @@ export const CodeStyles = styled('div')`
         color: #a0e7fb;
     }
     .token.probability {
-        color: #00F0B5;
+        color: #00f0b5;
     }
     .token.slot {
         color: #ffaf56;

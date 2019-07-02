@@ -9,7 +9,6 @@ import {
     IStatCache,
     IUtteranceWriter
 } from './types';
-import * as utils from './utils';
 
 const logger = console;
 
@@ -190,11 +189,8 @@ export const getVariationsFromEntity = async <T>(
     }
     // NOTE: if an entity has 5 sentences we add one (the optional empty sentence) and get that probability
     const optionalProb = 100 / (cacheStats.probabilities.length + 1);
-    let sentenceIndex = chance.weighted(Array.from(cacheStats.probabilities.keys()), cacheStats.probabilities);
+    const sentenceIndex = chance.weighted(Array.from(cacheStats.probabilities.keys()), cacheStats.probabilities);
     if (optional && chance.bool({ likelihood: optionalProb })) {
-        sentenceIndex = -1;
-    }
-    if (sentenceIndex === -1) {
         return [];
     }
     const sentence = ed.inner[sentenceIndex].sentence;
