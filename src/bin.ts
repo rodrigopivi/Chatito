@@ -61,10 +61,10 @@ const streamedAdapterAccumulator = (format: 'flair', outputPath: string) => {
     const trainingNerFilePath = path.resolve(outputPath, `ner_${trainingFileName}`);
     const testingNerFilePath = path.resolve(outputPath, `ner_${testingFileName}`);
     // write streams
-    const trainClassification = fs.createWriteStream(trainingClassificationFilePath, { flags: 'w' });
-    const testClassification = fs.createWriteStream(testingClassificationFilePath, { flags: 'w' });
-    const trainNER = fs.createWriteStream(trainingNerFilePath, { flags: 'w' });
-    const testNER = fs.createWriteStream(testingNerFilePath, { flags: 'w' });
+    const trainClassification = fs.createWriteStream(trainingClassificationFilePath, { flags: 'a' });
+    const testClassification = fs.createWriteStream(testingClassificationFilePath, { flags: 'a' });
+    const trainNER = fs.createWriteStream(trainingNerFilePath, { flags: 'a' });
+    const testNER = fs.createWriteStream(testingNerFilePath, { flags: 'a' });
     trainClassification.on('close', () => logger.log('Train classification dataset done!'));
     testClassification.on('close', () => logger.log('Test classification dataset done!'));
     trainNER.on('close', () => logger.log('Test NER dataset done!'));
