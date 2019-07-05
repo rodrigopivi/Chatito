@@ -28,7 +28,8 @@ interface IEditorState {
     adapterOptions: any;
     currentAdapter: 'default' | 'rasa' | 'snips' | 'luis';
     useCustomOptions: boolean;
-    frequencyDistribution: 'regular' | 'even';
+    frequencyDistribution: chatito.distributionType;
+    autoAliases: chatito.autoAliasesType;
 }
 
 type IDataset = webAdapter.IDefaultDataset | snipsAdapter.ISnipsDataset | rasaAdapter.IRasaDataset | luisAdapter.ILuisDataset;
@@ -53,7 +54,8 @@ export default class Editor extends React.Component<{}, IEditorState> {
         adapterOptions: null,
         currentAdapter: 'default',
         useCustomOptions: false,
-        frequencyDistribution: 'regular'
+        frequencyDistribution: 'regular',
+        autoAliases: 'allow'
     };
     private tabsContainer = React.createRef() as React.RefObject<HTMLDivElement>;
     private codeflask = null;
@@ -165,7 +167,7 @@ export default class Editor extends React.Component<{}, IEditorState> {
                             </select>
                         </es.SelectWrapper>
                     </es.DrawerFormField>
-                    <es.DrawerFormField style={{ borderRight: '1px solid #ccc' }}>
+                    <es.DrawerFormField>
                         <label htmlFor="distributionSelect">Default distribution: </label>
                         <es.SelectWrapper>
                             <select
@@ -179,7 +181,9 @@ export default class Editor extends React.Component<{}, IEditorState> {
                             </select>
                         </es.SelectWrapper>
                     </es.DrawerFormField>
-                    <es.DrawerFormField>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                    <es.DrawerFormField style={{ borderRight: '1px solid #ccc' }}>
                         <es.CheckboxWrapper>
                             <label>
                                 <input
@@ -190,6 +194,21 @@ export default class Editor extends React.Component<{}, IEditorState> {
                                 Use custom options
                             </label>
                         </es.CheckboxWrapper>
+                    </es.DrawerFormField>
+                    <es.DrawerFormField>
+                        <label htmlFor="autoAliasesSelect">Auto aliases: </label>
+                        <es.SelectWrapper>
+                            <select
+                                id="autoAliasesSelect"
+                                name="autoAliasesSelect"
+                                onChange={this.onAutoAliasesChange}
+                                value={this.state.autoAliases}
+                            >
+                                <option value="allow">Allow</option>
+                                <option value="warn">Warn (in console)</option>
+                                <option value="restrict">Retrict</option>
+                            </select>
+                        </es.SelectWrapper>
                     </es.DrawerFormField>
                 </div>
                 <div style={{ textAlign: 'center', fontSize: 13, maxWidth: '80%', margin: '1rem auto' }}>
@@ -303,6 +322,18 @@ export default class Editor extends React.Component<{}, IEditorState> {
         );
     };
 
+    private onAutoAliasesChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        if ((chatito.VALID_AUTO_ALIASES as readonly string[]).includes(e.target.value)) {
+            this.setState(
+                {
+                    autoAliases: e.target.value as chatito.autoAliasesType,
+                    dataset: null
+                },
+                () => this.saveToLocalStorage(false, true, true)
+            );
+        }
+    };
+
     private onEditAdapterOptions = changes => {
         if (changes && changes.updated_src) {
             this.setState({ adapterOptions: changes.updated_src }, () => {
@@ -355,6 +386,7 @@ export default class Editor extends React.Component<{}, IEditorState> {
             if (saveAdapterOptions) {
                 localStorage.setItem('___adapterOptions', this.state.useCustomOptions ? JSON.stringify(this.state.adapterOptions) : '');
                 localStorage.setItem('___defaultDistribution', this.state.frequencyDistribution);
+                localStorage.setItem('___autoAliases', this.state.autoAliases);
             }
             if (saveCurrentAdapter) {
                 localStorage.setItem('___currentAdapter', this.state.currentAdapter);
@@ -384,11 +416,12 @@ export default class Editor extends React.Component<{}, IEditorState> {
 
     private loadFromLocalStorage = (cb: () => void) => {
         if (window && localStorage) {
-            const newState: any = {};
+            const newState: IEditorState = this.state;
             const localTabs = this.loadFromLocalIfPresent('___tabs', true);
             const localAdapterOptions = this.loadFromLocalIfPresent('___adapterOptions', true);
             const localCurrentAdapter = this.loadFromLocalIfPresent('___currentAdapter', false);
-            const localDefaultDistribution: 'regular' | 'even' | undefined = this.loadFromLocalIfPresent('___defaultDistribution', false);
+            const localDefaultDistribution: string | undefined = this.loadFromLocalIfPresent('___defaultDistribution', false);
+            const localAutoAliases: string | undefined = this.loadFromLocalIfPresent('___autoAliases', false);
             this.tabs = localTabs ? localTabs : tabs;
             if (localAdapterOptions) {
                 newState.adapterOptions = localAdapterOptions;
@@ -397,8 +430,11 @@ export default class Editor extends React.Component<{}, IEditorState> {
             if (localCurrentAdapter) {
                 newState.currentAdapter = localCurrentAdapter;
             }
-            if (localDefaultDistribution) {
-                newState.frequencyDistribution = localDefaultDistribution;
+            if (localDefaultDistribution && (chatito.VALID_DISTRIBUTIONS as readonly string[]).includes(localDefaultDistribution)) {
+                newState.frequencyDistribution = localDefaultDistribution as chatito.distributionType;
+            }
+            if (localAutoAliases && (chatito.VALID_AUTO_ALIASES as readonly string[]).includes(localAutoAliases)) {
+                newState.autoAliases = localAutoAliases as chatito.autoAliasesType;
             }
             this.setState(newState, cb);
         } else {
@@ -494,6 +530,7 @@ export default class Editor extends React.Component<{}, IEditorState> {
             return;
         }
         chatito.config.defaultDistribution = this.state.frequencyDistribution;
+        chatito.config.autoAliases = this.state.autoAliases;
         for (const [i, tab] of this.tabs.entries()) {
             try {
                 if (dataset === null && this.state.useCustomOptions && this.state.adapterOptions) {

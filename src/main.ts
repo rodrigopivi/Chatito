@@ -15,9 +15,12 @@ const logger = console;
 export const VALID_DISTRIBUTIONS = ['regular', 'even'] as const;
 export const VALID_AUTO_ALIASES = ['allow', 'warn', 'restrict'] as const;
 
+export type distributionType = typeof VALID_DISTRIBUTIONS[number];
+export type autoAliasesType = typeof VALID_AUTO_ALIASES[number];
+
 export interface IConfigOptions {
-    defaultDistribution?: typeof VALID_DISTRIBUTIONS[number];
-    autoAliases: typeof VALID_AUTO_ALIASES[number];
+    defaultDistribution?: distributionType;
+    autoAliases?: autoAliasesType;
 }
 
 type Configuration = Required<IConfigOptions>;
