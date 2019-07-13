@@ -1664,3 +1664,84 @@ test('example with slot with alias and custom tagging', async () => {
     expect(dataset.findByCityAndCategory).not.toBeNull();
     expect(dataset.findByCityAndCategory.length).toEqual(5);
 });
+
+describe('autoAliases config', () => {
+    const example = `
+%[intent]
+    some ~[missing alias#variation?]
+`;
+    const generated = [
+        [
+            {
+                type: 'Text',
+                value: 'some'
+            }
+        ],
+        [
+            {
+                type: 'Text',
+                value: 'some missing alias#variation'
+            }
+        ]
+    ];
+
+    test('with default value', async () => {
+        let error = null;
+        const dataset: { [key: string]: ISentenceTokens[][] } = {};
+        const writer: IUtteranceWriter = (u, k, n) => {
+            if (!dataset[k]) {
+                dataset[k] = [];
+            }
+            dataset[k].push(u);
+        };
+        try {
+            await chatito.datasetFromString(example, writer);
+        } catch (e) {
+            error = e;
+        }
+        expect(error).toBeNull();
+        expect(dataset.intent).toStrictEqual(generated);
+    });
+
+    test('with warn option', async () => {
+        let error = null;
+        const dataset: { [key: string]: ISentenceTokens[][] } = {};
+        const writer: IUtteranceWriter = (u, k, n) => {
+            if (!dataset[k]) {
+                dataset[k] = [];
+            }
+            dataset[k].push(u);
+        };
+        const consoleOutput: string[] = [];
+        const mockedWarn = (output: string) => consoleOutput.push(output);
+        // tslint:disable: no-console
+        const originalWarn = console.warn;
+        try {
+            console.warn = mockedWarn;
+            chatito.config.autoAliases = 'warn';
+            await chatito.datasetFromString(example, writer);
+        } catch (e) {
+            error = e;
+        } finally {
+            console.warn = originalWarn;
+            chatito.config.autoAliases = 'allow';
+        }
+        // tslint:enable: no-console
+        expect(error).toBeNull();
+        expect(dataset.intent).toStrictEqual(generated);
+        expect(consoleOutput).toStrictEqual(["WARNING! Auto alias creation: 'missing alias#variation'"]);
+    });
+
+    test('with restrict option', async () => {
+        let error = null;
+        try {
+            chatito.config.autoAliases = 'restrict';
+            await chatito.datasetFromString(example, () => null);
+        } catch (e) {
+            error = e;
+        } finally {
+            chatito.config.autoAliases = 'allow';
+        }
+        expect(error.toString()).toEqual('Error: Alias not defined: missing alias#variation');
+    });
+});

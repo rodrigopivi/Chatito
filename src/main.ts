@@ -13,15 +13,21 @@ import {
 const logger = console;
 
 export const VALID_DISTRIBUTIONS = ['regular', 'even'] as const;
+export const VALID_AUTO_ALIASES = ['allow', 'warn', 'restrict'] as const;
+
+export type distributionType = typeof VALID_DISTRIBUTIONS[number];
+export type autoAliasesType = typeof VALID_AUTO_ALIASES[number];
 
 export interface IConfigOptions {
-    defaultDistribution?: typeof VALID_DISTRIBUTIONS[number];
+    defaultDistribution?: distributionType;
+    autoAliases?: autoAliasesType;
 }
 
 type Configuration = Required<IConfigOptions>;
 
 export const config: Configuration = {
-    defaultDistribution: 'regular'
+    defaultDistribution: 'regular',
+    autoAliases: 'allow'
 };
 
 // tslint:disable-next-line:no-var-requires
@@ -531,6 +537,10 @@ const addMissingAliases = (defs: IEntities) => {
     }
     for (const alias of aliases) {
         if (!defs.Alias[alias]) {
+            if (config.autoAliases === 'warn') {
+                // tslint:disable-next-line: no-console
+                console.warn(`WARNING! Auto alias creation: '${alias}'`);
+            }
             defs.Alias[alias] = {
                 inner: [{ sentence: [{ value: alias, type: 'Text' }], probability: null }],
                 key: alias,
@@ -607,7 +617,9 @@ export const definitionsFromAST = (initialAst: IChatitoEntityAST[], importHandle
         }
         entity[odKey] = od;
     });
-    addMissingAliases(operatorDefinitions);
+    if (config.autoAliases !== 'restrict') {
+        addMissingAliases(operatorDefinitions);
+    }
     preCalcCardinality(operatorDefinitions);
     return operatorDefinitions;
 };

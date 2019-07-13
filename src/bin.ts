@@ -6,7 +6,7 @@ import * as luis from './adapters/luis';
 import * as rasa from './adapters/rasa';
 import * as snips from './adapters/snips';
 import * as web from './adapters/web';
-import { config, VALID_DISTRIBUTIONS } from './main';
+import { config, VALID_AUTO_ALIASES, VALID_DISTRIBUTIONS } from './main';
 import * as utils from './utils';
 
 // tslint:disable-next-line:no-var-requires
@@ -127,6 +127,25 @@ const adapterAccumulator = (format: IValidFormat, outputPath: string, formatOpti
     };
 };
 
+const validateArgs = () => {
+    if (argv.defaultDistribution) {
+        if (VALID_DISTRIBUTIONS.includes(argv.defaultDistribution)) {
+            config.defaultDistribution = argv.defaultDistribution;
+        } else {
+            throw new Error(
+                `Unknow defaultDistribution value: '${argv.defaultDistribution}'. Valid values are: ${VALID_DISTRIBUTIONS.join(', ')}.`
+            );
+        }
+    }
+    if (argv.autoAliases) {
+        if (VALID_AUTO_ALIASES.includes(argv.autoAliases)) {
+            config.autoAliases = argv.autoAliases;
+        } else {
+            throw new Error(`Unknow autoAliases value: '${argv.autoAliases}'. Valid values are: ${VALID_AUTO_ALIASES.join(', ')}.`);
+        }
+    }
+};
+
 (async () => {
     if (!argv._ || !argv._.length) {
         logger.error('Invalid chatito file.');
@@ -139,11 +158,9 @@ const adapterAccumulator = (format: IValidFormat, outputPath: string, formatOpti
         process.exit(1);
     }
     const outputPath = argv.outputPath || process.cwd();
-    if (argv.defaultDistribution && VALID_DISTRIBUTIONS.indexOf(argv.defaultDistribution) !== -1) {
-        config.defaultDistribution = argv.defaultDistribution;
-    }
-    logger.log(`NOTE: Using ${config.defaultDistribution} as default frequency distribution.`);
     try {
+        validateArgs();
+        logger.log(`NOTE: Using ${config.defaultDistribution} as default frequency distribution.`);
         // parse the formatOptions argument
         let formatOptions = null;
         if (argv.formatOptions) {
