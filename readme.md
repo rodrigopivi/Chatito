@@ -124,6 +124,8 @@ npx chatito <pathToFileOrDirectory> --format=<format> --formatOptions=<formatOpt
 - `<testingFileName>` Optional. The name of the generated testing dataset file. Do not forget to add a .json extension at the end. Uses `<format>`_dataset_testing.json as default file name.
 - `<defaultDistribution>` Optional. The default frequency distribution if not defined at the entity level. Defaults to `regular` and can be set to `even`.
 
+- `<autoAliases>` Optional. The generaor behavior when finding an undefined alias. Valid opions are `allow`, `warn`, `restrict`. Defauls to 'allow'.
+
 ### Notes to prevent overfitting
 
 [Overfitting](https://en.wikipedia.org/wiki/Overfitting) is a problem that can be prevented if we use Chatito correctly. The idea behind this tool, is to have an intersection between data augmentation and a probabilistic description of possible sentences combinations. It is not intended to generate deterministic datasets, you should avoid generating all possible combinations.

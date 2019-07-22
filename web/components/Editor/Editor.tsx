@@ -484,9 +484,7 @@ export default class Editor extends React.Component<{}, IEditorState> {
             const intentsWithoutLimit = ast.filter(entity => entity.type === 'IntentDefinition' && entity.args === null);
             if (intentsWithoutLimit.length) {
                 return {
-                    warning: `Warning: Limit the number of generated examples for intents. E.g.: %[${
-                        intentsWithoutLimit[0].key
-                    }]('training': '100')`
+                    warning: `Warning: Limit the number of generated examples for intents. E.g.: %[${intentsWithoutLimit[0].key}]('training': '100')`
                 };
             }
             return null;

@@ -155,7 +155,7 @@ Nesting entities: Sentences defined inside a slot can only reference alias entit
 
 #### 2.1.3 - Alias
 The alias entity is defined by the `~[` symbols at the start of a line, following by the name of the alias and `]`.
-Alias are just variations of a word and does not generate any tag. By default if an alias is referenced but not defined (like in the next example for `how are you`, it just uses the alias key name, this is useful for making a word optional but not having to add the extra lines of code defining a new alias. e.g.:
+Alias are just variations of a word and does not generate any tag. By default if an alias is referenced but not defined (like in the next example for `how are you`, it just uses the alias key name, this is useful for making a word optional but not having to add the extra lines of code defining a new alias. (This 'auto alias' behavior can be configurable) e.g.:
 
 ```
 %[greet]
