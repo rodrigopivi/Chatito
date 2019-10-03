@@ -1,6 +1,6 @@
 {
   "name": "chatito",
-  "version": "2.3.4",
+  "version": "2.3.5",
   "description": "Generate training datasets for NLU chatbots using a simple DSL",
   "bin": {
     "chatito": "./dist/bin.js"
@@ -48,9 +48,8 @@
   "license": "MIT",
   "homepage": "https://github.com/rodrigopivi/Chatito",
   "dependencies": {
-    "chance": "1.0.18",
-    "minimist": "1.2.0",
-    "wink-tokenizer": "5.2.1"
+    "chance": "1.1.0",
+    "minimist": "1.2.0"
   },
   "jest": {
     "transform": {
@@ -74,43 +73,42 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "7.4.5",
-    "@types/chance": "1.0.5",
+    "@babel/core": "7.6.2",
+    "@types/chance": "1.0.6",
     "@types/file-saver": "2.0.1",
-    "@types/jest": "24.0.15",
-    "@types/node": "12.0.10",
-    "@types/react": "16.8.22",
-    "@types/react-dom": "16.8.4",
-    "@types/react-helmet": "5.0.8",
-    "@types/react-router-dom": "4.3.4",
-    "@types/wink-tokenizer": "4.0.0",
+    "@types/jest": "24.0.18",
+    "@types/node": "12.7.9",
+    "@types/react": "16.9.4",
+    "@types/react-dom": "16.9.1",
+    "@types/react-helmet": "5.0.11",
+    "@types/react-router-dom": "5.1.0",
     "babel-loader": "8.0.6",
-    "babel-plugin-import": "1.12.0",
+    "babel-plugin-import": "1.12.2",
     "babel-plugin-styled-components": "1.10.6",
     "codeflask": "1.4.1",
-    "core-js": "3.1.4",
+    "core-js": "3.2.1",
     "file-saver": "2.0.2",
     "gatsby": "2.12.0",
     "gatsby-link": "2.2.0",
     "gatsby-plugin-react-helmet": "3.1.0",
     "gatsby-plugin-styled-components": "3.1.0",
     "gatsby-plugin-typescript": "2.1.0",
-    "gh-pages": "2.0.1",
-    "jest": "24.8.0",
+    "gh-pages": "2.1.1",
+    "jest": "24.9.0",
     "pegjs": "0.10.0",
     "prettier": "1.18.2",
-    "react": "16.8.6",
-    "react-dom": "16.8.6",
+    "react": "16.10.1",
+    "react-dom": "16.10.1",
     "react-helmet": "5.2.1",
     "react-json-view": "1.19.1",
-    "react-router-dom": "5.0.1",
-    "regenerator-runtime": "0.13.2",
-    "styled-components": "4.3.2",
-    "ts-jest": "24.0.2",
-    "ts-node": "8.3.0",
-    "tslint": "5.18.0",
+    "react-router-dom": "5.1.2",
+    "regenerator-runtime": "0.13.3",
+    "styled-components": "4.4.0",
+    "ts-jest": "24.1.0",
+    "ts-node": "8.4.1",
+    "tslint": "5.20.0",
     "tslint-config-prettier": "1.18.0",
     "tslint-plugin-prettier": "2.0.1",
-    "typescript": "3.5.2"
+    "typescript": "3.6.3"
   }
 }

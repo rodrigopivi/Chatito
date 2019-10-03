@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Helmet from 'react-helmet';
+import { Helmet } from 'react-helmet';
 import Editor from '../components/Editor/Editor';
 import { Global, Header } from '../components/globalStyles';
 import Logo from '../components/Logo';

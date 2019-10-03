@@ -93,7 +93,7 @@ describe('example with max training defined higher than the maximum posibilities
         expect(error).toBeNull();
         expect(dataset.max.length).toEqual(1);
         expect(consoleOutput).toStrictEqual([
-            "Can't generate 100 examples. Using the maximum possible combinations: 1. NOTE: Using the maximum leads to overfitting."
+            `Can't generate 100 examples for intent "max". Using the maximum possible combinations: 1. NOTE: Using the maximum leads to overfitting.`
         ]);
     });
 });

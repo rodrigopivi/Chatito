@@ -121,7 +121,7 @@ export default class Editor extends React.Component<{}, IEditorState> {
         return (
             <es.EditorWrapper>
                 <es.EditorHeader>
-                    <es.TabsArea innerRef={this.tabsContainer}>{this.tabs.map(this.renderTabButton)}</es.TabsArea>
+                    <es.TabsArea ref={this.tabsContainer}>{this.tabs.map(this.renderTabButton)}</es.TabsArea>
                     <es.TabsAreaButton onClick={this.onAddFile} style={{ backgroundColor: '#1a6849' }}>
                         New file
                     </es.TabsAreaButton>
@@ -206,7 +206,7 @@ export default class Editor extends React.Component<{}, IEditorState> {
                             >
                                 <option value="allow">Allow</option>
                                 <option value="warn">Warn (in console)</option>
-                                <option value="restrict">Retrict</option>
+                                <option value="restrict">Restrict</option>
                             </select>
                         </es.SelectWrapper>
                     </es.DrawerFormField>

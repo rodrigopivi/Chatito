@@ -2,16 +2,16 @@
 
 ## 1 -  Overview
 
-Chatito is a domain specific language designed to simplify the process of creating, extending and maintaining
-datasets for training natural language processing (NLP) models for text classification, named entity recognition, slot filling or equivalent tasks.
+Chatito is a powerful domain specific language designed to simplify the process of creating, extending and maintaining datasets for training and validating natural language processing (NLP) models for text classification, named entity recognition, slot filling or equivalent tasks.
 
 Chatito design principles:
 
-- Simplicity: should be understandable by someone looking at it for the first time
+- Practicality: this tool is meant to help people who use it, the design should be guided by the community needs
 
 - Speed: generate samples by pulling them from a cloud of probabilities on demand
 
-- Practicality: this tool is meant to help people who use it, the design should be guided by the community needs
+- Simplicity: should be understandable by someone looking at it for the first time
+
 
 Following those principles this is an example of the language and its generated output:
 
@@ -33,7 +33,7 @@ Following those principles this is an example of the language and its generated 
 ```
 
 This code could produce a maximum of 18 examples, the output format is independent from the DSL language,
-although it is recommended to use a newline delimited format to just stream results to a file, a format like ndjson is recommended over plain json and using the `training` entity argument to limit the dataset size is recommended for large dataset where there should be no need to generate all variations.
+although it is recommended to use a newline delimited format to just stream results to a file, a format like ndjson is recommended over plain json and using the `training` entity argument to limit the dataset size is recommended for large dataset where there should be no need to generate all combinations.
 
 That said, the earlier DSL code generates two training examples for the `greet` intent. Here is the `Newline Delimited JSON` (ndjson.org) examples generated from the previous code:
 
@@ -46,8 +46,7 @@ Given this principles in mind, this document is the specification of such langua
 
 ## 2 - Language
 
-A chatito file, is a document containing the grammar definitions. Because of the different encoding formats and range of
-non printable characters, this are the requirements of document source text and some terminology:
+A chatito file, is a document containing the grammar definitions. Because of the different encoding formats and range of non printable characters, this are the requirements of document source text and some terminology:
 
 - Format: UTF-8
 - Valid characters: Allow international language characters.
@@ -204,11 +203,11 @@ The text next to the import statement should be a relative path from the main fi
 Note: Chatito will throw an exception if two imports define the same entity.
 
 
-### 2.2 - Controlling probabilities
+### 2.3 - Controlling probabilities
 
 The way Chatito works, is like pulling samples from a cloud of possible combinations and avoiding duplicates. Once the sentences definitions gain complexity, the max possible combinations increments exponentially, causing a problem where the generator will most likely pick sentences that have more possible combinations, and omit some sentences that may be more important at the dataset. To overcome this problem, semantics for controlling the data generation probabilities are provided.
 
-#### 2.2.1 - Frequency distribution strategies
+#### 2.3.1 - Frequency distribution strategies
 
 When generating samples for an entity, the generator will randomly pick a sentence model using one of the two frequency distribution strategies available: `regular` or `even`.
 
@@ -256,7 +255,7 @@ For `even` distribution using the previous example:
 | sentence 3 | 400              | 1      | 33.3333%      |
 
 
-#### 2.2.1 - Sentence probability operator
+#### 2.3.2 - Sentence probability operator
 
 The sentence probability operator is defined by the `*[` symbol at the start of a sentence following by the probability value and `]`. The probability value may be expressed in two ways, as a plain number (considered as weighted probabilty, e.g.: `1`) or as a percentage value (a number ending with `%`, e.g.: `33.3333%`), but once an entity defines a probabilty as either weight or percentage, then all the other sentences for that entity should use the same type. Inconsistencies declaring entity sentence probabilty values should be considered an input error and if the value is not a valid integer, float or percentual value, the input should be considered as simple text and not as a sentence probability definition.
  

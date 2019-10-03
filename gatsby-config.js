@@ -4,7 +4,10 @@ module.exports = {
         title: 'Chatito'
     },
     plugins: [
-        'gatsby-plugin-typescript',
+        {
+            resolve: `gatsby-plugin-typescript`,
+            options: {},
+        },
         {
             resolve: 'gatsby-plugin-page-creator',
             options: {
@@ -12,6 +15,9 @@ module.exports = {
             }
         },
         'gatsby-plugin-react-helmet',
-        'gatsby-plugin-styled-components'
-    ]
+        {
+            resolve: 'gatsby-plugin-styled-components',
+            options: {},
+        },
+    ],
 };

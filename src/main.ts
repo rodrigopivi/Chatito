@@ -664,7 +664,7 @@ export const datasetFromAST = async (
             let intentMax = trainingN + testingN;
             if (intentMax > maxIntentExamples) {
                 logger.warn(
-                    `Can't generate ${intentMax} examples. ` +
+                    `Can't generate ${intentMax} examples for intent "${intentKey}". ` +
                         `Using the maximum possible combinations: ${maxIntentExamples}. ` +
                         'NOTE: Using the maximum leads to overfitting.'
                 );

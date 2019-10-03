@@ -1,13 +1,12 @@
 import { WriteStream } from 'fs';
-import * as Tokenizer from 'wink-tokenizer';
 import * as gen from '../main';
+import { splitSentenceToWords } from '../simpleTokenizer';
 import { ISentenceTokens } from '../types';
-
-const tokenizer = new Tokenizer();
 
 export interface IDefaultDataset {
     [intent: string]: ISentenceTokens[][];
 }
+
 export interface IFlairWriteStreams {
     trainClassification: WriteStream;
     testClassification: WriteStream;
@@ -31,15 +30,15 @@ export async function streamAdapter(dsl: string, ws: IFlairWriteStreams, imp?: g
         // named entity recognition dataset in two column with BIO-annotated NER tags (requires tokenization)
         const writeStreamNER = isTrainingExample ? ws.trainNER : ws.testNER;
         utterance.forEach(v => {
-            const wordTokens = tokenizer.tokenize(v.value);
+            const wordTokens = splitSentenceToWords(v.value);
             if (v.type === 'Slot') {
                 wordTokens.forEach((wt, idx) => {
                     const slotBorI = idx === 0 ? 'B' : 'I';
                     const slotTag = v.slot!.toLocaleUpperCase().replace(/\s+/g, '');
-                    writeStreamNER.write(`${wt.value} ${slotBorI}-${slotTag}` + '\n');
+                    writeStreamNER.write(`${wt} ${slotBorI}-${slotTag}` + '\n');
                 });
             } else {
-                wordTokens.forEach(wt => writeStreamNER.write(`${wt.value} O` + '\n'));
+                wordTokens.forEach(wt => writeStreamNER.write(`${wt} O` + '\n'));
             }
         });
         writeStreamNER.write('\n'); // always write an extra EOL at the end of sentences
