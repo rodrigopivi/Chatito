@@ -1,0 +1,7 @@
+{
+  "name": "Chatito Editor Express Web Server",
+  "script": "server.js",
+  "exec_interpreter": "node",
+  "exec_mode": "cluster",
+  "cwd": "/opt/chatito/"
+}
