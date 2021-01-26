@@ -90,6 +90,11 @@ export async function adapter(dsl: string, formatOptions?: any, importer?: gen.I
             if (!training.entities[slotKey]) {
                 training.entities[slotKey] = {};
             }
+            training.entities[slotKey].use_synonyms = true;
+            training.entities[slotKey].automatically_extensible = true;
+            if (!training.entities[slotKey].data) {
+                training.entities[slotKey].data = [];
+            }
             return;
         }
         Object.keys(synonymsForSlots[slotKey]).forEach(synonymsValue => {
