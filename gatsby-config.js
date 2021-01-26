@@ -1,5 +1,5 @@
 module.exports = {
-    pathPrefix: '/Chatito',
+    pathPrefix: '/editor/chatito',
     siteMetadata: {
         title: 'Chatito'
     },

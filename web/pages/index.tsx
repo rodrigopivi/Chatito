@@ -19,6 +19,7 @@ export default class Index extends React.Component<{}, {}> {
                     <link rel="mask-icon" href={`${__PATH_PREFIX__}/safari-pinned-tab.svg`} color="#5bbad5" />
                     <meta name="msapplication-TileColor" content="#da532c" />
                     <meta name="theme-color" content="#ffffff" />
+                    <base href={`/editor/chatito/`} />
                     <title>Chatito DSL - Generate dataset for chatbots</title>
                     <meta
                         name="keywords"
