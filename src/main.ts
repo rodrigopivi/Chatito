@@ -32,7 +32,9 @@ export const config: Configuration = {
 
 // tslint:disable-next-line:no-var-requires
 const chatito = require('../parser/chatito') as IChatitoParser;
-const chance = new Chance();
+var seedrandom = require('seedrandom');
+seedrandom('hello.', { global: true });
+const chance = new Chance(12345);
 
 /**
  * Returns the entity key for the Alias/Slot that `token` refers to
