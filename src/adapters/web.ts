@@ -21,3 +21,6 @@ export async function adapter(dsl: string, formatOptions?: any, importer?: gen.I
     await gen.datasetFromString(dsl, utteranceWriter, importer, currentPath);
     return { training, testing };
 }
+
+
+https://www.ibm.com/standards/carbon/developing/carbon-cdn-style-helpers/
