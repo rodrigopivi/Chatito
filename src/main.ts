@@ -632,7 +632,8 @@ export const datasetFromAST = async (
     importHandler?: IFileImporter,
     currPath?: string
 ) => {
-    const operatorDefinitions = definitionsFromAST(initialAst, importHandler, currPath);
+    let operatorDefinitions = definitionsFromAST(initialAst, importHandler, currPath);
+    const operatorDefinitionsOriginal = JSON.parse(JSON.stringify(operatorDefinitions));
     if (!operatorDefinitions) {
         return;
     }
@@ -709,6 +710,49 @@ export const datasetFromAST = async (
                 false,
                 globalCache
             );
+
+             // extract list of slots from selected sentence
+            type selectedSentenceSlotsDictType = {[key: string]: [string];};
+            const selectedSentenceSlots: selectedSentenceSlotsDictType = {};
+            for (const key in intentSentence) {
+                if (intentSentence.hasOwnProperty(key)) {
+                  const sentencePart = intentSentence[key];
+                  if (sentencePart['type'] == "Slot"){
+                    const slotKey = String(sentencePart['slot'])
+                    if (!selectedSentenceSlots.hasOwnProperty(slotKey)) {
+                        selectedSentenceSlots[slotKey] = [sentencePart['value']];
+                    } else {
+                        selectedSentenceSlots[slotKey].push(sentencePart['value']);
+                    }
+                }
+                }
+              }
+
+            // filter operatorDefinitions from selected intent slots
+            for (const slotName in selectedSentenceSlots){
+                const slotValues = selectedSentenceSlots[slotName]
+                const slotSentences = operatorDefinitions.Slot[slotName].inner
+                for (const slotValue of slotValues){
+                    const targetSlotSentence = slotValue
+                    // loop on slot sentences to pop from it if matched with target sentence
+                    slotSentences.forEach((sentence, index) => {
+                        const sentenceText = sentence['sentence'][0]['value'];
+                        if (sentenceText == targetSlotSentence){
+                            slotSentences.splice(index, 1);
+                        }
+                      });
+                }
+                operatorDefinitions.Slot[slotName].inner = slotSentences
+            }
+            
+            // Restore operatorDefinitions Slots if no slots available in any of slots
+            for (const slotName in operatorDefinitions.Slot){
+                const slotValues = operatorDefinitions.Slot[slotName]
+                if (slotValues.inner.length < 1){
+                    operatorDefinitions.Slot[slotName].inner = operatorDefinitionsOriginal.Slot[slotName].inner.slice();
+                }
+            }
+
             const utterance = chatitoFormatPostProcess(intentSentence);
             const utteranceString = utterance.reduce((p, n) => p + n.value, '');
             if (!collitionsCache[utteranceString]) {
