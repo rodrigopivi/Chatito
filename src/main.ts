@@ -202,6 +202,18 @@ export const getVariationsFromEntity = async <T>(
         return [];
     }
     const sentence = ed.inner[sentenceIndex].sentence;
+    // Apply removing slots variation without replacement
+    if (ed.type == "SlotDefinition" && ed['variation'] !== null){
+        const slotKeyInEntities = ed.key + "#" + ed.variation
+        // if one sentences left in the slot , then refill
+        if (entities.Slot[slotKeyInEntities].inner.length < 2){
+            entities.Slot[slotKeyInEntities].inner = operatorDefinitionsOriginal.Slot[slotKeyInEntities].inner.slice()
+        }
+        else{
+            entities.Slot[slotKeyInEntities].inner.splice(sentenceIndex, 1)
+        }
+    }
+
     let accumulator: ISentenceTokens[] = [];
     // For slots where a sentence is composed of only one alias, we add the synonym tag,
     // to denote that the generated alias is a synonym of its alias name
@@ -626,6 +638,7 @@ export const definitionsFromAST = (initialAst: IChatitoEntityAST[], importHandle
     return operatorDefinitions;
 };
 
+let operatorDefinitionsOriginal: {[key: string]: any;} = {}
 export const datasetFromAST = async (
     initialAst: IChatitoEntityAST[],
     writterFn: IUtteranceWriter,
@@ -633,7 +646,7 @@ export const datasetFromAST = async (
     currPath?: string
 ) => {
     let operatorDefinitions = definitionsFromAST(initialAst, importHandler, currPath);
-    const operatorDefinitionsOriginal = JSON.parse(JSON.stringify(operatorDefinitions));
+    operatorDefinitionsOriginal = JSON.parse(JSON.stringify(operatorDefinitions));
     if (!operatorDefinitions) {
         return;
     }
@@ -710,48 +723,6 @@ export const datasetFromAST = async (
                 false,
                 globalCache
             );
-
-             // extract list of slots from selected sentence
-            type selectedSentenceSlotsDictType = {[key: string]: [string];};
-            const selectedSentenceSlots: selectedSentenceSlotsDictType = {};
-            for (const key in intentSentence) {
-                if (intentSentence.hasOwnProperty(key)) {
-                  const sentencePart = intentSentence[key];
-                  if (sentencePart['type'] == "Slot"){
-                    const slotKey = String(sentencePart['slot'])
-                    if (!selectedSentenceSlots.hasOwnProperty(slotKey)) {
-                        selectedSentenceSlots[slotKey] = [sentencePart['value']];
-                    } else {
-                        selectedSentenceSlots[slotKey].push(sentencePart['value']);
-                    }
-                }
-                }
-              }
-
-            // filter operatorDefinitions from selected intent slots
-            for (const slotName in selectedSentenceSlots){
-                const slotValues = selectedSentenceSlots[slotName]
-                const slotSentences = operatorDefinitions.Slot[slotName].inner
-                for (const slotValue of slotValues){
-                    const targetSlotSentence = slotValue
-                    // loop on slot sentences to pop from it if matched with target sentence
-                    slotSentences.forEach((sentence, index) => {
-                        const sentenceText = sentence['sentence'][0]['value'];
-                        if (sentenceText == targetSlotSentence){
-                            slotSentences.splice(index, 1);
-                        }
-                      });
-                }
-                operatorDefinitions.Slot[slotName].inner = slotSentences
-            }
-            
-            // Restore operatorDefinitions Slots if no slots available in any of slots
-            for (const slotName in operatorDefinitions.Slot){
-                const slotValues = operatorDefinitions.Slot[slotName]
-                if (slotValues.inner.length < 1){
-                    operatorDefinitions.Slot[slotName].inner = operatorDefinitionsOriginal.Slot[slotName].inner.slice();
-                }
-            }
 
             const utterance = chatitoFormatPostProcess(intentSentence);
             const utteranceString = utterance.reduce((p, n) => p + n.value, '');
