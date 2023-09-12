@@ -202,6 +202,18 @@ export const getVariationsFromEntity = async <T>(
         return [];
     }
     const sentence = ed.inner[sentenceIndex].sentence;
+    // Apply removing slots variation without replacement
+    if (ed.type == "SlotDefinition" && ed['variation'] !== null){
+        const slotKeyInEntities = ed.key + "#" + ed.variation
+        // if one sentences left in the slot , then refill
+        if (entities.Slot[slotKeyInEntities].inner.length < 2){
+            entities.Slot[slotKeyInEntities].inner = operatorDefinitionsOriginal.Slot[slotKeyInEntities].inner.slice()
+        }
+        else{
+            entities.Slot[slotKeyInEntities].inner.splice(sentenceIndex, 1)
+        }
+    }
+
     let accumulator: ISentenceTokens[] = [];
     // For slots where a sentence is composed of only one alias, we add the synonym tag,
     // to denote that the generated alias is a synonym of its alias name
@@ -626,13 +638,15 @@ export const definitionsFromAST = (initialAst: IChatitoEntityAST[], importHandle
     return operatorDefinitions;
 };
 
+let operatorDefinitionsOriginal: {[key: string]: any;} = {}
 export const datasetFromAST = async (
     initialAst: IChatitoEntityAST[],
     writterFn: IUtteranceWriter,
     importHandler?: IFileImporter,
     currPath?: string
 ) => {
-    const operatorDefinitions = definitionsFromAST(initialAst, importHandler, currPath);
+    let operatorDefinitions = definitionsFromAST(initialAst, importHandler, currPath);
+    operatorDefinitionsOriginal = JSON.parse(JSON.stringify(operatorDefinitions));
     if (!operatorDefinitions) {
         return;
     }
@@ -709,6 +723,7 @@ export const datasetFromAST = async (
                 false,
                 globalCache
             );
+
             const utterance = chatitoFormatPostProcess(intentSentence);
             const utteranceString = utterance.reduce((p, n) => p + n.value, '');
             if (!collitionsCache[utteranceString]) {
